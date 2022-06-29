@@ -11,6 +11,7 @@ public:
 		while (ret == 1.0) {
 			ret = dist(eng);
 		}
+		// return dist(eng);
 		return ret;
 	}
 
