@@ -2,7 +2,6 @@
 #define __CPP_ALGO_RANDOM_H
 
 #include <random>
-
 class Random {
 public:
 	auto operator()(double a = 0.0, double b = 1.0) {
