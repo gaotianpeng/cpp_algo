@@ -1,3 +1,4 @@
+#include <array>
 #include <iostream>
 #include <vector>
 #include "gtest/gtest.h"
@@ -11,8 +12,8 @@ static void swap(int& a, int &b) {
 	b = tmp;
 }
 
-void merge(vector<int>& arr, size_t left, size_t mid, size_t right) {
-	int n = right - left + 1;
+static void merge(vector<int>& arr, size_t left, size_t mid, size_t right) {
+	size_t n = right - left + 1;
 	int* helper = new int[n];
 	size_t i = 0;
 	size_t p1 = left;
@@ -30,11 +31,12 @@ void merge(vector<int>& arr, size_t left, size_t mid, size_t right) {
 		helper[i++] = arr[p2++];
 	}
 
-	for (size_t  i = 0; i < n; i++) {
+	for (size_t i = 0; i < n; i++) {
 		arr[left + i] = helper[i];
 	}
 
 	delete [] helper;
+
 }
 
 static void process(vector<int>& arr, size_t left, size_t right) {
