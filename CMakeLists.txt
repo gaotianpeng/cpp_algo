@@ -8,7 +8,7 @@ if(NOT CMAKE_C_STANDARD)
 endif(NOT CMAKE_C_STANDARD)
 
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD 17)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
   set(CMAKE_CXX_EXTENSIONS OFF)
 endif(NOT CMAKE_CXX_STANDARD)
@@ -66,7 +66,7 @@ endif(CPP_ALGO_HAVE_NO_MISSING_FIELD_INITIALIZERS)
 
 include_directories(common)
 
-add_executable(cpp_algo "" common/arr_tools.h)
+add_executable(cpp_algo "" common/arr_tools.h common/list_tools.cc common/list_tools.h)
 
 FILE(GLOB COMMON ${CMAKE_CURRENT_SOURCE_DIR}/common/*)
 FILE(GLOB SORT ${CMAKE_CURRENT_SOURCE_DIR}/sort/*)
