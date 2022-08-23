@@ -12,15 +12,15 @@ static void swap(int& a, int &b) {
 }
 
 static void InsertSort(vector<int>& arr) {
-    if (arr.size() < 2) {
-        return;
-    }
+	if (arr.size() < 2) {
+		return;
+	}
 
 	int n = arr.size();
 	for (int i = 1; i < n; ++i) {
-		for (int j = i - 1; j >= 0; --j) {
-			if (arr[j+1] < arr[j]) {
-				swap(arr[j+1], arr[j]);
+		for (int j = i; j > 0; --j) {
+			if (arr[j] < arr[j-1]) {
+				swap(arr[j], arr[j-1]);
 			}
 		}
 	}
