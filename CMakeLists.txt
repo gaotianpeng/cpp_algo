@@ -72,6 +72,7 @@ FILE(GLOB SORT ${CMAKE_CURRENT_SOURCE_DIR}/sort/*.cc)
 target_sources(cpp_algo
   PUBLIC
   ${SORT}
+  main.cc
 )  
 target_link_libraries(cpp_algo gmock gtest gtest_main)
 

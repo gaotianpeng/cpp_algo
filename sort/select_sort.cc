@@ -106,20 +106,16 @@ TEST(SortTest, SelectSort) {
     for (int i = 0; i < test_times; i++) {
         vector<int> arr1;
         vector<int> arr2;
-        vector<int> arr3;
         RandomArr(arr1, max_n, min_val, max_val);
         CopyArr(arr1, arr2);
-        CopyArr(arr1, arr3);
         SelectSort(arr1);
         std::sort(arr2.begin(), arr2.end());
-        test(arr3);
-        if (!IsEqual(arr1, arr2) || !IsEqual(arr1, arr3)) {
+        if (!IsEqual(arr1, arr2)) {
             Print(arr1);
             Print(arr2);
-            Print(arr3);
             ASSERT_TRUE(false);
         }
     }
     cout << "test success\n";
-    cout << "select sort end\n";
+    cout << "select sort end\n\n";
 }
