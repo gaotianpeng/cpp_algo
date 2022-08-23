@@ -19,20 +19,39 @@ void swap(int& a, int &b) {
 }
 
 void SelectSort(vector<int>& arr) {
-    if (arr.size() <= 1) {
+    if (arr.size() < 2) {
         return;
     }
 
     size_t n = arr.size();
-    for (size_t i = 0; i < n - 1; i++) {
+    for (size_t i = 0; i < n - 1; ++i) {
         size_t min_index = i;
-        for (size_t j = i + 1; j < n; j++) {
+        for (size_t j = i + 1; j < n; ++j) {
             if (arr[j] < arr[min_index]) {
                 min_index = j;
             }
         }
         if (min_index != i) {
             swap(arr[i], arr[min_index]);
+        }
+    }
+}
+
+void test(vector<int>& arr) {
+    if (arr.size() < 2) {
+        return;
+    }
+
+    size_t n = arr.size();
+    for (int i = n - 1; i > 0; --i) {
+        size_t max_idx = i;
+        for (int j = 0; j < i; j++) {
+            if (arr[max_idx] < arr[j]) {
+                max_idx = j;
+            }
+        }
+        if (max_idx != i) {
+            swap(arr[max_idx], arr[i]);
         }
     }
 }
@@ -88,13 +107,17 @@ TEST(SortTest, SelectSort) {
     for (int i = 0; i < test_times; i++) {
         vector<int> arr1;
         vector<int> arr2;
+        vector<int> arr3;
         RandomArr(arr1, max_n, min_val, max_val);
         CopyArr(arr1, arr2);
+        CopyArr(arr1, arr3);
         SelectSort(arr1);
         std::sort(arr2.begin(), arr2.end());
-        if (!IsEqual(arr1, arr2)) {
+        test(arr3);
+        if (!IsEqual(arr1, arr2) || !IsEqual(arr1, arr3)) {
             Print(arr1);
             Print(arr2);
+            Print(arr3);
             ASSERT_TRUE(false);
         }
     }
