@@ -4,13 +4,6 @@
 #include "random.h"
 
 using namespace std;
-/*
-    arr[0～N-1]范围上，找到最小值所在的位置，然后把最小值交换到0位置。
-    arr[1～N-1]范围上，找到最小值所在的位置，然后把最小值交换到1位置。
-    arr[2～N-1]范围上，找到最小值所在的位置，然后把最小值交换到2位置。
-    …
-    arr[N-1～N-1]范围上，找到最小值位置，然后把最小值交换到N-1位置。
-*/
 
 static void swap(int& a, int &b) {
     int tmp = a;
@@ -18,21 +11,17 @@ static void swap(int& a, int &b) {
     b = tmp;
 }
 
-static void SelectSort(vector<int>& arr) {
+static void BubbleSort(vector<int>& arr) {
     if (arr.size() < 2) {
         return;
     }
 
-    size_t n = arr.size();
-    for (size_t i = 0; i < n - 1; ++i) {
-        size_t min_index = i;
-        for (size_t j = i + 1; j < n; ++j) {
-            if (arr[j] < arr[min_index]) {
-                min_index = j;
+    int n = arr.size();
+    for (int i = n-1; i > 0; --i) {
+        for (int j = 0; j < i; ++j) {
+            if (arr[j] > arr[j+1]) {
+                swap(arr[j], arr[j+1]);
             }
-        }
-        if (min_index != i) {
-            swap(arr[i], arr[min_index]);
         }
     }
 }
@@ -97,8 +86,8 @@ static bool IsEqual(const vector<int>& arr_a, const vector<int>& arr_b) {
     return true;
 }
 
-TEST(SortTest, SelectSort) {
-    cout << "select sort test start\n";
+TEST(SortTest, BubbleSort) {
+    cout << "bubble sort test start\n";
     int max_n = 100;
     int min_val = -20;
     int max_val = 30;
@@ -110,16 +99,20 @@ TEST(SortTest, SelectSort) {
         RandomArr(arr1, max_n, min_val, max_val);
         CopyArr(arr1, arr2);
         CopyArr(arr1, arr3);
-        SelectSort(arr1);
+        BubbleSort(arr1);
         std::sort(arr2.begin(), arr2.end());
         test(arr3);
-        if (!IsEqual(arr1, arr2) || !IsEqual(arr1, arr3)) {
-            Print(arr1);
+        if (!IsEqual(arr2, arr3)) {
             Print(arr2);
             Print(arr3);
             ASSERT_TRUE(false);
         }
+        if (!IsEqual(arr1, arr2)) {
+            Print(arr1);
+            Print(arr2);
+            ASSERT_TRUE(false);
+        }
     }
     cout << "test success\n";
-    cout << "select sort end\n";
+    cout << "bubble sort end\n";
 }
