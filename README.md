@@ -8,4 +8,7 @@ mkdir build && cd build
 cmake ..
 
 ./cpp_algo
+
+# 检查内存泄漏(Linux)
+valgrind --tool=memcheck --leak-check=full  ./cpp_algo
 ```

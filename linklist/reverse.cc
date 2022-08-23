@@ -6,13 +6,35 @@
 using namespace std;
 using namespace tools;
 
+ListNode* ReverseList(ListNode* head) {
+	if (head == nullptr) {
+		return nullptr;
+	}
+
+	ListNode* prev = nullptr;
+	ListNode* next = nullptr;
+	while (head != nullptr) {
+		next = head->next;
+		head->next = prev;
+		prev = head;
+		head = next;
+	}
+
+	return prev;
+}
+
 
 TEST(LinkListTest, ReverseList) {
 	cout << "reverse list test start\n";
-	for (int i = 0; i < 10; i++) {
-		ListNode* head = GenRandomList(10, -20, 30);
-		PrintList(head);
-		FreeList(head);
+	int test_times = 100000;
+	int max_n = 100;
+	int min_val = -20;
+	int max_val = 30;
+
+	for (int i = 0; i < test_times; i++) {
+		ListNode* head = GenRandomList(max_n, min_val, max_val);
+		ListNode* reverse = ReverseList(head);
+		FreeList(reverse);
 	}
 
 	cout << "test success\n";
