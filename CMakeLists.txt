@@ -66,12 +66,17 @@ endif(CPP_ALGO_HAVE_NO_MISSING_FIELD_INITIALIZERS)
 
 include_directories(common)
 
-add_executable(cpp_algo "")
+add_executable(cpp_algo "" common/arr_tools.h)
 
-FILE(GLOB SORT ${CMAKE_CURRENT_SOURCE_DIR}/sort/*.cc)
+FILE(GLOB COMMON ${CMAKE_CURRENT_SOURCE_DIR}/common/*)
+FILE(GLOB SORT ${CMAKE_CURRENT_SOURCE_DIR}/sort/*)
+FILE(GLOB LINKLIST ${CMAKE_CURRENT_SOURCE_DIR}/linklist/*)
+
 target_sources(cpp_algo
   PUBLIC
-  ${SORT}
+  ${COMMON}
+#  ${SORT}
+  ${LINKLIST}
   main.cc
 )  
 target_link_libraries(cpp_algo gmock gtest gtest_main)
