@@ -71,12 +71,14 @@ add_executable(cpp_algo "" common/arr_tools.h common/list_tools.cc common/list_t
 FILE(GLOB COMMON ${CMAKE_CURRENT_SOURCE_DIR}/common/*)
 FILE(GLOB SORT ${CMAKE_CURRENT_SOURCE_DIR}/sort/*)
 FILE(GLOB LINKLIST ${CMAKE_CURRENT_SOURCE_DIR}/linklist/*)
+FILE(GLOB SEARCH ${CMAKE_CURRENT_SOURCE_DIR}/search/*)
 
 target_sources(cpp_algo
   PUBLIC
   ${COMMON}
-#  ${SORT}
+  ${SORT}
   ${LINKLIST}
+  ${SEARCH}
   main.cc
 )  
 target_link_libraries(cpp_algo gmock gtest gtest_main)

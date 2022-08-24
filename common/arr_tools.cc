@@ -23,6 +23,16 @@ void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
 	}
 }
 
+int RandomVal(int min_val, int max_val) {
+	Random random;
+	return min_val + (int)(random() *(max_val - min_val));
+}
+
+void RandomSortedArr(std::vector<int>& out, int max_n, int min_val, int max_val) {
+	RandomArr(out, max_n, min_val, max_val);
+	std::sort(out.begin(), out.end());
+}
+
 void CopyArr(const vector<int>& src, vector<int>& dst) {
 	dst.clear();
 	for (size_t i = 0; i < src.size(); i++) {

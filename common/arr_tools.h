@@ -13,6 +13,10 @@ void swap(int& a, int &b);
 
 void RandomArr(std::vector<int>& out, int max_n, int min_val, int max_val);
 
+int RandomVal(int min_val, int max_val);
+
+void RandomSortedArr(std::vector<int>& out, int max_n, int min_val, int max_val);
+
 
 void CopyArr(const std::vector<int>& src, std::vector<int>& dst);
 
