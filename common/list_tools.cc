@@ -30,6 +30,24 @@ ListNode* GenRandomList(int max_n, int min_val, int max_val) {
 	return head;
 }
 
+ListNode* CopyList(ListNode* src) {
+	if (src == nullptr) {
+		return nullptr;
+	}
+
+	ListNode* ret = new ListNode(src->val);
+	ListNode* node = ret;
+	src = src->next;
+	while (src != nullptr) {
+		node->next = new ListNode(src->val);
+		src = src->next;
+		node = node->next;
+	}
+	node->next = nullptr;
+
+	return ret;
+}
+
 void FreeList(ListNode* list) {
 	if (list == nullptr) {
 		return;
@@ -53,6 +71,38 @@ void PrintList(ListNode* list) {
 		head = head->next;
 	}
 	cout << endl;
+}
+
+static void GetListValues(ListNode* list, vector<int>& out) {
+	if (list == nullptr) {
+		return;
+	}
+
+	ListNode* head = list;
+	while (head != nullptr) {
+		out.emplace_back(head->val);
+		head = head->next;
+	}
+}
+
+bool IsReverse(ListNode* list_a, ListNode* list_b) {
+	if (list_a == nullptr && list_b == nullptr) {
+		return true;
+	}
+
+	if (list_a == nullptr && list_b != nullptr) {
+		return false;
+	}
+
+	if (list_a != nullptr && list_b == nullptr) {
+		return false;
+	}
+
+	vector<int> a_values;
+	GetListValues(list_a, a_values);
+	vector<int> b_values;
+	GetListValues(list_b, b_values);
+	return IsReverse(a_values, b_values);
 }
 
 } // namespace tools

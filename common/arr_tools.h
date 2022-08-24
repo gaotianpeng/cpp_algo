@@ -20,5 +20,7 @@ void Print(const std::vector<int>& arr);
 
 bool IsEqual(const std::vector<int>& arr_a, const std::vector<int>& arr_b);
 
+bool IsReverse(const std::vector<int>& arr_a, const std::vector<int>& arr_b);
+
 } // namespace tools
 #endif //CPP_ALGO_COMMON_ARR_TOOLS_H_

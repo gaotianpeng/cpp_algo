@@ -13,9 +13,13 @@ struct ListNode {
 
 ListNode* GenRandomList(int max_n, int min_val, int max_val);
 
+ListNode* CopyList(ListNode* src);
+
 void FreeList(ListNode* list);
 
 void PrintList(ListNode* list);
+
+bool IsReverse(ListNode* list_a, ListNode* list_b);
 
 } // namespace tools
 

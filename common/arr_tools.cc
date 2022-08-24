@@ -52,6 +52,21 @@ bool IsEqual(const vector<int>& arr_a, const vector<int>& arr_b) {
 	return true;
 }
 
+bool IsReverse(const vector<int>& arr_a, const vector<int>& arr_b) {
+	if (arr_a.size() != arr_b.size()) {
+		return false;
+	}
+
+	int n = arr_a.size();
+	for (int i = 0; i < n; i++) {
+		if (arr_a[i] != arr_b[n-i-1]) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
 } // namespace tools
 
 
