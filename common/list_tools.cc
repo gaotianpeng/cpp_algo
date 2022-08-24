@@ -17,11 +17,10 @@ ListNode* GenRandomList(int max_n, int min_val, int max_val) {
 		return nullptr;
 	}
 
-	Random random;
-	ListNode* head = new ListNode((int)(random() * (max_val - min_val)) + min_val);
+	ListNode* head = new ListNode((int)(Random::random() * (max_val - min_val)) + min_val);
 	ListNode* prev = head;
 	for (int i = 0; i < n; i++) {
-		int val = (int)(random() * (max_val - min_val)) + min_val;
+		int val = (int)(Random::random() * (max_val - min_val)) + min_val;
 		prev->next = new ListNode(val);
 		prev = prev->next;
 	}

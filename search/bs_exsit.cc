@@ -14,10 +14,10 @@ bool BSExist(vector<int>& arr, int val) {
 	int left = 0;
 	int right = arr.size() - 1;
 	while (left < right) {
-		int mid = left + ((right - left)>>1);
-		if (val > arr[mid]) {
+		int mid = left + ((right - left) >>1);
+		if (arr[mid] < val) {
 			left = mid + 1;
-		} else if (val < arr[mid]) {
+		} else if (arr[mid] > val) {
 			right = mid - 1;
 		} else {
 			return true;

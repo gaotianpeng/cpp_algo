@@ -15,17 +15,15 @@ void swap(int& a, int &b) {
 }
 
 void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
-	Random random;
-	int len = (int)(random() * max_n);
+	int len = (int)(Random::random() * max_n);
 	for (int i = 0; i < len; i++) {
-		int val = (int)(random() * (max_val - min_val)) + min_val;
+		int val = (int)(Random::random() * (max_val - min_val)) + min_val;
 		out.emplace_back(val);
 	}
 }
 
 int RandomVal(int min_val, int max_val) {
-	Random random;
-	return min_val + (int)(random() *(max_val - min_val));
+	return min_val + (int)(Random::random() *(max_val - min_val));
 }
 
 void RandomSortedArr(std::vector<int>& out, int max_n, int min_val, int max_val) {
