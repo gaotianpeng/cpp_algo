@@ -36,7 +36,7 @@ static int test(vector<int>& arr, int val) {
 		return -1;
 	}
 
-	for (int i = 0; i < arr.size(); i++) {
+	for (size_t i = 0; i < arr.size(); i++) {
 		if (arr[i] >= val) {
 			return i;
 		}
@@ -45,25 +45,25 @@ static int test(vector<int>& arr, int val) {
 	return -1;
 }
 
-TEST(SearchTest, BSLeftestExistTest) {
-	cout << " bs leftest exist test start\n";
-	int test_times = 500000;
-	int max_n = 10;
-	int min_val = -20;
-	int max_val = 30;
-	for (int i = 0; i < test_times; i++) {
-		vector<int> arr1;
-		RandomSortedArr(arr1, max_n, min_val, max_val);
-		vector<int> arr2;
-		CopyArr(arr1, arr2);
-
-		int val = RandomVal(min_val, max_val);
-		if (BSLeftestExist(arr1, val) != test(arr2, val)) {
-			EXPECT_TRUE(false);
-			cout << "find target val is " << val << endl;
-			Print(arr1);
-			break;
-		}
-	}
-	cout << " bs leftest exist test end\n";
-}
+//TEST(SearchTest, BSLeftestExistTest) {
+//	cout << " bs leftest exist test start\n";
+//	int test_times = 500000;
+//	int max_n = 10;
+//	int min_val = -20;
+//	int max_val = 30;
+//	for (int i = 0; i < test_times; i++) {
+//		vector<int> arr1;
+//		RandomSortedArr(arr1, max_n, min_val, max_val);
+//		vector<int> arr2;
+//		CopyArr(arr1, arr2);
+//
+//		int val = RandomVal(min_val, max_val);
+//		if (BSLeftestExist(arr1, val) != test(arr2, val)) {
+//			EXPECT_TRUE(false);
+//			cout << "find target val is " << val << endl;
+//			Print(arr1);
+//			break;
+//		}
+//	}
+//	cout << " bs leftest exist test end\n";
+//}
