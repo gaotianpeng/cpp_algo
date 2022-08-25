@@ -6,23 +6,22 @@
 using namespace std;
 using namespace tools;
 
-// 在一个有序数组中，找>=某个数最左侧的位置
-static int BSLeftestExist(vector<int>& arr, int val) {
+// 在一个有序数组中，找<=某个数最右侧的位置
+static int BSRightestExist(vector<int>& arr, int val) {
 	if (arr.size() == 0) {
 		return -1;
 	}
 
+	int index = -1;
 	int left = 0;
 	int right = arr.size() - 1;
-	int index = -1;
-
 	while (left <= right) {
 		int mid = left + ((right - left)>>1);
-		if (arr[mid] >= val) {
-			right = mid - 1;
+		if (arr[mid] <= val) {
 			index = mid;
-		} else {
 			left = mid + 1;
+		} else {
+			right = mid - 1;
 		}
 	}
 
@@ -37,8 +36,8 @@ static int test(vector<int>& arr, int val) {
 		return -1;
 	}
 
-	for (size_t i = 0; i < arr.size(); i++) {
-		if (arr[i] >= val) {
+	for (int i = arr.size() - 1; i >= 0; --i) {
+		if (arr[i] <= val) {
 			return i;
 		}
 	}
@@ -46,8 +45,8 @@ static int test(vector<int>& arr, int val) {
 	return -1;
 }
 
-//TEST(SearchTest, BSLeftestExistTest) {
-//	cout << " bs leftest exist test start\n";
+//TEST(SearchTest, BSRightestExistTest) {
+//	cout << " bs rightest exist test start\n";
 //	int test_times = 500000;
 //	int max_n = 10;
 //	int min_val = -20;
@@ -59,12 +58,14 @@ static int test(vector<int>& arr, int val) {
 //		CopyArr(arr1, arr2);
 //
 //		int val = RandomVal(min_val, max_val);
-//		if (BSLeftestExist(arr1, val) != test(arr2, val)) {
-//			EXPECT_TRUE(false);
-//			cout << "find target val is " << val << endl;
+//		if (BSRightestExist(arr1, val) != test(arr2, val)) {
 //			Print(arr1);
+//			cout << "find target val is " << val << endl;
+//			cout << BSRightestExist(arr1, val) << endl;
+//			cout << test(arr2, val) << endl;
+//			EXPECT_TRUE(false);
 //			break;
 //		}
 //	}
-//	cout << " bs leftest exist test end\n";
+//	cout << " bs rightest exist test end\n";
 //}
