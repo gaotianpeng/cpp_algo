@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.13.0)
 project(cpp_algo VERSION 0.0 LANGUAGES C CXX)
 
 if(NOT CMAKE_C_STANDARD)
@@ -66,12 +66,13 @@ endif(CPP_ALGO_HAVE_NO_MISSING_FIELD_INITIALIZERS)
 
 include_directories(common)
 
-add_executable(cpp_algo "" common/arr_tools.h common/list_tools.cc common/list_tools.h)
+add_executable(cpp_algo "")
 
 FILE(GLOB COMMON ${CMAKE_CURRENT_SOURCE_DIR}/common/*)
 FILE(GLOB SORT ${CMAKE_CURRENT_SOURCE_DIR}/sort/*)
 FILE(GLOB LINKLIST ${CMAKE_CURRENT_SOURCE_DIR}/linklist/*)
 FILE(GLOB SEARCH ${CMAKE_CURRENT_SOURCE_DIR}/search/*)
+FILE(GLOB BIT ${CMAKE_CURRENT_SOURCE_DIR}/bit/*)
 
 target_sources(cpp_algo
   PUBLIC
@@ -79,6 +80,7 @@ target_sources(cpp_algo
   ${SORT}
   ${LINKLIST}
   ${SEARCH}
+  ${BIT}
   main.cc
 )  
 target_link_libraries(cpp_algo gmock gtest gtest_main)
