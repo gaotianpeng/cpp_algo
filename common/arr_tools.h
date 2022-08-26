@@ -9,7 +9,7 @@
 
 namespace tools {
 
-void swap(int& a, int &b);
+
 
 void RandomArr(std::vector<int>& out, int max_n, int min_val, int max_val);
 

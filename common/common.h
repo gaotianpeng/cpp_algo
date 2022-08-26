@@ -3,6 +3,8 @@
 
 namespace tools {
 
+void Swap(int& a, int &b);
+
 int RandomVal(int min_val, int max_val);
 
 int RandomOddVal(int min_val, int max_val);

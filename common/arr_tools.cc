@@ -8,12 +8,6 @@ using std::endl;
 
 namespace tools {
 
-void swap(int& a, int &b) {
-	int tmp = a;
-	a = b;
-	b = tmp;
-}
-
 void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
 	int len = (int)(Random::random() * max_n);
 	for (int i = 0; i < len; i++) {
