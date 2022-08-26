@@ -8,6 +8,20 @@ namespace tools {
 std::random_device Random::r;
 std::mt19937 Random::eng = SeededEng();
 
+double Random::random(double a, double b) {
+	std::uniform_real_distribution<double> dist(a, b);
+	auto ret = dist(eng);
+	while (ret == 1.0) {
+		ret = dist(eng);
+	}
+	return ret;
+}
+
+int Random::random(int a, int b) {
+	std::uniform_int_distribution<int> dist(a, b);
+	return dist(eng);
+}
+
 } // namespace tools
 
 //TEST(RandomTest, Random) {

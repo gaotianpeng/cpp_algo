@@ -6,14 +6,8 @@ namespace tools {
 
 class Random {
 public:
-	static auto random(double a = 0.0, double b = 1.0) {
-		std::uniform_real_distribution<double> dist(a, b);
-		auto ret = dist(eng);
-		while (ret == 1.0) {
-			ret = dist(eng);
-		}
-		return ret;
-	}
+	static double random(double a = 0.0, double b = 1.0);
+	static int random(int a, int b);
 
 private:
 	static std::mt19937 SeededEng() {
