@@ -4,6 +4,7 @@
 #include <set>
 #include "gtest/gtest.h"
 #include "common.h"
+#include "arr_tools.h"
 using namespace std;
 using namespace tools;
 
@@ -19,7 +20,6 @@ static int GetOddNumber(const std::vector<int>& arr) {
 /*
  * for test
  */
-
 static void RandomArray(vector<int>& out, int min_val, int max_val, int max_n) {
 	int out_n = RandomVal(0, max_n);
 	if (out_n == 0) {
@@ -51,9 +51,9 @@ static void RandomArray(vector<int>& out, int min_val, int max_val, int max_n) {
 		out_n -= n_even;
 	}
 
-	for (int i = 0; i < out_n; i++) {
-		int pos1 = RandomVal(0, out_n - 1);
-		int pos2 = RandomVal(0, out_n - 1);
+	for (int i = 0; i < out.size(); i++) {
+		int pos1 = RandomVal(0, out.size() - 1);
+		int pos2 = RandomVal(0, out.size() - 1);
 		if (pos1 != pos2) {
 			Swap(out[pos1], out[pos2]);
 		}
