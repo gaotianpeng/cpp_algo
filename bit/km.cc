@@ -12,12 +12,39 @@ using namespace tools;
  *  一个数组中一种数出现k次，其它数都出现了M次
  *  M > 1, K < M
  *  找到出现了K次的数
- *  要求, 客外空间复杂度为O(1), 时间复杂度为O(N)
+ *  要求, 额外空间复杂度为O(1), 时间复杂度为O(N)
  *  说明，请外部保证数据的合法性(k>0)
  */
 static int FindKM(const std::vector<int>& arr, int k, int m) {
-	// to do
-	return 0;
+	if (arr.size() < k + m) {
+		return -1;
+	}
+
+	map<int, int> bit_one;
+	int int_bits = sizeof(int)*8;
+	int val = 1;
+	for (int i = 0; i < int_bits; ++i) {
+		bit_one.insert({val, i});
+		val <<= 1;
+	}
+
+	vector<int> bits_one_sum(int_bits, 0);
+	for (auto elem: arr) {
+		while (elem != 0) {
+			int right_one = elem & (-elem);
+			bits_one_sum[bit_one[right_one]]++;
+			elem ^= right_one;
+		}
+	}
+
+	int ans = 0;
+	for (int i = 0; i < int_bits; i++) {
+		if ((bits_one_sum[i] % m) != 0) {
+			ans |= (1<<i);
+		}
+	}
+
+	return ans;
 }
 
 /*
@@ -33,6 +60,10 @@ std::pair<int, int> RandomKM(int min_val, int max_val) {
 	return {k, m};
 }
 
+
+/*
+ * for test
+ */
 // min_val < max_val , k < m, max_n > k + m 由外部保证
 static void RandomArray(vector<int>& out, int min_val, int max_val, int max_n, int k, int m) {
 	int arr_len = RandomVal(k + m, max_n);
@@ -93,13 +124,13 @@ static int test(const std::vector<int>& arr, int k, int m) {
 
 	return -1;
 }
-//
+
 //TEST(BitTest, GetPddTest) {
 //    cout << "bit test start\n";
-//	int test_times = 100;
+//	int test_times = 500000;
 //	int min_val = -100;
 //	int max_val = 200;
-//	int max_n = 100;
+//	int max_n = 50;
 //	int min_km = 1;
 //	int max_km = 10;
 //	for (int i = 0; i < test_times; i++) {
@@ -107,6 +138,8 @@ static int test(const std::vector<int>& arr, int k, int m) {
 //		vector<int> arr;
 //		RandomArray(arr, min_val, max_val, max_n, km.first, km.second);
 //		if (test(arr, km.first, km.second) != FindKM(arr, km.first, km.second))  {
+//			Print(arr);
+//			cout << "k, m = (" << km.first << "," << km.second << ")" << endl;
 //			cout << test(arr, km.first, km.second) << endl;
 //			cout << FindKM(arr, km.first, km.second) << endl;
 //			ASSERT_TRUE(false);
