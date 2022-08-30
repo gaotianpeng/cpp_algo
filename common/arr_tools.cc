@@ -1,6 +1,7 @@
 #include "arr_tools.h"
 #include "random.h"
 #include <iostream>
+#include <algorithm>
 
 using std::vector;
 using std::cout;
