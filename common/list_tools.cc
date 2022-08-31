@@ -189,6 +189,7 @@ bool IsReverse(ListDNode* list_a, ListDNode* list_b) {
 			return false;
 		}
 	}
+
 	return true;
 }
 
