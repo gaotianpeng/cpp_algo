@@ -115,8 +115,6 @@ ListDNode* GenRandomDList(int max_n, int min_val, int max_val) {
 		return nullptr;
 	}
 
-	cout << "double link list size " << n << endl;
-
 	ListDNode* head = new ListDNode(RandomVal(min_val, max_val));
 	ListDNode* ret = head;
 
@@ -157,6 +155,40 @@ ListDNode* CopyDList(ListDNode* dlist) {
 }
 
 bool IsReverse(ListDNode* list_a, ListDNode* list_b) {
+	if (list_a == nullptr && list_b == nullptr) {
+		return true;
+	}
+
+	if (list_a != nullptr && list_b == nullptr) {
+		return false;
+	}
+
+	if (list_a == nullptr&& list_b != nullptr) {
+		return false;
+	}
+
+	vector<int> vec_a;
+	vector<int> vec_b;
+	while (list_a != nullptr) {
+		vec_a.emplace_back(list_a->val);
+		list_a = list_a->next;
+	}
+
+	while (list_b != nullptr) {
+		vec_b.emplace_back(list_b->val);
+		list_b = list_b->next;
+	}
+
+	if (vec_a.size() != vec_b.size()) {
+		return false;
+	}
+
+	size_t n = vec_a.size();
+	for (int i = 0; i < n; i++) {
+		if (vec_a[i] != vec_b[n-1-i]) {
+			return false;
+		}
+	}
 	return true;
 }
 
@@ -180,19 +212,21 @@ void FreeList(ListDNode* list) {
 
 } // namespace tools
 
-using namespace tools;
-
-TEST(ListTool, ListToolTest) {
-	int min_val = -10;
-	int max_val = 10;
-	int max_n = 10;
-	int test_times = 100;
-	for (int i = 0; i < test_times; ++i) {
-		ListDNode* d_list = GenRandomDList(max_n, min_val, max_val);
-		PrintDList(d_list);
-		ListDNode* copy_list = CopyDList(d_list);
-		PrintDList(copy_list);
-		FreeList(d_list);
-		FreeList(copy_list);
-	}
-};
+//using namespace tools;
+//
+//TEST(ListTool, ListToolTest) {
+//	int min_val = -10;
+//	int max_val = 10;
+//	int max_n = 10;
+//	int test_times = 100;
+//	for (int i = 0; i < test_times; ++i) {
+//		ListDNode* d_list = GenRandomDList(max_n, min_val, max_val);
+//		ListDNode* copy_list = CopyDList(d_list);
+//		if (IsReverse(d_list, copy_list)) {
+//			PrintDList(d_list);
+//			PrintDList(copy_list);
+//		}
+//		FreeList(d_list);
+//		FreeList(copy_list);
+//	}
+//};
