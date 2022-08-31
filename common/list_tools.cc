@@ -192,7 +192,7 @@ TEST(ListTool, ListToolTest) {
 		PrintDList(d_list);
 		ListDNode* copy_list = CopyDList(d_list);
 		PrintDList(copy_list);
-		free(d_list);
-		free(copy_list);
+		FreeList(d_list);
+		FreeList(copy_list);
 	}
 };
