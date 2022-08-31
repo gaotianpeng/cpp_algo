@@ -125,8 +125,8 @@ static int test(const std::vector<int>& arr, int k, int m) {
 	return -1;
 }
 
-//TEST(BitTest, GetPddTest) {
-//    cout << "bit test start\n";
+//TEST(BitTest, GetOddTest) {
+//  cout << "bit test start\n";
 //	int test_times = 500000;
 //	int min_val = -100;
 //	int max_val = 200;

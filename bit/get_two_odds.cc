@@ -19,13 +19,13 @@ static std::pair<int, int> GetOddNumber(const std::vector<int>& arr) {
 	}
 
 	int eor = 0;
-	for (auto& elem: arr) {
+	for (auto elem: arr) {
 		eor ^= elem;
 	}
 
 	int right_one = eor & (~eor + 1);
 	int eor2 = 0;
-	for (auto& elem: arr) {
+	for (auto elem: arr) {
 		if ((elem & right_one) != 0) {
 			eor2 ^= elem;
 		}
@@ -36,6 +36,7 @@ static std::pair<int, int> GetOddNumber(const std::vector<int>& arr) {
 	if (ret1 < ret2) {
 		return {ret1, ret2};
 	}
+
 	return {ret2, ret1};
 }
 
@@ -115,9 +116,9 @@ static std::pair<int,int> test(const std::vector<int>& arr) {
 	return {res[0], res[1]};
 }
 
-//TEST(BitTest, GetPddTest) {
+//TEST(BitTest, GetOddTest) {
 //    cout << "bit test start\n";
-//	int test_times = 100;
+//	int test_times = 500000;
 //	int min_val = -100;
 //	int max_val = 200;
 //	int max_n = 10;
