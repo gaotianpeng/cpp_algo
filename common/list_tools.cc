@@ -1,8 +1,10 @@
 #include "list_tools.h"
 #include "arr_tools.h"
 #include "random.h"
+#include "common.h"
 #include <vector>
 #include <iostream>
+#include "gtest/gtest.h"
 
 using namespace std;
 
@@ -104,4 +106,93 @@ bool IsReverse(ListNode* list_a, ListNode* list_b) {
 	return IsReverse(a_values, b_values);
 }
 
+ListDNode* GenRandomDList(int max_n, int min_val, int max_val) {
+	vector<int> values;
+	RandomArr(values, max_n, min_val, max_val);
+
+	size_t n = values.size();
+	if ( n <= 0) {
+		return nullptr;
+	}
+
+	cout << "double link list size " << n << endl;
+
+	ListDNode* head = new ListDNode(RandomVal(min_val, max_val));
+	ListDNode* ret = head;
+
+	ListDNode* prev = nullptr;
+	for (size_t i = 1; i < n; i++) {
+		prev = head;
+		head = new ListDNode(RandomVal(min_val, max_val));
+		prev->next = head;
+		head->prev = prev;
+		head->next = nullptr;
+	}
+
+	return ret;
+}
+
+ListDNode* CopyDList(ListDNode* dlist) {
+	if (dlist == nullptr) {
+		return nullptr;
+	}
+
+	ListDNode* ret = new ListDNode(dlist->val);
+	ret->next = dlist->next;
+	ret->prev = nullptr;
+
+	dlist = dlist->next;
+
+	ListDNode* prev = ret;
+
+	while (dlist != nullptr) {
+		ListDNode* node = new ListDNode(dlist->val);
+		prev->next = node;
+		node->prev = prev;
+		prev = node;
+		dlist = dlist->next;
+	}
+
+	return ret;
+}
+
+bool IsReverse(ListDNode* list_a, ListDNode* list_b) {
+	return true;
+}
+
+void PrintDList(ListDNode* list) {
+	while (list != nullptr) {
+		cout << list->val << " ";
+		list = list->next;
+	}
+
+	cout << endl;
+}
+
+void FreeList(ListDNode* list) {
+	ListDNode* next = nullptr;
+	while (list != nullptr) {
+		next = list->next;
+		delete list;
+		list = next;
+	}
+}
+
 } // namespace tools
+
+using namespace tools;
+
+TEST(ListTool, ListToolTest) {
+	int min_val = -10;
+	int max_val = 10;
+	int max_n = 10;
+	int test_times = 100;
+	for (int i = 0; i < test_times; ++i) {
+		ListDNode* d_list = GenRandomDList(max_n, min_val, max_val);
+		PrintDList(d_list);
+		ListDNode* copy_list = CopyDList(d_list);
+		PrintDList(copy_list);
+		free(d_list);
+		free(copy_list);
+	}
+};
