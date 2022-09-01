@@ -21,6 +21,8 @@ void PrintList(ListNode* list);
 
 bool IsReverse(ListNode* list_a, ListNode* list_b);
 
+bool IsEqual(ListNode* list_a, ListNode* list_b);
+
 struct ListDNode {
 	int val;
 	ListDNode* prev = nullptr;

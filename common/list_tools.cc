@@ -193,6 +193,45 @@ bool IsReverse(ListDNode* list_a, ListDNode* list_b) {
 	return true;
 }
 
+bool IsEqual(ListNode* list_a, ListNode* list_b) {
+	if (list_a == nullptr && list_b == nullptr) {
+		return true;
+	}
+
+	if (list_a != nullptr && list_b == nullptr) {
+		return false;
+	}
+
+	if (list_a == nullptr&& list_b != nullptr) {
+		return false;
+	}
+
+	vector<int> vec_a;
+	vector<int> vec_b;
+	while (list_a != nullptr) {
+		vec_a.emplace_back(list_a->val);
+		list_a = list_a->next;
+	}
+
+	while (list_b != nullptr) {
+		vec_b.emplace_back(list_b->val);
+		list_b = list_b->next;
+	}
+
+	if (vec_a.size() != vec_b.size()) {
+		return false;
+	}
+
+	size_t n = vec_a.size();
+	for (int i = 0; i < n; i++) {
+		if (vec_a[i] != vec_b[i]) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
 void PrintDList(ListDNode* list) {
 	while (list != nullptr) {
 		cout << list->val << " ";
