@@ -29,8 +29,8 @@ else(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   endif(NOT CMAKE_C_FLAGS MATCHES "-Wstrict-prototypes")
 
   # Disable C++ exceptions.
-  string(REGEX REPLACE "-fexceptions" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
+#  string(REGEX REPLACE "-fexceptions" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
 
   # Disable RTTI.
   string(REGEX REPLACE "-frtti" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -73,6 +73,7 @@ FILE(GLOB SORT ${CMAKE_CURRENT_SOURCE_DIR}/sort/*)
 FILE(GLOB LINKLIST ${CMAKE_CURRENT_SOURCE_DIR}/linklist/*)
 FILE(GLOB SEARCH ${CMAKE_CURRENT_SOURCE_DIR}/search/*)
 FILE(GLOB BIT ${CMAKE_CURRENT_SOURCE_DIR}/bit/*)
+FILE(GLOB QUEUE ${CMAKE_CURRENT_SOURCE_DIR}/queue/*)
 
 target_sources(cpp_algo
   PUBLIC
@@ -81,6 +82,7 @@ target_sources(cpp_algo
   ${LINKLIST}
   ${SEARCH}
   ${BIT}
+  ${QUEUE}
   main.cc
 )  
 target_link_libraries(cpp_algo gmock gtest gtest_main)
