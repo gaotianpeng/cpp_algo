@@ -8,7 +8,10 @@
 using namespace std;
 using namespace tools;
 
-class StackImplQueue {
+/*
+ * 用栈结构实现队列结构
+ */
+class QueueImplInStack {
 public:
 	void push(int val) {
 		push_to_pop();
@@ -47,14 +50,14 @@ private:
 };
 
 //TEST(StackTest, QueueImplStack) {
-//	cout << "queue impl stack test start\n";
+//	cout << "queue impl in stack test start\n";
 //	int min_val = -20;
 //	int max_val = 30;
 //	int test_times = 100000;
 //	int one_test_num = 1000;
 //
 //	for (int i = 0; i < test_times; ++i) {
-//		StackImplQueue queue1;
+//		QueueImplInStack queue1;
 //		queue<int> queue2;
 //		for (int j = 0; j < one_test_num; ++j) {
 //			if (Random::random() < 0.33) {
@@ -89,5 +92,5 @@ private:
 //	}
 //
 //	cout << "test success\n";
-//	cout << "queue impl stack test end\n";
+//	cout << "queue impl in stack test end\n";
 //}
