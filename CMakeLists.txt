@@ -74,6 +74,7 @@ FILE(GLOB LINKLIST ${CMAKE_CURRENT_SOURCE_DIR}/linklist/*)
 FILE(GLOB SEARCH ${CMAKE_CURRENT_SOURCE_DIR}/search/*)
 FILE(GLOB BIT ${CMAKE_CURRENT_SOURCE_DIR}/bit/*)
 FILE(GLOB QUEUE ${CMAKE_CURRENT_SOURCE_DIR}/queue/*)
+FILE(GLOB STACK ${CMAKE_CURRENT_SOURCE_DIR}/stack/*)
 
 target_sources(cpp_algo
   PUBLIC
@@ -83,6 +84,7 @@ target_sources(cpp_algo
   ${SEARCH}
   ${BIT}
   ${QUEUE}
+  ${STACK}
   main.cc
 )  
 target_link_libraries(cpp_algo gmock gtest gtest_main)
