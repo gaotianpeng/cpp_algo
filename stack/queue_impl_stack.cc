@@ -11,13 +11,12 @@ using namespace tools;
 class StackImplQueue {
 public:
 	void push(int val) {
-		stack_push_.push(val);
 		push_to_pop();
+		stack_push_.push(val);
 	}
 
 	int pop() {
 		push_to_pop();
-
 		int ret = stack_pop_.top();
 		stack_pop_.pop();
 		return ret;
