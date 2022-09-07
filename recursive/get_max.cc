@@ -2,13 +2,12 @@
 #include <vector>
 #include "common.h"
 #include "arr_tools.h"
-
 #include "gtest/gtest.h"
 
 using namespace std;
 using namespace tools;
 
-int process(const vector<int>& arr, int left, int right) {
+static int process(const vector<int>& arr, int left, int right) {
 	if (left == right) {
 		return arr[left];
 	}
@@ -19,7 +18,8 @@ int process(const vector<int>& arr, int left, int right) {
 	return max(left_val, right_val);
 }
 
-int GetMax(const vector<int>& arr) {
+// 求数组中的最大值，怎么用递归方法实现
+static int GetMax(const vector<int>& arr) {
 	return process(arr, 0, arr.size() - 1);
 }
 
