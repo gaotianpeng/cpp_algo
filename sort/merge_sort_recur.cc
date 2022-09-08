@@ -33,36 +33,27 @@ static void merge(vector<int>& arr, size_t left, size_t mid, size_t right) {
 	delete [] helper;
 }
 
+static void process(vector<int>& arr, size_t left, size_t right) {
+	if (left == right) {
+		return;
+	}
+
+	size_t mid = left + ((right - left)>>1);
+	process(arr, left, mid);
+	process(arr, mid + 1, right);
+	merge(arr, left, mid, right);
+}
+
 static void MergeSort(vector<int>& arr) {
 	if (arr.size() < 2) {
 		return;
 	}
 
-	int n = arr.size();
-	int merge_size = 1;
-	while (merge_size < n) {
-		int left = 0;
-		while (left < n) {
-			if (merge_size >= n - left) {
-				break;
-			}
-
-			int mid = left + merge_size - 1;
-			int right = mid + std::min(merge_size, n - mid - 1);
-			merge(arr, left, mid, right);
-			left = right + 1;
-		}
-
-		// 防止溢出
-		if (merge_size > n/2) {
-			break;
-		}
-		merge_size <<= 1;
-	}
+	process(arr, 0, arr.size() - 1);
 }
 
-//TEST(SortTest, MergeSortTest) {
-//	cout << "merge sort test start\n";
+//TEST(SortTest, MergeSortRecursiveTest) {
+//	cout << "merge sort recursive test start\n";
 //	int max_n = 100;
 //	int min_val = -20;
 //	int max_val = 30;
