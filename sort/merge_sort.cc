@@ -7,12 +7,12 @@
 using namespace std;
 using namespace tools;
 
-static void merge(vector<int>& arr, size_t left, size_t mid, size_t right) {
-	size_t n = right - left + 1;
+static void merge(vector<int>& arr, int left, int mid, int right) {
+	int n = right - left + 1;
 	int* helper = new int[n];
-	size_t i = 0;
-	size_t p1 = left;
-	size_t p2 = mid + 1;
+	int i = 0;
+	int p1 = left;
+	int p2 = mid + 1;
 
 	while (p1 <= mid && p2 <= right) {
 		helper[i++] = arr[p1] <= arr[p2] ? arr[p1++] : arr[p2++];
@@ -26,7 +26,7 @@ static void merge(vector<int>& arr, size_t left, size_t mid, size_t right) {
 		helper[i++] = arr[p2++];
 	}
 
-	for (size_t i = 0; i < n; i++) {
+	for (int i = 0; i < n; i++) {
 		arr[left + i] = helper[i];
 	}
 

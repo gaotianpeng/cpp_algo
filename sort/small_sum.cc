@@ -18,7 +18,7 @@ using namespace tools;
 		所以数组的小和为1+1+3+1+1+3+4+2=16
  */
 
-static int merge(vector<int>& arr, size_t left, size_t mid, size_t right) {
+static int merge(vector<int>& arr, int left, int mid, int right) {
 	size_t n = right - left + 1;
 	int* helper = new int[n];
 	int p1 = left;
@@ -46,18 +46,18 @@ static int merge(vector<int>& arr, size_t left, size_t mid, size_t right) {
 	return ret;
 }
 
-static int process(vector<int>& arr, size_t left, size_t right) {
+static int process(vector<int>& arr, int left, int right) {
 	if (left == right) {
 		return 0;
 	}
 
-	size_t mid = left + ((right - left) >> 1);
+	int mid = left + ((right - left) >> 1);
 	return process(arr, left, mid)
 			+ process(arr, mid + 1, right)
 			+ merge(arr, left, mid, right);
 }
 
-static int SmallSum(vector<int>& arr) {
+static int SmallSum(vector<int> arr) {
 	if (arr.size() < 2) {
 		return 0;
 	}
