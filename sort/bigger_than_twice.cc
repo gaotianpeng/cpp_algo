@@ -1,6 +1,7 @@
 #include <array>
 #include <iostream>
 #include <vector>
+#include <numeric>
 #include "gtest/gtest.h"
 #include "arr_tools.h"
 
@@ -8,32 +9,39 @@ using namespace std;
 using namespace tools;
 
 /*
-	在一个数组中，一个数左边比它小的数的总和，叫数的小和，所有数的小和累加起来，叫数组小和。求数组小和。
-	例子： [1,3,4,2,5]
-		1左边比1小的数：没有
-		3左边比3小的数：1
-		4左边比4小的数：1、3
-		2左边比2小的数：1
-		5左边比5小的数：1、3、4、 2
-		所以数组的小和为1+1+3+1+1+3+4+2=16
+	在一个数组中，对于每个数num，求有多少个后面的数 * 2 依然<num，求总个数
+	比如：[3,1,7,0,2]
+		3的后面有：1，0
+		1的后面有：0
+		7的后面有：0，2
+		0的后面没有
+		2的后面没有
+		所以总共有5个
  */
-
 static int merge(vector<int>& arr, int left, int mid, int right) {
+	int ans = 0;
+	int win_r = mid + 1;
+	for (int i = left; i <= mid; ++i) {
+		while (win_r <= right && (long)arr[i] > (long)arr[win_r]*2) {
+			++win_r;
+		}
+		ans += win_r - mid - 1;
+	}
+
 	int n = right - left + 1;
-	int* helper = new int[n];
+	int *helper = new int[n];
+	int i = 0;
 	int p1 = left;
 	int p2 = mid + 1;
-	int i = 0;
-	int ret = 0;
 	while (p1 <= mid && p2 <= right) {
-		ret += arr[p1] < arr[p2] ? arr[p1] * (right - p2 + 1): 0;
 		helper[i++] = arr[p1] < arr[p2] ? arr[p1++] : arr[p2++];
 	}
 
 	while (p1 <= mid) {
 		helper[i++] = arr[p1++];
 	}
-	while (p2 <= right) {
+
+	while(p2 <= right) {
 		helper[i++] = arr[p2++];
 	}
 
@@ -43,7 +51,7 @@ static int merge(vector<int>& arr, int left, int mid, int right) {
 
 	delete [] helper;
 
-	return ret;
+	return ans;
 }
 
 static int process(vector<int>& arr, int left, int right) {
@@ -53,11 +61,11 @@ static int process(vector<int>& arr, int left, int right) {
 
 	int mid = left + ((right - left) >> 1);
 	return process(arr, left, mid)
-			+ process(arr, mid + 1, right)
-			+ merge(arr, left, mid, right);
+		+ process(arr, mid + 1, right)
+		+ merge(arr, left, mid, right);
 }
 
-static int SmallSum(vector<int> arr) {
+static int BiggerThanTwice(vector<int> arr) {
 	if (arr.size() < 2) {
 		return 0;
 	}
@@ -71,10 +79,11 @@ static int test(vector<int>& arr) {
 	}
 
 	int ans = 0;
-	for (int i = 1; i < arr.size(); ++i) {
-		for(int j = 0; j < i; ++j) {
-			if (arr[j] < arr[i]) {
-				ans += arr[j];
+	int n = arr.size();
+	for (int i = 0; i < n - 1; ++i) {
+		for (int j = i + 1; j < n; ++j) {
+			if ((long)arr[i] > ((long)arr[j] << 1)) {
+				++ans;
 			}
 		}
 	}
@@ -82,11 +91,11 @@ static int test(vector<int>& arr) {
 	return ans;
 }
 
-//TEST(SortTest, SmallSumTest) {
-//	cout << "small sum test start\n";
+//TEST(SortTest, BiggerThanTwiceTest) {
+//	cout << "bigger than twice test start\n";
 //	int max_n = 100;
-//	int min_val = 20;
-//	int max_val = 50;
+//	int min_val = numeric_limits<int>::min();
+//	int max_val = numeric_limits<int>::max();
 //	int test_times = 500000;
 //	for (int i = 0; i < test_times; i++) {
 //		vector<int> arr1;
@@ -94,7 +103,7 @@ static int test(vector<int>& arr) {
 //		RandomArr(arr1, max_n, min_val, max_val);
 //		CopyArr(arr1, arr2);
 //		int ans1 = test(arr1);
-//		int ans2 = SmallSum(arr2);
+//		int ans2 = BiggerThanTwice(arr2);
 //		if (ans1 != ans2) {
 //			cout << ans1 << endl;
 //			cout << ans2 << endl;
@@ -102,5 +111,5 @@ static int test(vector<int>& arr) {
 //		}
 //	}
 //	cout << "test success\n";
-//	cout << "small sum test end\n\n";
+//	cout << "bigger than twice test end\n\n";
 //}
