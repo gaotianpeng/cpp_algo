@@ -2,6 +2,7 @@
 #include <vector>
 #include <map>
 #include <set>
+#include <algorithm>
 #include "gtest/gtest.h"
 #include "common.h"
 #include "arr_tools.h"

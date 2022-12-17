@@ -1,6 +1,7 @@
 #include <array>
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include "gtest/gtest.h"
 #include "arr_tools.h"
 
@@ -60,7 +61,7 @@ static void MergeSort(vector<int>& arr) {
 		merge_size <<= 1;
 	}
 }
-
+//
 //TEST(SortTest, MergeSortTest) {
 //	cout << "merge sort test start\n";
 //	int max_n = 100;
