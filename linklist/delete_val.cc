@@ -21,7 +21,7 @@ ListNode* DeleteListVal(ListNode* head, int val) {
 		delete cur;
 	}
 
-	ListNode* prev = head;
+	ListNode* prev = nullptr;
 	ListNode* cur = head;
 
 	while (cur != nullptr) {
@@ -77,7 +77,7 @@ ListNode* test(ListNode* head, int val) {
 
 	return ret;
 }
-//
+
 //TEST(LinkListTest, DeleteValList) {
 //	cout << "delete val test start\n";
 //	int test_times = 100000;
