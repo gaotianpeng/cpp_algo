@@ -38,6 +38,44 @@ ListNode* DeleteListVal(ListNode* head, int val) {
 	return head;
 }
 
+ListNode* DeleteListVal2(ListNode* head, int val) {
+    if (head == nullptr) {
+        return nullptr;
+    }
+
+    while (head != nullptr) {
+        if (head->val != val) {
+            break;
+        }
+
+        ListNode* tmp = head;
+        head = head->next;
+        if (tmp) {
+            delete tmp;
+        }
+    }
+
+    ListNode* prev = head;
+    ListNode* cur = head;
+
+    while (cur != nullptr) {
+        ListNode* tmp = nullptr;
+        if (cur->val != val) {
+            prev = cur;
+        } else {
+            tmp = cur;
+            prev->next = cur->next;
+        }
+
+        cur = cur->next;
+        if (tmp) {
+            delete tmp;
+        }
+    }
+
+    return head;
+}
+
 ListNode* test(ListNode* head, int val) {
 	if (head == nullptr) {
 		return nullptr;
@@ -77,7 +115,7 @@ ListNode* test(ListNode* head, int val) {
 
 	return ret;
 }
-//
+
 //TEST(LinkListTest, DeleteValList) {
 //	cout << "delete val test start\n";
 //	int test_times = 100000;
