@@ -8,34 +8,38 @@ using namespace std;
 using namespace tools;
 
 ListNode* DeleteListVal(ListNode* head, int val) {
-	if (head == nullptr) {
-		return nullptr;
-	}
+    if (head == nullptr) {
+        return nullptr;
+    }
 
-	while (head != nullptr) {
-		if (head->val != val) {
-			break;
-		}
-		ListNode* cur = head;
-		head = head->next;
-		delete cur;
-	}
+    while (head != nullptr) {
+        if (head->val != val) {
+            break;
+        }
+        ListNode* cur = head;
+        head = head->next;
+        delete cur;
+    }
 
-	ListNode* prev = head;
-	ListNode* cur = head;
+    ListNode* prev = head;
+    ListNode* cur = head;
 
-	while (cur != nullptr) {
-		if (cur->val != val) {
-			prev = cur;
-			cur = cur->next;
-		} else {
-			prev->next = cur->next;
-			delete cur;
-			cur = prev->next;
-		}
-	}
+    while (cur != nullptr) {
+        ListNode* tmp = nullptr;
+        if (cur->val == val) {
+            prev->next = cur->next;
+            tmp = cur;
+        } else {
+            prev = cur;
+        }
 
-	return head;
+        cur = cur->next;
+        if (tmp) {
+            delete tmp;
+        }
+    }
+
+    return head;
 }
 
 ListNode* DeleteListVal2(ListNode* head, int val) {
