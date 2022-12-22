@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "arr_tools.h"
+#include "common.h"
 #include "gtest/gtest.h"
 
 using namespace std;
@@ -44,9 +45,9 @@ bool test(vector<int>& arr, int val) {
 
 	return false;
 }
-//
+
 //TEST(SearchTest, BSExistTest) {
-//	cout << " bs exist test start\n";
+//	cout << "bs exist test start" << std::endl;
 //	int test_times = 500000;
 //	int max_n = 10;
 //	int min_val = -20;
@@ -65,5 +66,6 @@ bool test(vector<int>& arr, int val) {
 //			break;
 //		}
 //	}
-//	cout << " bs exist test end\n";
+//    cout << "test success" << std::endl;
+//	cout << "bs exist test end" << std::endl;
 //}
