@@ -17,90 +17,101 @@ using namespace tools;
 		5左边比5小的数：1、3、4、 2
 		所以数组的小和为1+1+3+1+1+3+4+2=16
  */
-
 static int merge(vector<int>& arr, int left, int mid, int right) {
-	int n = right - left + 1;
-	int* helper = new int[n];
-	int p1 = left;
-	int p2 = mid + 1;
-	int i = 0;
-	int ret = 0;
-	while (p1 <= mid && p2 <= right) {
-		ret += arr[p1] < arr[p2] ? arr[p1] * (right - p2 + 1): 0;
-		helper[i++] = arr[p1] < arr[p2] ? arr[p1++] : arr[p2++];
-	}
+    int n = right - left + 1;
+    int* helper = new int[n];
+    int p1 = left;
+    int p2 = mid + 1;
+    int i = 0;
+    int ans = 0;
+    while (p1 <= mid && p2 <= right) {
+        ans += arr[p1] < arr[p2] ? arr[p1] * (right - p2 + 1) : 0;
+        helper[i++]  = arr[p1] < arr[p2] ? arr[p1++] : arr[p2++];
+    }
 
-	while (p1 <= mid) {
-		helper[i++] = arr[p1++];
-	}
-	while (p2 <= right) {
-		helper[i++] = arr[p2++];
-	}
+    while (p1 <= mid) {
+        helper[i++] = arr[p1++];
+    }
+    while (p2 <= right) {
+        helper[i++] = arr[p2++];
+    }
 
-	for (int i = 0; i < n; ++i) {
-		arr[left + i] = helper[i];
-	}
+    for (int i = 0; i < n; ++i) {
+        arr[left + i] = helper[i];
+    }
 
-	delete [] helper;
+    delete [] helper;
 
-	return ret;
+    return ans;
 }
 
-static int process(vector<int>& arr, int left, int right) {
-	if (left == right) {
-		return 0;
-	}
-
-	int mid = left + ((right - left) >> 1);
-	return process(arr, left, mid)
-			+ process(arr, mid + 1, right)
-			+ merge(arr, left, mid, right);
-}
 
 static int SmallSum(vector<int> arr) {
-	if (arr.size() < 2) {
-		return 0;
-	}
+    if (arr.size() < 2) {
+        return 0;
+    }
 
-	return process(arr, 0, arr.size() - 1);
+    int n = arr.size();
+    int merge_size = 1;
+    int ans = 0;
+    while (merge_size < n) {
+        int left = 0;
+        while (left < n) {
+            if (merge_size >= n - left) {
+                break;
+            }
+
+            int mid = left + merge_size - 1;
+            int right = mid + std::min(n - mid -1, merge_size);
+            ans += merge(arr, left, mid, right);
+            left = right + 1;
+        }
+
+        if (merge_size > n/2) {
+            break;
+        }
+        merge_size <<= 1;
+    }
+
+    return ans;
 }
 
 static int test(vector<int>& arr) {
-	if (arr.size() < 2) {
-		return 0;
-	}
+    if (arr.size() < 2) {
+        return 0;
+    }
 
-	int ans = 0;
-	for (int i = 1; i < arr.size(); ++i) {
-		for(int j = 0; j < i; ++j) {
-			if (arr[j] < arr[i]) {
-				ans += arr[j];
-			}
-		}
-	}
+    int ans = 0;
+    for (int i = 1; i < arr.size(); ++i) {
+        for(int j = 0; j < i; ++j) {
+            if (arr[j] < arr[i]) {
+                ans += arr[j];
+            }
+        }
+    }
 
-	return ans;
+    return ans;
 }
 
 //TEST(SortTest, SmallSumTest) {
-//	cout << "small sum test start\n";
-//	int max_n = 100;
-//	int min_val = 20;
-//	int max_val = 50;
-//	int test_times = 500000;
-//	for (int i = 0; i < test_times; i++) {
-//		vector<int> arr1;
-//		vector<int> arr2;
-//		RandomArr(arr1, max_n, min_val, max_val);
-//		CopyArr(arr1, arr2);
-//		int ans1 = test(arr1);
-//		int ans2 = SmallSum(arr2);
-//		if (ans1 != ans2) {
-//			cout << ans1 << endl;
-//			cout << ans2 << endl;
-//			ASSERT_TRUE(false);
-//		}
-//	}
-//	cout << "test success\n";
-//	cout << "small sum test end\n\n";
+//    cout << "small sum test start\n";
+//    int max_n = 100;
+//    int min_val = 20;
+//    int max_val = 50;
+//    int test_times = 500000;
+//    for (int i = 0; i < test_times; i++) {
+//        vector<int> arr1;
+//        vector<int> arr2;
+//        RandomArr(arr1, max_n, min_val, max_val);
+//        CopyArr(arr1, arr2);
+//        int ans1 = test(arr1);
+//        int ans2 = SmallSum(arr2);
+//        if (ans1 != ans2) {
+//            cout << ans1 << endl;
+//            cout << ans2 << endl;
+//            ASSERT_TRUE(false);
+//        }
+//    }
+//    cout << "test success\n";
+//    cout << "small sum test end\n\n";
 //}
