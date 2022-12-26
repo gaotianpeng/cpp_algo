@@ -1,5 +1,4 @@
 #include <iostream>
-#include <limits>
 #include <map>
 #include "gtest/gtest.h"
 #include "common.h"
@@ -9,7 +8,7 @@ using namespace tools;
 class BitMap {
 public:
     BitMap(int max) {
-        bits = new long[(max + 64) >> 6];
+        bits = new int64_t [(max + 64) >> 6] {0};
     }
 
     ~BitMap() {
@@ -17,18 +16,21 @@ public:
     }
 
     void Add(int num) {
-        bits[num >> 6] |= (1L << (num & 63));
+        int64_t i = 1;
+        bits[num >> 6] |= (i << (num & 63));
     }
 
     void Delete(int num) {
-        bits[num >> 6] &= ~(1L << (num & 63));
+        int64_t i = 1;
+        bits[num >> 6] &= ~(i << (num & 63));
     }
     
     bool Contains(int num) {
-        return (bits[num >> 6] & (1L << (num & 63))) != 0;
+        return (bits[num >> 6] & (1LL << (num & 63))) != 0;
     }
+
 private:
-    long* bits = nullptr;
+    int64_t* bits = nullptr;
 };
 
 class BitMapTest {
