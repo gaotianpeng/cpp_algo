@@ -18,6 +18,10 @@ int RandomVal(int min_val, int max_val) {
 	return Random::random(min_val, max_val);
 }
 
+double RandomVal(double min_val, double max_val) {
+	return Random::random(min_val, max_val);
+}
+
 int RandomOddVal(int min_val, int max_val) {
 	int ret = Random::random(min_val, max_val);
 	while ((ret & 1) == 0) {
