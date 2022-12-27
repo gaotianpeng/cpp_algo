@@ -8,7 +8,7 @@ using namespace tools;
 class BitMap {
 public:
     BitMap(int max) {
-        bits = new int64_t [(max + 64) >> 6] {0};
+        bits = new long long[(max + 64) >> 6] {0};
     }
 
     ~BitMap() {
@@ -16,13 +16,11 @@ public:
     }
 
     void Add(int num) {
-        int64_t i = 1;
-        bits[num >> 6] |= (i << (num & 63));
+        bits[num >> 6] |= (1LL << (num & 63));
     }
 
     void Delete(int num) {
-        int64_t i = 1;
-        bits[num >> 6] &= ~(i << (num & 63));
+        bits[num>>6] &= ~(1LL << (num & 63));
     }
     
     bool Contains(int num) {
