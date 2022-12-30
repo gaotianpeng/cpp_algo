@@ -7,7 +7,6 @@
 using namespace std;
 using namespace tools;
 
-
 /*
     给定一个数组arr，两个整数lower和upper，
     返回arr中有多少个子数组的累加和在[lower,upper]范围上
@@ -71,7 +70,6 @@ static int process(int64_t sum[], int left, int right, int lower, int upper) {
             + merge(sum, left, mid, right, lower, upper);
 }
 
-
 static int CountRangeSum(std::vector<int> arr, int lower, int upper) {
     if (arr.size() < 1) {
         return 0;
@@ -89,8 +87,6 @@ static int CountRangeSum(std::vector<int> arr, int lower, int upper) {
     delete [] pre_sum;
     return ans;
 }
-
-
 
 static int test(std::vector<int> arr, int lower, int upper) {
     if (arr.size() < 1) {
@@ -130,8 +126,8 @@ static std::pair<int, int> GenerateRange(int max_val) {
     return {lower, upper};
 }
 
-//TEST(SortTest, CountRangeSumTest) {
-//    std::cout << "count range sum test start" << std::endl;
+//TEST(SortTest, CountRangeSumRecurTest) {
+//    std::cout << "count range sum recur test start" << std::endl;
 //    int max_val = 100;
 //    int min_val = -100;
 //    int max_n = 50;
@@ -151,5 +147,5 @@ static std::pair<int, int> GenerateRange(int max_val) {
 //    }
 //
 //    std::cout << "test success" << std::endl;
-//    std::cout << "count range sum test end" << std::endl;
+//    std::cout << "count range sum recur test end" << std::endl;
 //}
