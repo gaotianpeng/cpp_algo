@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <stack>
 #include "gtest/gtest.h"
 #include "arr_tools.h"
 
@@ -26,19 +27,11 @@ static int partition(vector<int>& arr, int left, int right) {
         if (arr[index] <= arr[right]) {
             swap(arr[index], arr[++less_equal]);
         }
-        index++;
+        ++index;
     }
-    swap(arr[++less_equal], arr[right]);
-    return less_equal;
-}
 
-static void processs(vector<int>& arr, int left, int right) {
-    if (left >= right) {
-        return;
-    }
-    int mid = partition(arr, left, right);
-    processs(arr, left, mid - 1);
-    processs(arr, mid + 1, right);
+    swap(arr[right], arr[++less_equal]);
+    return less_equal;
 }
 
 static void QuickSort(vector<int>& arr) {
@@ -46,7 +39,21 @@ static void QuickSort(vector<int>& arr) {
         return;
     }
 
-    processs(arr, 0, arr.size() - 1);
+    int n = arr.size();
+    stack<pair<int, int>> ranges;
+    int mid = partition(arr, 0, n - 1);
+    ranges.push({0, mid - 1});
+    ranges.push({mid + 1, n-1});
+
+    while (!ranges.empty()) {
+        pair<int, int> range = ranges.top();
+        ranges.pop();
+        if (range.first < range.second) {
+            int mid = partition(arr, range.first, range.second);
+            ranges.push({range.first, mid - 1});
+            ranges.push({mid + 1, range.second});
+        }
+    }
 }
 
 static void test(vector<int>& arr) {
@@ -68,8 +75,8 @@ static void test(vector<int>& arr) {
     }
 }
 
-//TEST(SortTest, QuickSortRecurTest) {
-//    cout << "quick sort recur test start\n";
+//TEST(SortTest, QuickSortTest) {
+//    cout << "quick sort test start\n";
 //    int max_n = 100;
 //    int min_val = -20;
 //    int max_val = 30;
@@ -88,5 +95,5 @@ static void test(vector<int>& arr) {
 //        }
 //    }
 //    cout << "test success\n";
-//    cout << "quick sort recur test end\n\n";
+//    cout << "quick sort test end\n\n";
 //}
