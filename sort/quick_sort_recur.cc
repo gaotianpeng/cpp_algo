@@ -40,7 +40,13 @@ static void processs(vector<int>& arr, int left, int right) {
     processs(arr, left, mid - 1);
     processs(arr, mid + 1, right);
 }
-
+/*
+在arr[L..R]范围上，进行快速排序的过程：
+    1）用arr[R]对该范围做partition，<= arr[R]的数在左部分并且保证arr[R]最后来到左部分的最后一个位置，记为M； <= arr[R]的数在右部分（arr[M+1..R]）
+    2）对arr[L..M-1]进行快速排序(递归)
+    3）对arr[M+1..R]进行快速排序(递归)
+因为每一次partition都会搞定一个数的位置且不会再变动，所以排序能完成
+ */
 static void QuickSort(vector<int>& arr) {
     if (arr.size() < 2) {
         return;
