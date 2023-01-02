@@ -76,6 +76,7 @@ FILE(GLOB BIT ${CMAKE_CURRENT_SOURCE_DIR}/bit/*)
 FILE(GLOB QUEUE ${CMAKE_CURRENT_SOURCE_DIR}/queue/*)
 FILE(GLOB STACK ${CMAKE_CURRENT_SOURCE_DIR}/stack/*)
 FILE(GLOB RECURSIVE ${CMAKE_CURRENT_SOURCE_DIR}/recursive/*)
+FILE(GLOB HEAP ${CMAKE_CURRENT_SOURCE_DIR}/heap/*)
 
 target_sources(cpp_algo
   PUBLIC
@@ -87,6 +88,7 @@ target_sources(cpp_algo
   ${QUEUE}
   ${STACK}
   ${RECURSIVE}
+  ${HEAP}
   main.cc
 )  
 target_link_libraries(cpp_algo gmock gtest gtest_main)
