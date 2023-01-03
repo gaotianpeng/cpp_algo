@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include "gtest/gtest.h"
 #include "arr_tools.h"
 
