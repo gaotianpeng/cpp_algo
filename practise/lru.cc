@@ -1,6 +1,5 @@
 #include <iostream>
 #include <map>
-#include <vector>
 #include "gtest/gtest.h"
 #include "arr_tools.h"
 
@@ -24,19 +23,60 @@ using namespace tools;
     最多调用 2 * 105 次 get 和 put
 
  */
+struct Node {
+    int key;
+    int value;
+    struct Node* last = nullptr;
+    struct Node* next = nullptr;
+
+    Node(int k, int v):key(k), value(v) {
+    }
+};
+
+class NodeDoubleLinkedList {
+public:
+    void AddNode(Node* node) {}
+
+    void MoveNodeToTail(Node* node) {
+
+    }
+
+    Node* RemoveHead() { return nullptr; }
+
+private:
+    Node* head_ = nullptr;
+    Node* tail_ = nullptr;
+};
+
+
 class LRUCache {
 public:
-    LRUCache(int capacity) {
+    LRUCache(int capacity):capacity_(capacity) {
     }
 
     int get(int key) {
-        return -1;
+        auto iter = kv_.find(key);
+        int ans = -1;
+        if (iter != kv_.end()) {
+            ans = iter->second->value;
+            node_list_.MoveNodeToTail(iter->second);
+        }
+
+        return ans;
     }
 
     void put(int key, int value) {
-
     }
+
+private:
+
+
+private:
+    map<int, Node*> kv_;
+    NodeDoubleLinkedList node_list_;
+    int capacity_;
 };
+
 
 class LRUCacheTest {
 public:
