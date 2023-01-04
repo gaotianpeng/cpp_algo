@@ -41,19 +41,29 @@ public:
 class LRUCacheTest {
 public:
     LRUCacheTest(int capacity): capacity_(capacity) {
+        kv_ = new pair<int, int>[capacity_] {{0,0}};
     }
 
+    ~LRUCacheTest() {
+        delete [] kv_;
+    }
     int get(int key) {
-        if (kv_.empty()) {
+        if (size_ == 0) {
             return -1;
         }
 
         int ans = -1;
-        int index = 0;
-        for (; index < size_; ++index) {
-            if (kv_[index].first == key) {
-                ans = kv_[index].second;
+        int index = -1;
+        for (int i = 0; i < size_; ++i) {
+            if (kv_[i].first == key) {
+                ans = kv_[i].second;
+                index = i;
+                break;
             }
+        }
+
+        if (index == -1) {
+            return -1;
         }
 
         for (int i = index; i > 0; --i) {
@@ -74,25 +84,31 @@ public:
             }
         }
 
-        if (key_index != -1) {
+        if (key_index != -1) { // 存在key,取出来，调位置
             for (int i = key_index; i > 0; --i) {
                 kv_[i] = kv_[i-1];
             }
             kv_[0] = {key, value};
-        } else {
-            for (int i = size_; i > 0; --i) {
-                kv_[i] = kv_[i-1];
-            }
-            kv_[0] = {key, value};
-            if (size_ < capacity_) {
+        } else { // 不存在key，需要添加元素
+            if (size_ >= capacity_) {
+                for (int i = capacity_ - 1; i > 0; --i) {
+                    kv_[i] = kv_[i-1];
+                }
+                kv_[0] = {key, value};
+            } else if (size_ < capacity_){
                 ++size_;
+                for (int i = size_ - 1; i > 0; --i) {
+                    kv_[i] = kv_[i-1];
+                }
+                kv_[0] = {key, value};
             }
         }
     }
 
+
 private:
     int capacity_ = 0;
-    vector<pair<int, int>> kv_;
+    pair<int, int>* kv_ = nullptr;
     int size_ = 0;
 };
 
