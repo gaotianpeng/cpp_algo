@@ -218,7 +218,7 @@ private:
 //    cout << "lru cache test start\n";
 //    int test_times = 500000;
 //    int max_val = 100;
-//    int min_val = 100;
+//    int min_val = -100;
 //
 //    LRUCacheTest lru_test(10);
 //    LRUCache lru(10);
