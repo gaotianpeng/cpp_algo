@@ -1,6 +1,7 @@
 #include <iostream>
 #include <map>
 #include "gtest/gtest.h"
+#include "random.h"
 #include "arr_tools.h"
 
 using namespace std;
@@ -23,33 +24,79 @@ using namespace tools;
     最多调用 2 * 105 次 get 和 put
 
  */
-struct Node {
-    int key;
-    int value;
-    struct Node* last = nullptr;
-    struct Node* next = nullptr;
-
-    Node(int k, int v):key(k), value(v) {
-    }
-};
-
-class NodeDoubleLinkedList {
-public:
-    void AddNode(Node* node) {}
-
-    void MoveNodeToTail(Node* node) {
-
-    }
-
-    Node* RemoveHead() { return nullptr; }
-
-private:
-    Node* head_ = nullptr;
-    Node* tail_ = nullptr;
-};
-
-
 class LRUCache {
+private:
+    struct Node {
+        int key;
+        int value;
+        struct Node* last = nullptr;
+        struct Node* next = nullptr;
+
+        Node(int k, int v):key(k), value(v) {
+        }
+    };
+
+    class NodeDoubleLinkedList {
+    public:
+        void AddNode(Node* node) {
+            if (node == nullptr) {
+                return;
+            }
+
+            if (head_ == nullptr) {
+                head_ = node;
+                tail_ = node;
+            } else {
+                tail_->next = node;
+                node->last = tail_;
+                tail_ = node;
+            }
+        }
+
+        void MoveNodeToTail(Node* node) {
+            if (node == nullptr) {
+                return;
+            }
+            if (tail_ == node) {
+                return;
+            }
+
+            if (head_ == node) {
+                head_ = head_->next;
+                head_->last = nullptr;
+            } else {
+                node->last->next = node->next;
+                node->next->last = node->last;
+            }
+
+            node->last = tail_;
+            node->next = nullptr;
+            tail_->next = node;
+            tail_ = node;
+        }
+
+        Node* RemoveHead() {
+            if (head_ == nullptr) {
+                return nullptr;
+            }
+
+            Node* ret = head_;
+            if (head_ == tail_) {
+                head_ = nullptr;
+                tail_ = nullptr;
+            } else {
+                head_ = head_->next;
+                ret->next = nullptr;
+                head_->last = nullptr;
+            }
+            return ret;
+        }
+
+    private:
+        Node* head_ = nullptr;
+        Node* tail_ = nullptr;
+    };
+
 public:
     LRUCache(int capacity):capacity_(capacity) {
     }
@@ -66,11 +113,25 @@ public:
     }
 
     void put(int key, int value) {
+        auto iter = kv_.find(key);
+        if (iter != kv_.end()) {
+            iter->second->value = value;
+            node_list_.MoveNodeToTail(iter->second);
+            return;
+        }
+
+        if (kv_.size() == capacity_) {
+            Node* head = node_list_.RemoveHead();
+            if (head != nullptr) {
+                kv_.erase(head->key);
+                delete head;
+            }
+        }
+
+        Node* node = new Node(key, value);
+        node_list_.AddNode(node);
+        kv_.insert({key, node});
     }
-
-private:
-
-
 private:
     map<int, Node*> kv_;
     NodeDoubleLinkedList node_list_;
@@ -87,6 +148,7 @@ public:
     ~LRUCacheTest() {
         delete [] kv_;
     }
+
     int get(int key) {
         if (size_ == 0) {
             return -1;
@@ -152,9 +214,28 @@ private:
     int size_ = 0;
 };
 
-//TEST(PractiseTest, LRUCacheTest) {
-//    cout << "lru cache test start\n";
-//
-//    cout << "test success\n";
-//    cout << "lru cache test end\n\n";
-//}
+TEST(PractiseTest, LRUCacheTest) {
+    cout << "lru cache test start\n";
+    int test_times = 500000;
+    int max_val = 100;
+    int min_val = 100;
+
+    LRUCacheTest lru_test(10);
+    LRUCache lru(10);
+    for (int i = 0; i < test_times; ++i) {
+        if (Random::random() < 0.5) {
+            int key = Random::random(min_val, max_val);
+            int value = Random::random(min_val, max_val);
+            lru_test.put(key, value);
+            lru.put(key, value);
+        } else {
+            int key = Random::random(min_val, max_val);
+            if (lru_test.get(key) != lru.get(key)) {
+                ASSERT_TRUE(false);
+            }
+        }
+    }
+
+    cout << "test success\n";
+    cout << "lru cache test end\n\n";
+}
