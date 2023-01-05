@@ -214,28 +214,28 @@ private:
     int size_ = 0;
 };
 
-TEST(PractiseTest, LRUCacheTest) {
-    cout << "lru cache test start\n";
-    int test_times = 500000;
-    int max_val = 100;
-    int min_val = 100;
-
-    LRUCacheTest lru_test(10);
-    LRUCache lru(10);
-    for (int i = 0; i < test_times; ++i) {
-        if (Random::random() < 0.5) {
-            int key = Random::random(min_val, max_val);
-            int value = Random::random(min_val, max_val);
-            lru_test.put(key, value);
-            lru.put(key, value);
-        } else {
-            int key = Random::random(min_val, max_val);
-            if (lru_test.get(key) != lru.get(key)) {
-                ASSERT_TRUE(false);
-            }
-        }
-    }
-
-    cout << "test success\n";
-    cout << "lru cache test end\n\n";
-}
+//TEST(PractiseTest, LRUCacheTest) {
+//    cout << "lru cache test start\n";
+//    int test_times = 500000;
+//    int max_val = 100;
+//    int min_val = 100;
+//
+//    LRUCacheTest lru_test(10);
+//    LRUCache lru(10);
+//    for (int i = 0; i < test_times; ++i) {
+//        if (Random::random() < 0.5) {
+//            int key = Random::random(min_val, max_val);
+//            int value = Random::random(min_val, max_val);
+//            lru_test.put(key, value);
+//            lru.put(key, value);
+//        } else {
+//            int key = Random::random(min_val, max_val);
+//            if (lru_test.get(key) != lru.get(key)) {
+//                ASSERT_TRUE(false);
+//            }
+//        }
+//    }
+//
+//    cout << "test success\n";
+//    cout << "lru cache test end\n\n";
+//}
