@@ -56,7 +56,6 @@ static int maxCoverTest(vector<pair<int, int>> lines) {
         ans = std::max(ans, cur);
     }
 
-
     return ans;
 }
 
