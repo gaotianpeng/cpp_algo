@@ -19,15 +19,15 @@ static int maxCover(vector<pair<int, int>> lines) {
     }
 
     std::sort(lines.begin(), lines.end(), sortCompactor);
-    priority_queue<int, vector<int>, greater<int>> heap;
+    priority_queue<int, vector<int>, std::greater<int>> heap;
     int ans = 0;
     for (int i = 0; i < lines.size(); ++i) {
         while (!heap.empty() && heap.top() <= lines[i].first) {
             heap.pop();
         }
+
         heap.push(lines[i].second);
-        int heap_size = heap.size();
-        ans = std::max(ans, heap_size);
+        ans = std::max(ans, (int)heap.size());
     }
 
     return ans;
@@ -38,26 +38,24 @@ static int maxCoverTest(vector<pair<int, int>> lines) {
         return 0;
     }
 
-    int min_val = numeric_limits<int>::max();
-    int max_val = numeric_limits<int>::min();
-    int n = lines.size();
-    for (int i = 0; i < n; ++i) {
-        min_val = std::min(min_val, lines[i].first);
-        max_val = std::max(max_val, lines[i].second);
+    int min_val = std::numeric_limits<int>::max();
+    int max_val = std::numeric_limits<int>::min();
+    for (auto& elem: lines) {
+        min_val = std::min(elem.first, min_val);
+        max_val = std::max(elem.second, max_val);
     }
-
     int ans = 0;
-    for (int left = min_val; left < max_val; ++left) {
+    for (int i = min_val; i < max_val; ++i) {
+        double p = i + 0.5;
         int cur = 0;
-        double p = left + 0.5;
-        for (int i = 0; i < n; ++i) {
-            if (lines[i].first < p && lines[i].second > p) {
+        for (auto& elem: lines) {
+            if (elem.first < p && elem.second > p) {
                 cur++;
             }
         }
-
-        ans = std::max(cur, ans);
+        ans = std::max(ans, cur);
     }
+
 
     return ans;
 }
