@@ -3,7 +3,8 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <map>
+#include <set>
+#include <queue>
 #include "gtest/gtest.h"
 #include "arr_tools.h"
 #include "random.h"
@@ -21,15 +22,6 @@ class TrieTree {
            pass = 0;
            end = 0;
         };
-
-        ~Node() {
-            for (int i = 0; i < nexts.size(); ++i) {
-                if (nexts[i] != nullptr) {
-                    delete nexts[i];
-                    nexts[i] = nullptr;
-                }
-            }
-        }
     };
 public:
     TrieTree() {
@@ -73,6 +65,7 @@ public:
         for (int i = 0; i < word.size(); ++i) {
             path = word[i] - 'a';
             if (--node->nexts[path]->pass == 0) {
+                FreeNode(node->nexts[path]);
                 node->nexts[path] = nullptr;
                 return;
             }
@@ -117,7 +110,30 @@ public:
     }
 
 private:
+    void FreeNode(Node* node) {
+        if (node == nullptr) {
+            return;
+        }
 
+        queue<Node*> node_queue;
+        set<Node*> node_set;
+        node_queue.push(node);
+        node_set.insert(node);
+        while (!node_queue.empty()) {
+            Node* tmp = node_queue.front();
+            node_queue.pop();
+            for (int i = 0; i < tmp->nexts.size(); ++i) {
+                if (tmp->nexts[i] != nullptr) {
+                    node_queue.push(tmp->nexts[i]);
+                    node_set.insert(tmp->nexts[i]);
+                }
+            }
+        }
+
+        for (auto elem: node_set) {
+            delete elem;
+        }
+    }
 private:
     Node* root_ = nullptr;
 };
@@ -201,7 +217,6 @@ static void generateRandomStringArray(vector<string>& arr, int arr_len, int str_
     }
 }
 
-// to do: solve memory leak
 //TEST(TreeTest, TrieTreeTest) {
 //    cout << "trie tree test start\n";
 //    int arr_len = 100;
