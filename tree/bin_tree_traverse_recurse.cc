@@ -1,12 +1,11 @@
 #include <iostream>
-#include "random.h"
 #include "tree_tools.h"
 #include "gtest/gtest.h"
 
 using namespace std;
 using namespace tools;
 
-void PreOrder(TreeNode* tree) {
+static void PreOrder(TreeNode* tree) {
     if (tree == nullptr) {
         return;
     }
@@ -16,7 +15,7 @@ void PreOrder(TreeNode* tree) {
     PreOrder(tree->right);
 }
 
-void InOrder(TreeNode* tree) {
+static void InOrder(TreeNode* tree) {
     if (tree == nullptr) {
         return;
     }
@@ -26,7 +25,7 @@ void InOrder(TreeNode* tree) {
     InOrder(tree->right);
 }
 
-void PosOrder(TreeNode* tree) {
+static void PosOrder(TreeNode* tree) {
     if (tree == nullptr) {
         return;
     }
