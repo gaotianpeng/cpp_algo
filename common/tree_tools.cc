@@ -38,7 +38,6 @@ void FreeBST(TreeNode* tree) {
         delete cur_node;
         cur_node = nullptr;
     }
-
 }
 
 } // namespace tools
