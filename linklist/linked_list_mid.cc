@@ -21,19 +21,50 @@ static ListNode* midOrUpMidNode(ListNode* head) {
         slow = slow->next;
         fast = fast->next->next;
     }
+
     return slow;
 }
+
 static ListNode* midOrUpMidNodeTest(ListNode* head) {
     if (head == nullptr || head->next == nullptr || head->next->next == nullptr) {
         return head;
     }
+
     vector<ListNode*> nodes;
     while (head != nullptr) {
         nodes.push_back(head);
         head = head->next;
     }
 
-    return nodes[(nodes.size() - 1) / 2];
+    return nodes[(nodes.size() - 1)/ 2];
+}
+
+static ListNode* midOrDownMidNode(ListNode* head) {
+    if (head == nullptr || head->next == nullptr) {
+        return head;
+    }
+
+    ListNode* slow = head->next;
+    ListNode* fast = head->next;
+    while (fast->next != nullptr && fast->next->next != nullptr) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    return slow;
+}
+
+static ListNode* midOrDownMidNodeTest(ListNode* head) {
+    if (head == nullptr) {
+        return head;
+    }
+
+    vector<ListNode*> nodes;
+    while (head != nullptr) {
+        nodes.push_back(head);
+        head = head->next;
+    }
+    return nodes[(nodes.size())/ 2];
 }
 
 //TEST(LinkListTest, LinkedListMidTest) {
@@ -49,6 +80,16 @@ static ListNode* midOrUpMidNodeTest(ListNode* head) {
 //        if (mid1 != mid2) {
 //            ASSERT_TRUE(false);
 //        }
+//        FreeList(head);
+//    }
+//    for (int i = 0; i < test_times; ++i) {
+//        ListNode* head = GenRandomList(max_n, min_val, max_val);
+//        ListNode* mid1 = midOrDownMidNode(head);
+//        ListNode* mid2 = midOrDownMidNodeTest(head);
+//        if (mid1 != mid2) {
+//            ASSERT_TRUE(false);
+//        }
+//        FreeList(head);
 //    }
 //
 //	cout << "test success\n";
