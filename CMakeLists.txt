@@ -79,6 +79,7 @@ FILE(GLOB RECURSIVE ${CMAKE_CURRENT_SOURCE_DIR}/recursive/*)
 FILE(GLOB HEAP ${CMAKE_CURRENT_SOURCE_DIR}/heap/*)
 FILE(GLOB PRACTISE ${CMAKE_CURRENT_SOURCE_DIR}/practise/*)
 FILE(GLOB TREE ${CMAKE_CURRENT_SOURCE_DIR}/tree/*)
+FILE(GLOB LEETCODE ${CMAKE_CURRENT_SOURCE_DIR}/leetcode/*)
 
 target_sources(cpp_algo
   PUBLIC
@@ -93,6 +94,7 @@ target_sources(cpp_algo
   ${HEAP}
   ${PRACTISE}
   ${TREE}
+  ${LEETCODE}
   main.cc
 )  
 target_link_libraries(cpp_algo gmock gtest gtest_main)
