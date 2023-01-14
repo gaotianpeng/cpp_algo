@@ -14,10 +14,10 @@ static int maxWidth(TreeNode* root) {
 
     queue<TreeNode*> node_queue;
     node_queue.push(root);
+    int max = 0;
     TreeNode* cur_end = root;
     TreeNode* next_end = nullptr;
-    int max = 0;
-    int cur_level_nodes = 0;
+    int cur_leve_nodes = 0;
     while (!node_queue.empty()) {
         TreeNode* cur = node_queue.front();
         node_queue.pop();
@@ -29,14 +29,14 @@ static int maxWidth(TreeNode* root) {
             node_queue.push(cur->right);
             next_end = cur->right;
         }
-        cur_level_nodes++;
+        cur_leve_nodes++;
         if (cur == cur_end) {
-            max = std::max(max, cur_level_nodes);
-            cur_level_nodes = 0;
+            max = std::max(cur_leve_nodes, max);
+            cur_leve_nodes = 0;
             cur_end = next_end;
+            next_end = nullptr;
         }
     }
-
     return max;
 }
 
