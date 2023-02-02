@@ -66,7 +66,7 @@ endif(CPP_ALGO_HAVE_NO_MISSING_FIELD_INITIALIZERS)
 
 include_directories(common)
 
-add_executable(cpp_algo "")
+add_executable(cpp_algo "" leetcode/0070_climbing_staris.cc)
 
 FILE(GLOB COMMON ${CMAKE_CURRENT_SOURCE_DIR}/common/*)
 FILE(GLOB SORT ${CMAKE_CURRENT_SOURCE_DIR}/sort/*)
@@ -81,6 +81,7 @@ FILE(GLOB PRACTISE ${CMAKE_CURRENT_SOURCE_DIR}/practise/*)
 FILE(GLOB TREE ${CMAKE_CURRENT_SOURCE_DIR}/tree/*)
 FILE(GLOB LEETCODE ${CMAKE_CURRENT_SOURCE_DIR}/leetcode/*)
 FILE(GLOB SET ${CMAKE_CURRENT_SOURCE_DIR}/set/*)
+FILE(GLOB GRAPH ${CMAKE_CURRENT_SOURCE_DIR}/graph/*)
 
 target_sources(cpp_algo
   PUBLIC
@@ -97,6 +98,7 @@ target_sources(cpp_algo
   ${TREE}
   ${LEETCODE}
   ${SET}
+  ${GRAPH}
   main.cc
 )  
 target_link_libraries(cpp_algo gmock gtest gtest_main)

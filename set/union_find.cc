@@ -6,7 +6,7 @@ namespace {
 class Node {
 public:
     Node(int v) {
-        value = v;
+        val = v;
     }
 
 private:
