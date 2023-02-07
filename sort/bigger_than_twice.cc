@@ -19,11 +19,11 @@ using namespace tools;
 		所以总共有5个
  */
 
-static int merge(vector<int>& arr, int left, int mid, int right) {
+static int merge(vector<int> &arr, int left, int mid, int right) {
     int win_r = mid + 1;
     int ans = 0;
     for (int i = left; i <= mid; ++i) {
-        while (win_r <= right && (long)arr[i] > (long)(2*arr[win_r])) {
+        while (win_r <= right && (long) arr[i] > (long) (2 * arr[win_r])) {
             win_r++;
         }
 
@@ -31,7 +31,7 @@ static int merge(vector<int>& arr, int left, int mid, int right) {
     }
 
     int n = right - left + 1;
-    int * helper = new int[n];
+    int *helper = new int[n];
     int i = 0;
     int p1 = left;
     int p2 = mid + 1;
@@ -86,7 +86,7 @@ static int BiggerThanTwice(vector<int> arr) {
     return ans;
 }
 
-static int test(vector<int>& arr) {
+static int test(vector<int> &arr) {
     if (arr.size() < 2) {
         return 0;
     }
@@ -95,7 +95,7 @@ static int test(vector<int>& arr) {
     int n = arr.size();
     for (int i = 0; i < n - 1; ++i) {
         for (int j = i + 1; j < n; ++j) {
-            if ((long)arr[i] > ((long)arr[j] << 1)) {
+            if ((long) arr[i] > ((long) arr[j] << 1)) {
                 ++ans;
             }
         }
