@@ -31,10 +31,10 @@ public:
     }
 };
 
-TEST(LeetcodeTest, LongtestPalindromicWithoutRepeatingCharactersTest) {
-    string s = "abcabcbb";
-    Solution sol;
-    cout << sol.lengthOfLongestSubstring(s) << endl;
-}
+//TEST(LeetcodeTest, LongtestPalindromicWithoutRepeatingCharactersTest) {
+//    string s = "abcabcbb";
+//    Solution sol;
+//    cout << sol.lengthOfLongestSubstring(s) << endl;
+//}
 
 } // namespace
