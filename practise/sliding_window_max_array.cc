@@ -10,6 +10,12 @@ using namespace std;
 using namespace tools;
 
 namespace {
+/*
+    假设一个固定大小为W的窗口，依次划过arr，
+    返回每一次滑出状况的最大值
+            例如，arr = [4,3,5,4,3,3,6,7], W = 3
+    返回：[5,5,5,4,6,7]
+ */
 
 static vector<int> GetMaxWindow(const vector<int>& arr, int w) {
     if (arr.size() == 0 || w < 1 || arr.size() < w) {
