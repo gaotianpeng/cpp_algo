@@ -1,6 +1,6 @@
 #include <array>
-#include <iostream>
 #include <numeric>
+#include <iostream>
 #include "gtest/gtest.h"
 #include "random.h"
 

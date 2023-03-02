@@ -82,6 +82,7 @@ FILE(GLOB TREE ${CMAKE_CURRENT_SOURCE_DIR}/tree/*)
 FILE(GLOB LEETCODE ${CMAKE_CURRENT_SOURCE_DIR}/leetcode/*)
 FILE(GLOB SET ${CMAKE_CURRENT_SOURCE_DIR}/set/*)
 FILE(GLOB GRAPH ${CMAKE_CURRENT_SOURCE_DIR}/graph/*)
+FILE(GLOB TOOLS ${CMAKE_CURRENT_SOURCE_DIR}/tools/*)
 
 target_sources(cpp_algo
   PUBLIC
@@ -99,6 +100,7 @@ target_sources(cpp_algo
   ${LEETCODE}
   ${SET}
   ${GRAPH}
+  ${TOOLS}
   main.cc
 )  
 target_link_libraries(cpp_algo gmock gtest gtest_main)
