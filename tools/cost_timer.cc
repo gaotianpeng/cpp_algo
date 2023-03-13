@@ -6,35 +6,49 @@ using namespace std;
 
 class CostTimer {
 public:
-    CostTimer(const std::string& msg):t0(std::chrono::high_resolution_clock::now()), msg_(msg) {
-        t_last = t0;
+    CostTimer(const std::string& msg = ""): t0_(std::chrono::high_resolution_clock::now()), msg_(msg) {
+        t_last_ = t0_;
     }
 
-    int Cost(const std::string& msg) {
-        auto t_cur = std::chrono::high_resolution_clock::now();
-        auto nanos = std::chrono::duration_cast<chrono::milliseconds>(t_cur - t_last).count();
-        cout << msg_ << ": cost time: " <<  nanos << " ms" << endl;
-        t_last = t_cur;
-
+    int Cost() {
+        auto t_now = std::chrono::high_resolution_clock::now();
+        auto nanos = std::chrono::duration_cast<chrono::microseconds>(t_now - t_last_).count();
+        t_last_ = t_now;
         return nanos;
     }
 
     int CostAll() {
-        auto t_cur = std::chrono::high_resolution_clock::now();
-        auto nanos = std::chrono::duration_cast<chrono::milliseconds>(t_cur - t0).count();
-        cout << msg_ << ": cost time: " <<  nanos << " ms" << endl;
+        auto t_now = std::chrono::high_resolution_clock::now();
+        auto nanos = std::chrono::duration_cast<chrono::microseconds>(t_now - t0_).count();
         return nanos;
     }
 
+    auto Reset() {
+        t_last_ = t0_ = std::chrono::high_resolution_clock::now();
+    }
+
     ~CostTimer() {
-        auto t_cur = std::chrono::high_resolution_clock::now();
-        auto nanos = std::chrono::duration_cast<chrono::milliseconds>(t_cur - t0).count();
-        cout << msg_ << ": cost time: " <<  nanos << " ms" << endl;
+        auto t_now = std::chrono::high_resolution_clock::now();
+        auto nanos = std::chrono::duration_cast<chrono::microseconds>(t_now - t0_).count();
+        cout << msg_ << " cost time: " <<  nanos << " mm" << endl;
+    }
+
+    static std::string MicorToMinute(int micro_s) {
+        int ms = micro_s / 1000;
+        int total_second = ms / 1000;
+        if (ms % 1000 > 500) {
+            total_second++;
+        }
+        int min = total_second / 60;
+        int seconds = total_second % 60;
+        int milloseconds = ms % 1000;
+        return std::to_string(min) + ":" +
+               std::to_string(seconds) + ":" + std::to_string(milloseconds);
     }
 
 private:
-    std::chrono::high_resolution_clock::time_point  t0;
-    std::chrono::high_resolution_clock::time_point  t_last;
+    std::chrono::high_resolution_clock::time_point  t0_;
+    std::chrono::high_resolution_clock::time_point  t_last_;
     std::string msg_;
 };
 
@@ -45,15 +59,15 @@ TEST(ToolsTest, CostTimer) {
     for (int i = 0; i < N; ++i) {
         sum += i * 3.14159;
     }
-    timer.Cost("current cost1 ");
+    cout << timer.Cost() << endl;
     for (int i = 0; i < N; ++i) {
         sum += i * 3.14159;
     }
-    timer.Cost("current cost2 ");
+    cout << timer.Cost() << endl;
     for (int i = 0; i < N; ++i) {
         sum += i * 3.14159;
     }
-    timer.Cost("current cost2 ");
+    cout << timer.Cost() << endl;
     for (int i = 0; i < N; ++i) {
         sum += i * 3.14159;
     }
