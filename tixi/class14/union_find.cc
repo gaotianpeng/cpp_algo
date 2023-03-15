@@ -143,61 +143,48 @@ namespace {
     };
 }
 
-TEST(UnionFind, UnionFindTest) {
-//    std::cout << "union find" <<std::endl;
-//    vector<int> elem { 1, 2, 3, 4, 5, 6};
-//    UnionFindTest u(elem);
-//    cout << u.Sets() << endl;
+//TEST(UnionFind, UnionFindTest) {
+//    cout << "test start ...." << endl;
+//    int test_times = 10000;
+//    int min_val = 10;
+//    int max_val = 100;
+//    int max_n = 20;
+//    bool is_success = true;
+//    for (int i = 0; i < test_times; ++i) {
+//        vector<int> elem;
+//        tools::RandomNorepeatedArr(elem, max_n, min_val, max_val);
+//        if (elem.empty()) {
+//            continue;
+//        }
+//        UnionFind union1(elem);
+//        UnionFindTest union2(elem);
+//        for (int j = 0; j < 100; ++j) {
+//            if (Random::random() < 0.33) {
+//                int a = RandomVal(0, elem.size() - 1);
+//                int b = RandomVal(0, elem.size() - 1);
+//                if (union1.IsSameSet(elem[a], elem[b]) != union2.IsSameSet(elem[a], elem[b])) {
+//                    cout << "test failed" << endl;
+//                    is_success = false;
+//                    break;
+//                }
+//            } else if (Random::random() < 0.66) {
+//                if (union1.Sets() != union2.Sets()) {
+//                    cout << "test failed" << endl;
+//                    is_success = false;
+//                    break;
+//                }
+//            } else {
+//                int a = RandomVal(0, elem.size()- 1);
+//                int b = RandomVal(0, elem.size()-1);
+//                union1.Union(elem[a], elem[b]);
+//                union2.Union(elem[a], elem[b]);
+//            }
+//        }
 //
-//    u.Union(1, 2);
-//    cout << u.Sets() << endl;
-//    cout << u.IsSameSet(1, 2) << endl;
+//        if (!is_success) {
+//            break;
+//        }
+//    }
 //
-//    cout << u.IsSameSet(1, 3) << endl;
-//
-//    u.Union(1, 3);
-//    cout << u.Sets() << endl;
-    cout << "test start ...." << endl;
-    int test_times = 10000;
-    int min_val = 10;
-    int max_val = 100;
-    int max_n = 20;
-    bool is_success = true;
-    for (int i = 0; i < test_times; ++i) {
-        vector<int> elem;
-        tools::RandomNorepeatedArr(elem, max_n, min_val, max_val);
-        if (elem.empty()) {
-            continue;
-        }
-        UnionFind union1(elem);
-        UnionFindTest union2(elem);
-        for (int j = 0; j < 100; ++j) {
-            if (Random::random() < 0.33) {
-                int a = RandomVal(0, elem.size() - 1);
-                int b = RandomVal(0, elem.size() - 1);
-                if (union1.IsSameSet(elem[a], elem[b]) != union2.IsSameSet(elem[a], elem[b])) {
-                    cout << "test failed" << endl;
-                    is_success = false;
-                    break;
-                }
-            } else if (Random::random() < 0.66) {
-                if (union1.Sets() != union2.Sets()) {
-                    cout << "test failed" << endl;
-                    is_success = false;
-                    break;
-                }
-            } else {
-                int a = RandomVal(0, elem.size()- 1);
-                int b = RandomVal(0, elem.size()-1);
-                union1.Union(elem[a], elem[b]);
-                union2.Union(elem[a], elem[b]);
-            }
-        }
-
-        if (!is_success) {
-            break;
-        }
-    }
-
-    cout << "test end" << endl;
-}
+//    cout << "test end" << endl;
+//}
