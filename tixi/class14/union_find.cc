@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <stack>
-#include <map>
 #include <unordered_map>
 #include <set>
 #include "random.h"
@@ -14,133 +13,133 @@ using namespace tools;
 
 namespace {
 
-    class UnionFind {
-    public:
-        UnionFind(vector<int> &elem) {
-            for (int i = 0; i < elem.size(); ++i) {
-                int *p = new int(i);
-                sets_[elem[i]] = p;
-                parents_[p] = p;
-                size_map_[p] = 1;
-            }
+class UnionFind {
+public:
+    UnionFind(vector<int> &elem) {
+        for (int i = 0; i < elem.size(); ++i) {
+            int* p_set = new int(elem[i]);
+            nodes_[elem[i]] = p_set;
+            size_map_[p_set] = 1;
+            parents_[p_set] = p_set;
+        }
+    }
+
+    ~UnionFind() {
+        for (auto elem: nodes_) {
+            delete elem.second;
+        }
+    }
+
+
+    bool IsSameSet(int a, int b) {
+        return FindFather(nodes_[a]) == FindFather(nodes_[b]);
+    }
+
+    void Union(int a, int b) {
+        int* a_head = FindFather(nodes_[a]);
+        int* b_head = FindFather(nodes_[b]);
+        if (a_head != b_head) {
+            int set_a_size = size_map_[a_head];
+            int set_b_size = size_map_[b_head];
+            int* big = set_a_size >= set_b_size ? a_head : b_head;
+            int* small = big == a_head ? b_head : a_head;
+            parents_[small] = big;
+            size_map_[big] = set_a_size + set_b_size;
+            size_map_.erase(small);
+        }
+    }
+
+    int Sets() const {
+        return size_map_.size();
+    }
+
+private:
+    int* FindFather(int* cur) {
+        stack<int*> path;
+        while (cur != parents_[cur]) {
+            path.push(cur);
+            cur = parents_[cur];
+        }
+        while (!path.empty()) {
+            parents_[path.top()] = cur;
+            path.pop();
         }
 
-        ~UnionFind() {
-            for (auto elem: parents_) {
-                delete elem.first;
+        return cur;
+    }
+
+private:
+    unordered_map<int, int*> nodes_;
+    unordered_map<int*, int*> parents_;
+    unordered_map<int*, int> size_map_;
+
+};
+
+class UnionFindTest {
+public:
+    UnionFindTest(vector<int> &elem) {
+        for (int i = 0; i < elem.size(); ++i) {
+            vector<int> vec;
+            vec.push_back(elem[i]);
+            sets.push_back(vec);
+        }
+    }
+
+    bool IsSameSet(int a, int b) {
+        for (int i = 0; i < sets.size(); ++i) {
+            set<int> val;
+            for (int j = 0; j < sets[i].size(); ++j) {
+                val.insert(sets[i][j]);
+            }
+
+            if (val.contains(a) && val.contains(b)) {
+                return true;
             }
         }
+        return false;
+    }
 
-
-        bool IsSameSet(int a, int b) {
-            return FindFather(sets_.at(a)) == FindFather(sets_.at(b));
+    void Union(int a, int b) {
+        if (IsSameSet(a, b)) {
+            return;
         }
 
-        void Union(int a, int b) {
-            int *a_head = FindFather(sets_.at(a));
-            int *b_head = FindFather(sets_.at(b));
-            if (a_head != b_head) {
-                int a_set_size = size_map_[a_head];
-                int b_set_size = size_map_[b_head];
-                int *p_big = a_set_size >= b_set_size ? a_head : b_head;
-                int *p_small = p_big == a_head ? b_head : a_head;
-                parents_[p_small] = p_big;
-                size_map_[p_big] = a_set_size + b_set_size;
-                size_map_.erase(p_small);
-            }
-        }
-
-        int Sets() const {
-            return size_map_.size();
-        }
-
-    private:
-        int *FindFather(int *p) {
-            stack<int *> path;
-            while (p != parents_[p]) {
-                path.push(p);
-                p = parents_[p];
-            }
-
-            while (!path.empty()) {
-                parents_[path.top()] = p;
-                path.pop();
-            }
-
-            return p;
-        }
-
-    private:
-        map<int, int *> sets_;
-        map<int *, int *> parents_;
-        map<int *, int> size_map_;
-    };
-
-    class UnionFindTest {
-    public:
-        UnionFindTest(vector<int> &elem) {
-            for (int i = 0; i < elem.size(); ++i) {
-                vector<int> vec;
-                vec.push_back(elem[i]);
-                sets.push_back(vec);
-            }
-        }
-
-        bool IsSameSet(int a, int b) {
-            for (int i = 0; i < sets.size(); ++i) {
-                set<int> val;
-                for (int j = 0; j < sets[i].size(); ++j) {
-                    val.insert(sets[i][j]);
-                }
-
-                if (val.contains(a) && val.contains(b)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        void Union(int a, int b) {
-            if (IsSameSet(a, b)) {
-                return;
-            }
-
-            int pos_a = -1;
-            int pos_b = -1;
-            for (int i = 0; i < sets.size(); ++i) {
-                for (int j = 0; j < sets[i].size(); ++j) {
-                    if (sets[i][j] == a) {
-                        pos_a = i;
-                        break;
-                    }
-                }
-            }
-            for (int i = 0; i < sets.size(); ++i) {
-                for (int j = 0; j < sets[i].size(); ++j) {
-                    if (sets[i][j] == b) {
-                        pos_b = i;
-                        break;
-                    }
+        int pos_a = -1;
+        int pos_b = -1;
+        for (int i = 0; i < sets.size(); ++i) {
+            for (int j = 0; j < sets[i].size(); ++j) {
+                if (sets[i][j] == a) {
+                    pos_a = i;
+                    break;
                 }
             }
-
-            if (pos_a == -1 || pos_b == -1) {
-                return;
+        }
+        for (int i = 0; i < sets.size(); ++i) {
+            for (int j = 0; j < sets[i].size(); ++j) {
+                if (sets[i][j] == b) {
+                    pos_b = i;
+                    break;
+                }
             }
-
-            for (int i = 0; i < sets[pos_b].size(); ++i) {
-                sets[pos_a].push_back(sets[pos_b][i]);
-            }
-            sets.erase(sets.begin() + pos_b);
         }
 
-        int Sets() const {
-            return sets.size();
+        if (pos_a == -1 || pos_b == -1) {
+            return;
         }
 
-    private:
-        vector<vector<int>> sets;
-    };
+        for (int i = 0; i < sets[pos_b].size(); ++i) {
+            sets[pos_a].push_back(sets[pos_b][i]);
+        }
+        sets.erase(sets.begin() + pos_b);
+    }
+
+    int Sets() const {
+        return sets.size();
+    }
+
+private:
+    vector<vector<int>> sets;
+};
 }
 
 //TEST(UnionFind, UnionFindTest) {
