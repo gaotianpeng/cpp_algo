@@ -8,7 +8,7 @@ if(NOT CMAKE_C_STANDARD)
 endif(NOT CMAKE_C_STANDARD)
 
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD 20)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
   set(CMAKE_CXX_EXTENSIONS OFF)
 endif(NOT CMAKE_CXX_STANDARD)
@@ -88,19 +88,19 @@ FILE(GLOB_RECURSE TiXi ${CMAKE_CURRENT_SOURCE_DIR}/tixi/*)
 target_sources(cpp_algo
   PUBLIC
   ${COMMON}
-  ${SORT}
-  ${LINKLIST}
-  ${SEARCH}
-  ${BIT}
-  ${QUEUE}
-  ${STACK}
-  ${RECURSIVE}
-  ${HEAP}
-  ${PRACTISE}
-  ${TREE}
-  ${LEETCODE}
-  ${SET}
-  ${GRAPH}
+#  ${SORT}
+#  ${LINKLIST}
+#  ${SEARCH}
+#  ${BIT}
+#  ${QUEUE}
+#  ${STACK}
+#  ${RECURSIVE}
+#  ${HEAP}
+#  ${PRACTISE}
+#  ${TREE}
+#  ${LEETCODE}
+#  ${SET}
+#  ${GRAPH}
   ${TOOLS}
   ${TiXi}
   main.cc

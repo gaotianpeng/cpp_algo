@@ -2,6 +2,7 @@
 #include "random.h"
 #include <iostream>
 #include <algorithm>
+#include <set>
 
 using std::vector;
 using std::cout;
@@ -20,6 +21,18 @@ void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
 void RandomSortedArr(std::vector<int>& out, int max_n, int min_val, int max_val) {
 	RandomArr(out, max_n, min_val, max_val);
 	std::sort(out.begin(), out.end());
+}
+
+void RandomNorepeatedArr(std::vector<int>& out, int max_n, int min_val, int max_val) {
+    vector<int> elems;
+    RandomArr(elems, max_n, min_val, max_val);
+    std::set<int> vals;
+    for (auto& elem :elems) {
+        vals.insert(elem);
+    }
+    for (auto val: vals) {
+        out.push_back(val);
+    }
 }
 
 void CopyArr(const vector<int>& src, vector<int>& dst) {

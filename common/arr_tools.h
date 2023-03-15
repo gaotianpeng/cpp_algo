@@ -13,6 +13,8 @@ void RandomArr(std::vector<int>& out, int max_n, int min_val, int max_val);
 
 void RandomSortedArr(std::vector<int>& out, int max_n, int min_val, int max_val);
 
+void RandomNorepeatedArr(std::vector<int>& out, int max_n, int min_val, int max_val);
+
 void CopyArr(const std::vector<int>& src, std::vector<int>& dst);
 
 void Print(const std::vector<int>& arr);
