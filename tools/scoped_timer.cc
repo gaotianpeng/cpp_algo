@@ -18,13 +18,16 @@ private:
     std::string msg_;
 };
 
-//TEST(ToolsTest, ScopedTimerTest) {
-//    int N = 100000000;
-//    long double sum = 0;
-//    ScopedTimer timer("test");
-//    for (int i = 0; i < N; ++i) {
-//        sum += i * 3.14159;
-//    }
-//
-//    cout << sum << endl;
-//}
+TEST(ToolsTest, ScopedTimerTest) {
+    int N = 100;
+    long double sum = 0;
+    ScopedTimer timer("test");
+    for (int i = 0; i < N; ++i) {
+        sum += i * 3.14159;
+    }
+
+    // 以普通小数形式输出浮点数
+    cout << fixed << sum << endl;
+    // 以科学计数法形式输出浮点数
+    cout << scientific << sum << endl;
+}

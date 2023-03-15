@@ -66,7 +66,7 @@ endif(CPP_ALGO_HAVE_NO_MISSING_FIELD_INITIALIZERS)
 
 include_directories(common)
 
-add_executable(cpp_algo "" leetcode/0070_climbing_staris.cc)
+add_executable(cpp_algo "")
 
 FILE(GLOB COMMON ${CMAKE_CURRENT_SOURCE_DIR}/common/*)
 FILE(GLOB SORT ${CMAKE_CURRENT_SOURCE_DIR}/sort/*)
