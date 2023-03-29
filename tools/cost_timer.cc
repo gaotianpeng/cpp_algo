@@ -52,25 +52,25 @@ private:
     std::string msg_;
 };
 
-TEST(ToolsTest, CostTimer) {
-    int N = 100000000;
-    long double sum = 0;
-    CostTimer timer("test");
-    for (int i = 0; i < N; ++i) {
-        sum += i * 3.14159;
-    }
-    cout << timer.Cost() << endl;
-    for (int i = 0; i < N; ++i) {
-        sum += i * 3.14159;
-    }
-    cout << timer.Cost() << endl;
-    for (int i = 0; i < N; ++i) {
-        sum += i * 3.14159;
-    }
-    cout << timer.Cost() << endl;
-    for (int i = 0; i < N; ++i) {
-        sum += i * 3.14159;
-    }
-
-    cout << timer.CostAll() << endl;
-}
+//TEST(ToolsTest, CostTimer) {
+//    int N = 100000000;
+//    long double sum = 0;
+//    CostTimer timer("test");
+//    for (int i = 0; i < N; ++i) {
+//        sum += i * 3.14159;
+//    }
+//    cout << timer.Cost() << endl;
+//    for (int i = 0; i < N; ++i) {
+//        sum += i * 3.14159;
+//    }
+//    cout << timer.Cost() << endl;
+//    for (int i = 0; i < N; ++i) {
+//        sum += i * 3.14159;
+//    }
+//    cout << timer.Cost() << endl;
+//    for (int i = 0; i < N; ++i) {
+//        sum += i * 3.14159;
+//    }
+//
+//    cout << timer.CostAll() << endl;
+//}

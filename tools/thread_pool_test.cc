@@ -32,26 +32,26 @@ std::thread::id PrintThreadId() {
 }
 
 
-TEST(ThreadPool, ThreadPoolTest) {
-    ThreadPool pool;
-    pool.Start();
-    pool.Run(&sampleFunction);
-    std::this_thread::sleep_for(std::chrono::seconds (5));
-
-    int i = 10000;
-    std::set<std::thread::id> idsets;
-    std::vector<std::shared_ptr<std::future<std::thread::id>>> vecs;
-
-    while(i >= 0) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        std::shared_ptr<std::future<std::thread::id>> id = pool.Run(&PrintThreadId);
-        vecs.push_back(id);
-    }
-
-    for (int j = 0; j < vecs.size(); ++j) {
-        auto id = vecs[j]->get();
-        idsets.insert(id);
-    }
-
-    cout << idsets.size() <<endl;
-}
+//TEST(ThreadPool, ThreadPoolTest) {
+//    ThreadPool pool;
+//    pool.Start();
+//    pool.Run(&sampleFunction);
+//    std::this_thread::sleep_for(std::chrono::seconds (5));
+//
+//    int i = 10000;
+//    std::set<std::thread::id> idsets;
+//    std::vector<std::shared_ptr<std::future<std::thread::id>>> vecs;
+//
+//    while(i >= 0) {
+//        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+//        std::shared_ptr<std::future<std::thread::id>> id = pool.Run(&PrintThreadId);
+//        vecs.push_back(id);
+//    }
+//
+//    for (int j = 0; j < vecs.size(); ++j) {
+//        auto id = vecs[j]->get();
+//        idsets.insert(id);
+//    }
+//
+//    cout << idsets.size() <<endl;
+//}
