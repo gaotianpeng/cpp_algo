@@ -115,7 +115,6 @@ int main(int argc, char* argv[]) {
     cout << "test start..." << endl;
     int test_times = 100000;
     int max_val = 100;
-    int max_level = 10;
     int poss = 5;
     int max_len = 30;
     for (int i = 0; i < test_times; ++i) {
