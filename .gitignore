@@ -1,2 +1,4 @@
-tixi/daily30/code01_morris
-.vscode/tasks.json
+
+.vscode/
+!**/*.cc
+!**/**/*.cc
