@@ -100,7 +100,6 @@ static void PreOrder(TreeNode* root, vector<int>& ans) {
     
     std::stack<TreeNode*> s;
     s.push(root);
-    // ans.push_back(root->val);
     while (!s.empty()) {
         TreeNode* node = s.top();
         s.pop();
