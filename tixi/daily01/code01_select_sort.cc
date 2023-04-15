@@ -39,7 +39,6 @@ static void PrintArr(const vector<int>& arr) {
     cout << endl;
 }
 
-
 static bool IsEqual(const vector<int>& arr1, const vector<int>& arr2) {
     if (arr1.size() != arr2.size()) {
         return false;
@@ -94,7 +93,7 @@ static void SelectSort(vector<int>& arr) {
         …
         arr[0~0] 范围上，找到最大值位置，然后把最大值交换到 0 位置
 */
-static void SelectSort1(const vector<int>& arr) {
+static void SelectSort1(vector<int>& arr) {
     if (arr.size() < 2) {
         return;
     }
@@ -103,7 +102,10 @@ static void SelectSort1(const vector<int>& arr) {
     for (int i = n - 1; i >= 0; --i) {
         int max_idx = i;
         for (int j = 0; j < i; j++) {
-            
+            max_idx = arr[j] > arr[max_idx] ? j : max_idx;
+        }
+        if (max_idx != i) {
+            Swap(arr, i, max_idx);
         }
     }
 }
@@ -116,14 +118,22 @@ int main(int argc, char* argv[]) {
     int test_times = 100000;
 
     for (int i = 0; i < test_times; ++i) {
-        vector<int> arr1, arr2;
+        vector<int> arr1, arr2, arr3;
         RandomArr(arr1, max_n, min, max);
         CopyArray(arr1, arr2);
+        CopyArray(arr1, arr3);
         SelectSort(arr1);
         std::sort(arr2.begin(), arr2.end());
+        SelectSort1(arr3);
         if (!IsEqual(arr1, arr2)) {
             PrintArr(arr1);
             PrintArr(arr2);
+            cout << "test failed" << endl;
+            break;
+        }
+        if (!IsEqual(arr1, arr3)) {
+            PrintArr(arr1);
+            PrintArr(arr3);
             cout << "test failed" << endl;
             break;
         }
