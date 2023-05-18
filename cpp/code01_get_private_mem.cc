@@ -4,43 +4,41 @@
 
 using namespace std;
 
-template<typename T, typename U, typename Ret, T ptr>
-struct Tunnel {
-    friend Ret & sneak(U& u) {
-        cout << typeid(ptr).name() << endl;
-        return u.*ptr;
-    }
+#define DEF_CLASS(T, U, RET, ClassName, SNEAK) \
+template<typename T, typename U, typename Ret, T ptr> \
+struct ClassName { \
+    friend Ret & SNEAK(U& u) { \
+        cout << typeid(ptr).name() << endl; \
+        return u.*ptr; \
+    } \
 };
 
-#define DEFINE_TUNNEL(CLASS_NAME, MEMBER_NAME, RET_TYPE) \
+#define DEFINE_TUNNEL(CLASS_NAME, MEMBER_NAME, RET_TYPE, Tunnel, sneak) \
 template struct Tunnel<decltype(&CLASS_NAME::MEMBER_NAME), \
-CLASS_NAME, RET_TYPE, &CLASS_NAME::MEMBER_NAME>;
+CLASS_NAME, RET_TYPE, &CLASS_NAME::MEMBER_NAME>; \
+RET_TYPE& sneak(CLASS_NAME& u);
 
 class ClassA {
-private:
+public:
     int i = 0;
+    bool j = true;
 };
 class ClassB {
 private:
     int j = 1;
 };
 
-DEFINE_TUNNEL(ClassA, i, int)
-DEFINE_TUNNEL(ClassB, j, int)
+DEF_CLASS(T, U, R, TunnelInt, sneakInt)
+DEFINE_TUNNEL(ClassA, i, int, TunnelInt, sneakInt)
 
-int& sneak(ClassA& u);
-int& sneak(ClassB& u);
+DEF_CLASS(T, U, R, TunnelBool, sneakBool)
+DEFINE_TUNNEL(ClassA, j, bool, TunnelBool, sneakBool)
     
 int main(int arg, char* argv[]) {
     {
         ClassA a;
-
-        cout << sneak(a) << endl;
-    }
-    {
-        ClassB b;
-
-        cout << sneak(b) << endl;
+        cout << sneakInt(a) << endl;
+        cout << sneakBool(a) << endl;
     }
 
     return 0;
