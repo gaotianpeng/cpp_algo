@@ -1,0 +1,193 @@
+#include <iostream>
+#include <random>
+#include <vector>
+#include <set>
+#include <algorithm>
+#include <unordered_map>
+
+using namespace std;
+
+/*
+    for test
+*/
+namespace {
+
+class Math {
+public:
+    static double random() {
+        static std::random_device rd;
+        static std::default_random_engine engine(rd());
+        static std::uniform_real_distribution<> distribution(0.0, 1.0);
+        return distribution(engine);
+    }
+};
+
+static int RandomVal(int max, int min) {
+    return min + (int) (Math::random() * (double)(max - min));
+}
+
+static int RandomOdd(int max) {
+    int val = (int)(Math::random()*(double(max))) + 1;
+    while (val % 2 == 0) {
+        val = (int)(Math::random()*(double(max))) + 1;
+    }
+    return val;
+}
+
+static int RandomEven(int max) {
+    int val = (int)(Math::random()*(double(max))) + 1;
+    while (val % 2 != 0) {
+        val = (int)(Math::random()*(double(max))) + 1;
+    }
+    return val;
+}
+
+static void Swap(vector<int>& arr, int i, int j) {
+    int tmp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = tmp;
+}
+
+static void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
+    int arr_len = 0;
+    while (true) {
+        arr_len = RandomVal(0, max_n) + 1;
+        if (arr_len < 2) {
+            continue;
+        }
+
+        if (arr_len % 2 == 0) {
+            break;
+        }
+    }
+    int odd_times = RandomOdd(arr_len);
+    while (odd_times == arr_len) {
+        odd_times = RandomOdd(arr_len);
+    }
+    set<int> vals;
+    int old_time_val = RandomVal(max_val, min_val);
+    vals.insert(old_time_val);
+    for (int i = 0; i < odd_times; ++i) {
+        out.emplace_back(old_time_val);
+    }
+
+    arr_len -= odd_times;
+    odd_times = RandomOdd(arr_len);
+    old_time_val = RandomVal(max_val, min_val);
+    while (vals.contains(old_time_val)) {
+        old_time_val = RandomVal(max_val, min_val);
+    }
+    vals.insert(old_time_val);
+    for (int i = 0; i < odd_times; ++i) {
+        out.emplace_back(old_time_val);
+    }
+    arr_len -= odd_times;
+    while (arr_len > 0) {
+        int even_times = RandomEven(arr_len);
+        int even_time_val = RandomVal(max_val, min_val);
+        while (vals.contains(even_time_val)) {
+            even_time_val = RandomVal(max_val, min_val);
+        }
+        vals.insert(even_time_val);
+        for (int i = 0; i < even_times; ++i) {
+            out.emplace_back(even_time_val);
+        }
+        arr_len -= even_times;
+    }
+    int n = out.size();
+    for (int i = 0; i < n; ++i) {
+        int a = RandomVal(n, 0);
+        int b = RandomVal(n, 0);
+        Swap(out, a, b);
+    }
+}
+
+static void PrintArr(const vector<int>& arr) {
+    for (auto& elem: arr) {
+        cout << elem << " ";
+    }
+    cout << endl;
+}
+
+static bool IsEqual(const std::pair<int, int>& a, const std::pair<int, int>& b) {
+    if (a.first == b.first && a.second == b.second) {
+        return true;
+    }
+    if (a.first == b.second && a.second == b.first) {
+        return true;
+    }
+
+    return false;
+}
+
+} // namespace
+
+/*
+    一个数组中有两种数出现了奇数次，其他数都出现了偶数次，找到这两种数并返回
+    注：假设arr中所有数都为正数，如果找不至均返回-1
+       传入数组的中数据合理性由外部保证
+*/
+static std::pair<int, int> GetTwoOdd(vector<int>& arr) {
+    int xor1 = 0;
+    int n = arr.size();
+    for (int i = 0; i < n; ++i) {
+        xor1 ^= arr[i];
+    }
+
+    int right_one = xor1 & (-xor1);
+    int xor2 = 0;
+    for (int i = 0; i < n; ++i) {
+        if ((arr[i] & right_one) == 0) {
+            xor2 ^= arr[i];
+        }
+    }
+
+    return {xor2, xor1 ^ xor2};
+}
+
+static std::pair<int, int> test(vector<int>& arr) {
+    unordered_map<int, int> map;
+    for (int i = 0; i < arr.size(); ++i) {
+        int key = arr[i];
+        if (map.contains(key)) {
+            int val = map[key];
+            map.erase(key);
+            map[key] = val + 1;
+        } else {
+            map[key] = 1;
+        }
+    }
+
+    vector<int> ans;
+
+    for (auto& elem: map) {
+        if (elem.second % 2 != 0) {
+            ans.push_back(elem.first);
+        }
+    }
+
+    return {ans[0], ans[1]};
+}
+
+int main(int argc, char* argv[]) {
+    cout << "test start..." << endl;
+    int max = 100;
+    int min = 0;
+    int max_n = 30;
+    int test_times = 100000;
+    for (int i = 0; i < test_times; ++i) {
+        vector<int> arr;
+        RandomArr(arr, max_n, min, max);
+        if (!IsEqual(test(arr), GetTwoOdd(arr))) {
+            cout << "test faild" << endl;
+            auto ans1 = test(arr);
+            auto ans2 = GetTwoOdd(arr);
+            cout << ans1.first << ",  " << ans1.second << endl;
+            cout << ans2.first << ",  " << ans2.second << endl;
+            break;
+        }
+    }
+
+    cout << "test end" << endl;
+    return 0;
+}
