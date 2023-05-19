@@ -1,8 +1,9 @@
 #include <iostream>
 #include <filesystem>
 #include <string>
-using namespace std;
+#include <stack>
 
+using namespace std;
 namespace fs = std::filesystem;
 
 static bool is_need_clean(std::string file_name) {
@@ -28,13 +29,20 @@ static bool is_need_clean(std::string file_name) {
 }
 
 static void traverse_directory(const fs::path& root_path) {
-    for (const auto& entry : fs::directory_iterator(root_path)) {
-        if (entry.is_directory() && !entry.path().filename().string().empty() && entry.path().filename().string()[0] != '.') {
-            traverse_directory(entry.path());
-        } else if (entry.is_regular_file()) {
-            if (is_need_clean(entry.path().filename())) {
-                fs::remove(entry.path());
-                cout << entry.path().string() << endl;
+    stack<fs::path> stack;
+    stack.push(root_path);
+    while (!stack.empty()) {
+        fs::path curr = stack.top();
+        stack.pop();
+        for (const auto& entry : fs::directory_iterator(curr)) {
+            if (entry.is_directory() && !entry.path().filename().string().empty() 
+                && entry.path().filename().string()[0] != '.') {
+                stack.push(entry.path());
+            } else if (entry.is_regular_file()) {
+                if (is_need_clean(entry.path().filename())) {
+                    fs::remove(entry.path());
+                    cout << entry.path().string() << endl;
+                }
             }
         }
     }
