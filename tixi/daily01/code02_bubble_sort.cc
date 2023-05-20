@@ -20,9 +20,9 @@ public:
 };
 
 static void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
-	int len = (int)(Math::random() * max_n);
+	int len = (int)(Math::random() * (max_n + 1));
 	for (int i = 0; i < len; i++) {
-		int val = (int)(Math::random() * (max_val - min_val)) + min_val;
+		int val = (int)(Math::random() * (max_val - min_val + 1)) + min_val;
 		out.emplace_back(val);
 	}
 }
@@ -61,7 +61,6 @@ static void Swap(vector<int>& arr, int i, int j) {
 
 } // namespace
 
-
 static void BubbleSort(vector<int>& arr) {
     if (arr.size() < 2) {
         return;
@@ -75,7 +74,6 @@ static void BubbleSort(vector<int>& arr) {
             }
         }
     }
-
 }
 
 int main(int argc, char* argv[]) {

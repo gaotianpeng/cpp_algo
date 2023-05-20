@@ -22,7 +22,7 @@ public:
 static void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
 	int len = (int)(Math::random() * max_n);
 	for (int i = 0; i < len; i++) {
-		int val = (int)(Math::random() * (max_val - min_val)) + min_val;
+		int val = (int)(Math::random() * (max_val - min_val + 1)) + min_val;
 		out.emplace_back(val);
 	}
 }
