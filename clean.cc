@@ -14,9 +14,6 @@ static bool is_need_clean(std::string file_name) {
     if (file_name == ".gitignore") {
         return false;
     }
-    if (file_name == "clean") {
-        return false;
-    }
 
     if (file_name.substr(file_name.size() - 3) == ".cc") {
         return false;
