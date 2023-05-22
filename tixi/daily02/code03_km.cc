@@ -66,12 +66,12 @@ static void RandomArr(vector<int>& out, int max, int min, int k, int m) {
         --times_m;
     }
 
-    // int n = out.size();
-    // for (int i = 0; i < n; ++i) {
-    //     int index1 = RandomVal(0, n - 1);
-    //     int index2 = RandomVal(0, n - 1);
-    //     Swap(out, index1, index2);
-    // }
+    int n = out.size();
+    for (int i = 0; i < n; ++i) {
+        int index1 = RandomVal(0, n - 1);
+        int index2 = RandomVal(0, n - 1);
+        Swap(out, index1, index2);
+    }
 }
 
 static void PrintArr(const vector<int>& arr) {
