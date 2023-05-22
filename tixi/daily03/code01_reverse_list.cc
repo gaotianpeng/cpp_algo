@@ -44,6 +44,10 @@ static ListNode* RandomList(int max_n, int min_val, int max_val) {
         lists.emplace_back(new ListNode(elem));
     }
 
+    if (lists.size() == 0) {
+        return nullptr;
+    }
+
     for (int i = 1; i < lists.size(); ++i) {
         lists[i-1]->next = lists[i];
     }
@@ -52,6 +56,10 @@ static ListNode* RandomList(int max_n, int min_val, int max_val) {
 }
 
 static ListNode* CopyList(ListNode* head) {
+    if (head == nullptr) {
+        return nullptr;
+    }
+
     ListNode* ans = new ListNode(head->val);
     ListNode* ans_head = ans;
     while (head->next != nullptr) {
@@ -71,7 +79,6 @@ static void PrintList(ListNode* head) {
 }
 
 static bool IsEqual(ListNode* head1, ListNode* head2) {
-    assert(head1 != head2);
     while (head1 != nullptr && head2 != nullptr) {
         if (head1->val != head2->val) {
             return false;
@@ -85,6 +92,16 @@ static bool IsEqual(ListNode* head1, ListNode* head2) {
     }
     return true;
 }
+
+static void FreeList(ListNode* head) {
+    while (head != nullptr) {
+        ListNode* tmp = head;
+        head = head->next;
+        delete tmp;
+    }
+}
+
+
 
 } // namespace
 
@@ -102,6 +119,10 @@ ListNode* ReverseList(ListNode* head) {
 }
 
 ListNode* test(ListNode* head) {
+    if (head == nullptr) {
+        return nullptr;
+    }
+
     vector<ListNode*> lists;
     while (head != nullptr) {
         lists.emplace_back(head);
@@ -133,6 +154,9 @@ int main(int argc, char* argv[]) {
             cout << "test failed" << endl;
             break; 
        }
+
+       FreeList(rev1);
+       FreeList(rev2);
     }
 
     cout << "test end" << endl;
