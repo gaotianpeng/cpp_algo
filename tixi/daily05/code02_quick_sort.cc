@@ -60,26 +60,31 @@ static void Swap(vector<int>& arr, int i, int j) {
 }
 }  // namespace
 
-static int partition(vector<int>& arr, int left, int right) {
+static std::pair<int, int> partition(vector<int>& arr, int left, int right) {
     if (left > right) {
-        return -1;
+        return {-1, -1};
     }
 
     if (left == right) {
-        return left;
+        return {left, left};
     }
 
     int less = left - 1;
+    int more = right;
     int index = left;
-    while (index < right) {
-        if (arr[index] <= arr[right]) {
-            ++less;
-            Swap(arr, less, index);
+    while (index < more) {
+        if (arr[index] < arr[right]) {
+            Swap(arr,index, ++less);
+            ++index;
+        } else if (arr[index] > arr[right]) {
+            Swap(arr, index, --more);
+        } else {
+            ++index;
         }
-        ++index;
     }
-    Swap(arr, ++less, right);
-    return less;
+
+    Swap(arr, more, right);
+    return {less + 1, more};
 }
 
 static void process(vector<int>& arr, int left, int right) {
@@ -87,9 +92,9 @@ static void process(vector<int>& arr, int left, int right) {
         return;
     }
 
-    int mid = partition(arr, left, right);
-    process(arr, left, mid - 1);
-    process(arr, mid + 1, right);
+    std::pair<int, int> equal_area = partition(arr, left, right);
+    process(arr, left, equal_area.first - 1);
+    process(arr, equal_area.second + 1, right);
 }
 
 static void QuickSort(vector<int>& arr) {
