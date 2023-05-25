@@ -71,9 +71,9 @@ static void HeapInsert(vector<int>& arr, int index) {
 static void Heapify(vector<int>& arr, int index, int heap_size) {
     int left = 2 * index + 1;
     while (left < heap_size) {
-        int largest = left + 1 < heap_size && arr[left + 1] > arr[left] ? left + 1
-            : left;
-        largest = arr[index] < arr[largest] ? largest: index;
+        int largest = left + 1 < heap_size && arr[left + 1] > arr[left] ? 
+            left + 1: left;
+        largest = arr[index] < arr[largest] ? largest : index;
         if (largest == index) {
             break;
         }
@@ -88,13 +88,29 @@ static void HeapSort(vector<int>& arr) {
         return;
     }
 
-    for (int i = 0; i < arr.size(); ++i) {
+    int heap_size = arr.size();
+    for (int i = 0; i < heap_size; ++i) {
         HeapInsert(arr, i);
     }
-
-    int heap_size = arr.size();
+    
     Swap(arr, 0, --heap_size);
+    while (heap_size > 0) {
+        Heapify(arr, 0, heap_size);
+        Swap(arr, 0, --heap_size);
+    }
+}
 
+static void HeapSort2(vector<int>& arr) {
+    if (arr.size() < 2) {
+        return;
+    }
+
+    int n = arr.size();
+    for (int i = n - 1; i >= 0; --i) {
+        Heapify(arr, i, n);
+    }
+    int heap_size = n;
+    Swap(arr, 0, --heap_size);
     while (heap_size > 0) {
         Heapify(arr, 0, heap_size);
         Swap(arr, 0, --heap_size);
@@ -109,14 +125,22 @@ int main(int argc, char* argv[]) {
     int test_times = 100000;
 
     for (int i = 0; i < test_times; ++i) {
-        vector<int> arr1, arr2;
+        vector<int> arr1, arr2, arr3;
         RandomArr(arr1, max_n, min, max);
         CopyArray(arr1, arr2);
+        CopyArray(arr1, arr3);
         HeapSort(arr1);
         std::sort(arr2.begin(), arr2.end());
+        HeapSort2(arr3);
         if (!IsEqual(arr1, arr2)) {
             PrintArr(arr1);
             PrintArr(arr2);
+            cout << "test failed" << endl;
+            break;
+        }
+        if (!IsEqual(arr2, arr3)) {
+            PrintArr(arr2);
+            PrintArr(arr3);
             cout << "test failed" << endl;
             break;
         }
