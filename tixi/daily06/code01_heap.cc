@@ -161,45 +161,45 @@ int main(int argc, char* argv[]) {
     bool success = true;
 
     for (int i = 0; i < test_times; ++i) {
-            int cur_limit = (int) (Math::random() * limit) + 1;
-            HeapMap my(cur_limit);
-            TestHeap test(cur_limit);
-            int curOpTimes = (int) (Math::random() * limit);
-            for (int j = 0; j < curOpTimes; j++) {
-                if (my.empty() != test.empty()) {
+        int cur_limit = (int) (Math::random() * limit) + 1;
+        HeapMap my(cur_limit);
+        TestHeap test(cur_limit);
+        int curOpTimes = (int) (Math::random() * limit);
+        for (int j = 0; j < curOpTimes; j++) {
+            if (my.empty() != test.empty()) {
+                success = false;
+                break;
+            }
+            if (my.full() != test.full()) {
+                success = false;
+                break;
+            }
+            if (my.empty()) {
+                int curValue = (int) (Math::random() * value);
+                my.push(curValue);
+                test.push(curValue);
+            } else if (my.full()) {
+                if (my.pop() != test.pop()) {
                     success = false;
                     break;
                 }
-                if (my.full() != test.full()) {
-                    success = false;
-                    break;
-                }
-                if (my.empty()) {
+            } else {
+                if (Math::random() < 0.5) {
                     int curValue = (int) (Math::random() * value);
                     my.push(curValue);
                     test.push(curValue);
-                } else if (my.full()) {
+                } else {
                     if (my.pop() != test.pop()) {
                         success = false;
                         break;
                     }
-                } else {
-                    if (Math::random() < 0.5) {
-                        int curValue = (int) (Math::random() * value);
-                        my.push(curValue);
-                        test.push(curValue);
-                    } else {
-                        if (my.pop() != test.pop()) {
-                            success = false;
-                            break;
-                        }
-                    }
                 }
             }
+        }
 
-            if (!success) {
-                break;
-            }
+        if (!success) {
+            break;
+        }
     }
 
     cout << "test end" << endl;
