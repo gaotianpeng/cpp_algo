@@ -106,8 +106,7 @@ static void FreeList(ListNode* head) {
 
 
 ListNode* MidOrUpMidNode(ListNode* head) {
-    if (head == nullptr || head->next == nullptr || 
-            head->next->next == nullptr) {
+    if (head == nullptr || head->next == nullptr || head->next->next == nullptr) {
         return head;
     }
 
@@ -117,6 +116,7 @@ ListNode* MidOrUpMidNode(ListNode* head) {
         slow = slow->next;
         fast = fast->next->next;
     }
+
     return slow;
 }
 
