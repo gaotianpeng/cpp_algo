@@ -105,15 +105,16 @@ static void FreeList(ListNode* head) {
 } // namespace
 
 /*
-    输入链表头节点，奇数长度返回中点，偶数长度返回下中点
+    输入链表头节点，奇数长度返回中点前一个，偶数长度返回上中点前一个
 */
-ListNode* MidOrDownMidNode(ListNode* head) {
-    if (head == nullptr || head->next == nullptr) {
-        return head;
+ListNode* MidOrUpPreNode(ListNode* head) {
+    if (head == nullptr || head->next == nullptr ||
+                head->next->next == nullptr) {
+        return nullptr;
     }
 
-    ListNode* slow = head->next;
-    ListNode* fast = head->next;
+    ListNode* slow = head;
+    ListNode* fast = head->next->next;
     while (fast->next != nullptr && fast->next->next != nullptr) {
         slow = slow->next;
         fast = fast->next->next;
@@ -123,8 +124,9 @@ ListNode* MidOrDownMidNode(ListNode* head) {
 }
 
 ListNode* test(ListNode* head) {
-    if (head == nullptr || head->next == nullptr) {
-        return head;
+    if (head == nullptr || head->next == nullptr || 
+            head->next->next == nullptr) {
+        return nullptr;
     }
 
     vector<ListNode*> nodes;
@@ -132,8 +134,8 @@ ListNode* test(ListNode* head) {
         nodes.emplace_back(head);
         head = head->next;
     }
-
-    return nodes[nodes.size() / 2];
+    
+    return nodes[(nodes.size() - 3) / 2];
 }
 
 int main(int argc, char* argv[]) {
@@ -146,7 +148,7 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < test_times; ++i) {
        ListNode* head1 = RandomList(max_n, min, max);
        ListNode* head2 = CopyList(head1);
-       ListNode* rev1 = MidOrDownMidNode(head1);
+       ListNode* rev1 = MidOrUpPreNode(head1);
        ListNode* rev2 = test(head2);
 
        if (!IsEqual(rev1, rev2)) {

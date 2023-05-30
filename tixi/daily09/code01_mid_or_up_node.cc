@@ -104,9 +104,12 @@ static void FreeList(ListNode* head) {
 
 } // namespace
 
-
+/*
+    输入链表头节点，奇数长度返回中点，偶数长度返回上中点
+ */
 ListNode* MidOrUpMidNode(ListNode* head) {
-    if (head == nullptr || head->next == nullptr || head->next->next == nullptr) {
+    if (head == nullptr || head->next == nullptr || 
+            head->next->next == nullptr) {
         return head;
     }
 
@@ -121,7 +124,8 @@ ListNode* MidOrUpMidNode(ListNode* head) {
 }
 
 ListNode* test(ListNode* head) {
-    if (head == nullptr || head->next == nullptr || head->next->next == nullptr) {
+    if (head == nullptr || head->next == nullptr || 
+            head->next->next == nullptr) {
         return head;
     }
 
