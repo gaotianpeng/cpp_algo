@@ -107,7 +107,7 @@ static void FreeList(ListNode* head) {
 /*
     输入链表头节点，奇数长度返回中点前一个，偶数长度返回下中点前一个
 */
-ListNode* MidOrDownPreNode(ListNode* head) {
+static ListNode* MidOrDownPreNode(ListNode* head) {
     if (head == nullptr || head->next == nullptr ||
                 head->next->next == nullptr ||
                 head->next->next->next == nullptr) {
@@ -124,7 +124,7 @@ ListNode* MidOrDownPreNode(ListNode* head) {
     return slow;
 }
 
-ListNode* test(ListNode* head) {
+static ListNode* test(ListNode* head) {
     if (head == nullptr || head->next == nullptr ||
                 head->next->next == nullptr ||
                 head->next->next->next == nullptr) {

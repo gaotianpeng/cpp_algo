@@ -1,7 +1,8 @@
+#include <algorithm>
 #include <iostream>
 #include <random>
+#include <stack>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
@@ -28,6 +29,10 @@ static void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
 	}
 }
 
+static int RandomVal(int min_val, int max_val) {
+    return (int)(Math::random() * (max_val - min_val + 1)) + min_val;
+}
+
 struct ListNode{
     int val  = 0;
     ListNode* next = nullptr;
@@ -36,7 +41,7 @@ struct ListNode{
     }
 };
 
-static ListNode* RandomList(int max_n, int min_val, int max_val) {
+static ListNode* RandomNormalList(int max_n, int min_val, int max_val) {
     vector<int> out;
     RandomArr(out, max_n, min_val, max_val);
     vector<ListNode*> lists;
@@ -53,6 +58,49 @@ static ListNode* RandomList(int max_n, int min_val, int max_val) {
     }
     lists[lists.size() - 1]->next = nullptr;
     return lists[0];
+}
+
+static ListNode* RandomPalindromeist(int max_n, int min_val, int max_val) {
+    vector<int> out;
+    RandomArr(out, max_n/2, min_val, max_val);
+    vector<ListNode*> lists;
+    ListNode* tail = nullptr;
+    for (auto& elem: out) {
+        lists.emplace_back(new ListNode(elem));
+    }
+
+    if (lists.size() == 0) {
+        return nullptr;
+    }
+
+    for (int i = 1; i < lists.size(); ++i) {
+        lists[i-1]->next = lists[i];
+    }
+    lists[lists.size() - 1]->next = nullptr;
+    tail = lists[lists.size() - 1];
+    if (Math::random() < 0.5) {
+        tail->next = new ListNode(RandomVal(min_val, max_val));
+        tail = tail->next;
+    }
+
+    for (int i = lists.size() - 1; i >= 0; --i) {
+        tail->next = new ListNode(lists[i]->val);
+        tail = tail->next;
+    }
+    tail->next = nullptr;
+
+    return lists[0];
+}
+
+static ListNode* RandomList(int max_n, int min_val, int max_val) {
+    ListNode* ans = nullptr;
+    if (Math::random() < 0.6) {
+        ans = RandomPalindromeist(max_n, min_val, max_val);
+    } else {
+        ans = RandomNormalList(max_n, min_val, max_val);
+    }
+
+    return ans;
 }
 
 static ListNode* CopyList(ListNode* head) {
@@ -78,22 +126,6 @@ static void PrintList(ListNode* head) {
     cout << endl;
 }
 
-static bool IsEqual(ListNode* head1, ListNode* head2) {
-    if (head1 == nullptr && head2 != nullptr) {
-        return false;
-    }
-
-    if (head1 != nullptr && head2 == nullptr) {
-        return false;
-    }
-
-    if (head1 == nullptr && head2 == nullptr) {
-        return true;
-    }
-
-    return head1->val == head2->val;
-}
-
 static void FreeList(ListNode* head) {
     while (head != nullptr) {
         ListNode* tmp = head;
@@ -105,28 +137,32 @@ static void FreeList(ListNode* head) {
 } // namespace
 
 /*
-    输入链表头节点，奇数长度返回中点，偶数长度返回上中点
- */
-static ListNode* MidOrUpMidNode(ListNode* head) {
-    if (head == nullptr || head->next == nullptr || 
-            head->next->next == nullptr) {
-        return head;
+    给定一个单链表的头节点head，请判断该链表是否为回文结构
+*/
+static bool IsPalindromeList(ListNode* head) {
+    if (head == nullptr || head->next == nullptr) {
+        return true;
     }
-
-    ListNode* slow = head->next;
-    ListNode* fast = head->next->next;
-    while (fast->next != nullptr && fast->next->next != nullptr) {
-        slow = slow->next;
-        fast = fast->next->next;
+    ListNode* cur = head;
+    stack<ListNode*> nodes;
+    while (cur != nullptr) {
+        nodes.push(cur);
+        cur = cur->next;
     }
-
-    return slow;
+    while (!nodes.empty()) {
+        ListNode* cur = nodes.top();
+        nodes.pop();
+        if (cur->val != head->val) {
+            return false;
+        }
+        head = head->next;
+    }
+    return true;
 }
 
-static ListNode* test(ListNode* head) {
-    if (head == nullptr || head->next == nullptr || 
-            head->next->next == nullptr) {
-        return head;
+static bool test(ListNode* head) {
+    if (head == nullptr || head->next == nullptr) {
+        return true;
     }
 
     vector<ListNode*> nodes;
@@ -135,7 +171,14 @@ static ListNode* test(ListNode* head) {
         head = head->next;
     }
 
-    return nodes[(nodes.size() - 1) / 2];
+    int n = nodes.size();
+    for (int i = 0; i < n; ++i) {
+        if (nodes[i]->val != nodes[n - i - 1]->val) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 int main(int argc, char* argv[]) {
@@ -143,24 +186,21 @@ int main(int argc, char* argv[]) {
     int max = 100;
     int min = -100;
     int max_n = 30;
-    int test_times = 10;
+    int test_times = 100000;
 
     for (int i = 0; i < test_times; ++i) {
        ListNode* head1 = RandomList(max_n, min, max);
        ListNode* head2 = CopyList(head1);
-       ListNode* rev1 = MidOrUpMidNode(head1);
-       ListNode* rev2 = test(head2);
-
-       if (!IsEqual(rev1, rev2)) {
+       bool ret1 = IsPalindromeList(head1);
+       bool ret2 = test(head2);
+       if (ret1 != ret2) {
             cout << "test failed" << endl;
-            break; 
+            break;
        }
-
        FreeList(head1);
        FreeList(head2);
     }
 
     cout << "test end" << endl;
-
     return 0;
 }
