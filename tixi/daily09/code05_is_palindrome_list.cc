@@ -136,6 +136,23 @@ static void FreeList(ListNode* head) {
 
 } // namespace
 
+static ListNode* ReverseList(ListNode* head) {
+    if (head == nullptr || head->next == nullptr) {
+        return head;
+    }
+
+    ListNode* pre = nullptr;
+    ListNode* next = nullptr;
+    while (head != nullptr) {
+        next = head->next;
+        head->next = pre;
+        pre = head;
+        head = next;
+    }
+
+    return pre;
+}
+
 /*
     给定一个单链表的头节点head，请判断该链表是否为回文结构
 */
@@ -143,21 +160,29 @@ static bool IsPalindromeList(ListNode* head) {
     if (head == nullptr || head->next == nullptr) {
         return true;
     }
-    ListNode* cur = head;
-    stack<ListNode*> nodes;
-    while (cur != nullptr) {
-        nodes.push(cur);
-        cur = cur->next;
+    ListNode* slow = head;
+    ListNode* fast = head;
+    while (fast->next != nullptr && fast->next->next != nullptr) {
+        slow = slow->next;
+        fast = fast->next->next;
     }
-    while (!nodes.empty()) {
-        ListNode* cur = nodes.top();
-        nodes.pop();
-        if (cur->val != head->val) {
-            return false;
+
+    ListNode* second_half_head = slow->next;
+    slow->next = nullptr;
+    ListNode* reverse = ReverseList(second_half_head);
+    ListNode* cur = reverse;
+    bool ans = true;
+    while (cur != nullptr) {
+        if (head->val != cur->val) {
+            ans = false;
+            break;
         }
         head = head->next;
+        cur = cur->next;
     }
-    return true;
+
+    slow->next = ReverseList(reverse);
+    return ans;
 }
 
 static bool test(ListNode* head) {
