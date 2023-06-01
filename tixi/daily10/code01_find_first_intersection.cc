@@ -230,11 +230,39 @@ static void FreeList(std::pair<ListNode*, ListNode*> lists) {
         如果两个链表长度之和为N，时间复杂度请达到O(N)，额外空间复杂度 请达到O(1)
 */
 static ListNode* FindFirstIntersection(ListNode* head1, ListNode* head2) {
+    if (head1 == nullptr || head2 == nullptr) {
+        return nullptr;
+    }
     return nullptr;
 }
 
 static ListNode* test(ListNode* head1, ListNode* head2) {
-    return nullptr;
+    if (head1 == nullptr || head2 == nullptr) {
+        return nullptr;
+    }
+
+    set<ListNode*> sets;
+    ListNode* head = head1;
+    while (head != nullptr) {
+        if (sets.contains(head)) {
+            break;
+        }
+        sets.insert(head);
+        head = head->next;
+    }
+
+    head = head2;
+    bool is_intersection = false;
+    while (head != nullptr) {
+        if (sets.contains(head)) {
+            is_intersection = true;
+            break;
+        }
+        sets.insert(head);
+        head = head->next;
+    }
+
+    return is_intersection ? head : nullptr;
 }
 
 int main(int argc, char* argv[]) {
@@ -246,8 +274,12 @@ int main(int argc, char* argv[]) {
 
     for (int i = 0; i < test_times; ++i) {
         std::pair<ListNode*, ListNode*> lists = GenRandomList(max_n, min, max);
-        PrintList(lists.first);
-        PrintList(lists.second);
+        if (test(lists.first, lists.second) != 
+                FindFirstIntersection(lists.first, lists.second)) {
+            cout << "test failed" << endl;
+            break;
+        }
+
         FreeList(lists);
     }
 
