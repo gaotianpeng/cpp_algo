@@ -134,7 +134,7 @@ static ListNode* SmallEqualBigger(ListNode* head, int val) {
     ListNode* equal_tail = nullptr;
     ListNode* bigger_head = nullptr;
     ListNode* bigger_tail = nullptr;
-
+    
     ListNode* next = nullptr;
     while (head != nullptr) {
         next = head->next;
@@ -143,46 +143,42 @@ static ListNode* SmallEqualBigger(ListNode* head, int val) {
             if (small_head == nullptr) {
                 small_head = head;
                 small_tail = head;
-                small_tail->next = nullptr;
             } else {
                 small_tail->next = head;
                 small_tail = small_tail->next;
-                small_tail->next = nullptr;
             }
         } else if (head->val == val) {
             if (equal_head == nullptr) {
                 equal_head = head;
                 equal_tail = head;
-                equal_tail->next = nullptr;
             } else {
                 equal_tail->next = head;
                 equal_tail = equal_tail->next;
-                equal_tail->next = nullptr;
             }
         } else {
             if (bigger_head == nullptr) {
                 bigger_head = head;
                 bigger_tail = head;
-                bigger_tail->next = nullptr;
             } else {
                 bigger_tail->next = head;
                 bigger_tail = bigger_tail->next;
-                bigger_tail->next = nullptr;
             }
         }
+
         head = next;
     }
-
+    
     if (small_tail != nullptr) {
         small_tail->next = equal_head;
-        equal_tail = equal_head == nullptr ? small_tail : equal_tail;
+        equal_tail = equal_tail == nullptr ? small_tail : equal_tail;
     }
+
     if (equal_tail != nullptr) {
         equal_tail->next = bigger_head;
     }
 
-    return small_head != nullptr ? small_head :
-        (equal_head != nullptr ? equal_head : bigger_head);
+    return small_head != nullptr ? small_head :(equal_head != nullptr ? 
+        equal_head : bigger_head);
 }
 
 static ListNode* test(ListNode* head, int val) {
@@ -225,7 +221,7 @@ int main(int argc, char* argv[]) {
     int max = 100;
     int min = -100;
     int max_n = 30;
-    int test_times = 10;
+    int test_times = 100000;
 
     for (int i = 0; i < test_times; ++i) {
         ListNode* head1 = RandomList(max_n, min, max);
