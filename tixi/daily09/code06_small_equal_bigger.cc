@@ -175,14 +175,14 @@ static ListNode* SmallEqualBigger(ListNode* head, int val) {
 
     if (small_tail != nullptr) {
         small_tail->next = equal_head;
-        equal_tail = equal_tail == nullptr ? small_tail : equal_tail;
+        equal_tail = equal_head == nullptr ? small_tail : equal_tail;
     }
-
     if (equal_tail != nullptr) {
         equal_tail->next = bigger_head;
     }
 
-    return small_head != nullptr ? small_head : (equal_head != nullptr ? equal_head: bigger_head);
+    return small_head != nullptr ? small_head :
+        (equal_head != nullptr ? equal_head : bigger_head);
 }
 
 static ListNode* test(ListNode* head, int val) {
@@ -200,12 +200,12 @@ static ListNode* test(ListNode* head, int val) {
         if (nodes[i]->val < val) {
             ans.emplace_back(nodes[i]);
         }
-    } 
+    }
     for (int i = 0; i < nodes.size(); ++i) {
         if (nodes[i]->val == val) {
             ans.emplace_back(nodes[i]);
         }
-    } 
+    }
     for (int i = 0; i < nodes.size(); ++i) {
         if (nodes[i]->val > val) {
             ans.emplace_back(nodes[i]);
