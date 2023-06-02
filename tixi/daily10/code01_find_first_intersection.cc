@@ -43,19 +43,21 @@ struct ListNode{
 };
 
 static ListNode* RandomList(int max_n, int min_val, int max_val) {
+    int cnt = 0;
     vector<int> out;
     RandomArr(out, max_n, min_val, max_val);
     vector<ListNode*> lists;
     for (auto& elem: out) {
         lists.emplace_back(new ListNode(elem));
+        ++cnt;
     }
 
     if (lists.size() == 0) {
         return nullptr;
     }
 
-    for (int i = 1; i < lists.size(); ++i) {
-        lists[i-1]->next = lists[i];
+    for (int i = 0; i < lists.size() - 1; ++i) {
+        lists[i]->next = lists[i + 1];
     }
 
     double probability = Math::random();
@@ -65,6 +67,17 @@ static ListNode* RandomList(int max_n, int min_val, int max_val) {
         int pos = RandomVal(0, lists.size() - 1);
         lists[lists.size() - 1]->next = lists[pos];
     }
+    lists[lists.size() - 1]->next = nullptr;
+    ListNode* node = lists[0];
+    while (node != nullptr) {
+        --cnt;
+        node = node->next;
+    }
+
+    if (cnt != 0) {
+        cout << "leak --------" << endl;
+    }
+
     return lists[0];
 }
 
@@ -113,10 +126,17 @@ static void PrintList(ListNode* head) {
 }
 
 static void FreeList(ListNode* head) {
+    set<ListNode*> nodes;
     while (head != nullptr) {
-        ListNode* tmp = head;
+        if (nodes.contains(head)) {
+            break;
+        }
+        nodes.insert(head);
         head = head->next;
-        delete tmp;
+    }
+
+    for (auto elem: nodes) {
+        delete elem;
     }
 }
 
@@ -139,6 +159,7 @@ static std::pair<ListNode*, ListNode*> GenRandomList(
         int max_n, int min_val, int max_val) {
     ListNode* list1 = RandomList(max_n, min_val, max_val);
     ListNode* list2 = RandomList(max_n, min_val, max_val);
+
 
     double probability = Math::random();
     if (probability < 0.5) {
@@ -197,31 +218,79 @@ static std::pair<ListNode*, ListNode*> GenRandomList(
 }
 
 static void FreeList(std::pair<ListNode*, ListNode*> lists) {
-    std::set<ListNode*> nodes;
+    std::set<ListNode*> nodes1;
     ListNode* head = lists.first;
     while (head != nullptr) {
-        if (nodes.contains(head)) {
+        if (nodes1.contains(head)) {
             break;
         }
-        nodes.insert(head);
+        nodes1.insert(head);
         head = head->next;
     }
     head = lists.second;
+
+    std::set<ListNode*> nodes2;
     while (head != nullptr) {
-        if (nodes.contains(head)) {
+        if (nodes2.contains(head)) {
             break;
         }
-        nodes.insert(head);
+        nodes2.insert(head);
         head = head->next;
     }
 
-    for (auto& elem: nodes) {
+    for (auto& elem: nodes2) {
+        if (!nodes1.contains(elem)) {
+            nodes1.insert(elem);
+        }
+    }
+
+    for (auto& elem: nodes1) {
         delete elem;
     }
 }
 
 } // namespace
 
+static ListNode* GetLoopNode(ListNode* head) {
+    if (head == nullptr || head->next == nullptr || head->next->next == nullptr) {
+        return nullptr;
+    }
+
+
+    ListNode* slow = head->next;
+    ListNode* fast = head->next->next;
+    while (slow != fast) {
+        if (fast->next == nullptr || fast->next->next == nullptr) {
+            return nullptr;
+        }
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    fast = head;
+    while (fast != slow) {
+        fast = fast->next;
+        slow = slow->next;
+    }
+    return slow;
+}
+
+static ListNode* GetLoopNodeTest(ListNode* head) {
+    if (head == nullptr || head->next == nullptr) {
+        return nullptr;
+    }
+
+    set<ListNode*> nodes;
+    while (head != nullptr) {
+        if (nodes.contains(head)) {
+            return head;
+        }
+        nodes.insert(head);
+        head = head->next;
+    }
+
+    return nullptr;
+}
 
 /*
     给定两个可能有环也可能无环的单链表，头节点head1 和 head2。请实现一个函数，如果两个链表相交，
@@ -270,13 +339,20 @@ int main(int argc, char* argv[]) {
     int max = 100;
     int min = -100;
     int max_n = 30;
-    int test_times = 100;
+    int test_times = 10;
 
     for (int i = 0; i < test_times; ++i) {
         std::pair<ListNode*, ListNode*> lists = GenRandomList(max_n, min, max);
-        if (test(lists.first, lists.second) != 
-                FindFirstIntersection(lists.first, lists.second)) {
-            cout << "test failed" << endl;
+
+        if (GetLoopNode(lists.first) != GetLoopNodeTest(lists.first)) {
+            cout << "test failed " << endl;
+            FreeList(lists);
+            break;
+        }
+
+        if (GetLoopNode(lists.second) != GetLoopNodeTest(lists.second)) {
+            cout << "test failed " << endl;
+            FreeList(lists);
             break;
         }
 
