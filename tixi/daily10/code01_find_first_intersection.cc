@@ -115,21 +115,6 @@ static void PrintList(ListNode* head) {
     }
 }
 
-static void FreeList(ListNode* head) {
-    set<ListNode*> nodes;
-    while (head != nullptr) {
-        if (nodes.contains(head)) {
-            break;
-        }
-        nodes.insert(head);
-        head = head->next;
-    }
-
-    for (auto elem: nodes) {
-        delete elem;
-    }
-}
-
 static bool IsEqual(ListNode* head1, ListNode* head2) {
     while (head1 != nullptr && head2 != nullptr) {
         if (head1->val != head2->val) {
@@ -225,7 +210,73 @@ static void FreeList(std::pair<ListNode*, ListNode*> lists) {
     }
 }
 
+static void PrintList(std::pair<ListNode*, ListNode*> lists) {
+    std::set<ListNode*> nodes1;
+    std::vector<ListNode*> list1;
+    ListNode* head = lists.first;
+    while (head != nullptr) {
+        if (nodes1.contains(head)) {
+            break;
+        }
+        nodes1.insert(head);
+        list1.emplace_back(head);
+        head = head->next;
+    }
+    head = lists.second;
+
+    std::set<ListNode*> nodes2;
+    std::vector<ListNode*> list2;
+    while (head != nullptr) {
+        if (nodes2.contains(head)) {
+            break;
+        }
+        nodes2.insert(head);
+        list2.emplace_back(head);
+        head = head->next;
+    }
+
+    for (int i = 0; i < list1.size(); ++i) {
+        cout << list1[i] << " ";
+    }
+    cout << endl;
+
+
+    for (int i = 0; i < list2.size(); ++i) {
+        cout << list2[i] << " ";
+    }
+    cout << endl;
+
+    for (int i = 0; i < list1.size(); ++i) {
+        cout << list1[i]->val << " ";
+    }
+    cout << endl;
+
+
+    for (int i = 0; i < list2.size(); ++i) {
+        cout << list2[i]->val << " ";
+    }
+    cout << endl;
+
+}
+
 } // namespace
+
+static ListNode* GetLoopNodeTest(ListNode* head) {
+    if (head == nullptr || head->next == nullptr) {
+        return nullptr;
+    }
+
+    set<ListNode*> nodes;
+    while (head != nullptr) {
+        if (nodes.contains(head)) {
+            return head;
+        }
+        nodes.insert(head);
+        head = head->next;
+    }
+
+    return nullptr;
+}
 
 static ListNode* GetLoopNode(ListNode* head) {
     if (head == nullptr || head->next == nullptr || head->next->next == nullptr) {
@@ -248,24 +299,92 @@ static ListNode* GetLoopNode(ListNode* head) {
         fast = fast->next;
         slow = slow->next;
     }
-    return slow;
+    return fast;
 }
 
-static ListNode* GetLoopNodeTest(ListNode* head) {
-    if (head == nullptr || head->next == nullptr) {
+static ListNode* BothLoop(ListNode* loop1, ListNode* loop2, ListNode* head1, ListNode* head2) {
+    ListNode* cur1 = nullptr;
+    ListNode* cur2 = nullptr;
+    if (loop1 == loop2) {
+        cur1 = head1;
+        cur2 = head2;
+        int n = 0;
+        while (cur1 != loop1) {
+            ++n;
+            cur1 = cur1->next;
+        }
+
+        while (cur2 != loop1) {
+            --n;
+            cur2 = cur2->next;
+        }
+
+        cur1 = n > 0 ? head1 : head2;
+        cur2 = cur1 == head1 ? head2 : head1;
+
+        n = std::abs(n);
+        while ( n > 0) {
+            --n;
+            cur1 = cur1->next;
+        }
+
+        while (cur1 != cur2) {
+            cur1 = cur1->next;
+            cur2 = cur2->next;
+        }
+
+        return cur1;
+    } else {
+        cur1 = loop1->next;
+        while (cur1 != loop1) {
+            if (cur1 == loop2) {
+                return loop2;
+            }
+            cur1 = cur1->next;
+        }
+
+        return nullptr;
+    }
+}
+
+static ListNode* NoLoop(ListNode* head1, ListNode* head2) {
+    if (head1 == nullptr || head2 == nullptr) {
         return nullptr;
     }
 
-    set<ListNode*> nodes;
-    while (head != nullptr) {
-        if (nodes.contains(head)) {
-            return head;
-        }
-        nodes.insert(head);
-        head = head->next;
+    int n = 0;
+    ListNode* cur1 = head1;
+    ListNode* cur2 = head2;
+    while (cur1 != nullptr) {
+        ++n;
+        cur1 = cur1->next;
     }
 
-    return nullptr;
+    while (cur2 != nullptr) {
+        --n;
+        cur2 = cur2->next;
+    }
+
+    if (cur1 != cur2) {
+        return nullptr;
+    }
+
+    cur1 = n > 0 ? head1 : head2;
+    cur2 = cur1 == head1 ? head2 : head1;
+
+    n = std::abs(n);
+
+    while (n > 0) {
+        --n;
+        cur1 = cur1->next;
+    }
+
+    while (cur1 != cur2) {
+        cur1 = cur1->next;
+        cur2 = cur2->next;
+    }
+
+    return cur1;
 }
 
 /*
@@ -274,10 +393,23 @@ static ListNode* GetLoopNodeTest(ListNode* head) {
     【要求】
         如果两个链表长度之和为N，时间复杂度请达到O(N)，额外空间复杂度 请达到O(1)
 */
-static ListNode* FindFirstIntersection(ListNode* head1, ListNode* head2) {
+
+static ListNode* getIntersectionNode(ListNode* head1, ListNode* head2) {
     if (head1 == nullptr || head2 == nullptr) {
         return nullptr;
     }
+
+    ListNode* loop1 = GetLoopNode(head1);
+    ListNode* loop2 = GetLoopNode(head2);
+
+    if (loop1 != nullptr && loop2 != nullptr) {
+        return BothLoop(loop1, loop2, head1, head2);
+    }
+
+    if (loop1 == nullptr && loop2 == nullptr) {
+        return NoLoop(head1, head2);
+    }
+
     return nullptr;
 }
 
@@ -285,29 +417,42 @@ static ListNode* test(ListNode* head1, ListNode* head2) {
     if (head1 == nullptr || head2 == nullptr) {
         return nullptr;
     }
-
-    set<ListNode*> sets;
+    
+    set<ListNode*> set1;
+    vector<ListNode*> nodes1;
     ListNode* head = head1;
     while (head != nullptr) {
-        if (sets.contains(head)) {
+        auto iter = set1.find(head);
+        if (iter != set1.end()) {
             break;
         }
-        sets.insert(head);
+        nodes1.emplace_back(head);
+        set1.insert(head);
         head = head->next;
     }
 
+    set<ListNode*> set2;
+    vector<ListNode*> nodes2;
     head = head2;
-    bool is_intersection = false;
     while (head != nullptr) {
-        if (sets.contains(head)) {
-            is_intersection = true;
+        auto iter = set2.find(head);
+        if (iter != set2.end()) {
             break;
         }
-        sets.insert(head);
+        nodes2.emplace_back(head);
+        set2.insert(head);
         head = head->next;
     }
 
-    return is_intersection ? head : nullptr;
+    for (auto& elem: nodes2) {
+        for (auto& target : nodes1) {
+            if (target == elem) {
+                return target;
+            }
+        }
+    }
+
+    return nullptr;
 }
 
 int main(int argc, char* argv[]) {
@@ -315,19 +460,12 @@ int main(int argc, char* argv[]) {
     int max = 100;
     int min = -100;
     int max_n = 30;
-    int test_times = 10;
+    int test_times = 100000;
 
     for (int i = 0; i < test_times; ++i) {
         std::pair<ListNode*, ListNode*> lists = GenRandomList(max_n, min, max);
-
-        if (GetLoopNode(lists.first) != GetLoopNodeTest(lists.first)) {
-            cout << "test failed " << endl;
-            FreeList(lists);
-            break;
-        }
-
-        if (GetLoopNode(lists.second) != GetLoopNodeTest(lists.second)) {
-            cout << "test failed " << endl;
+        if (getIntersectionNode(lists.first, lists.second) != test(lists.first, lists.second)){
+            PrintList(lists);
             FreeList(lists);
             break;
         }
