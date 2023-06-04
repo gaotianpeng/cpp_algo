@@ -35,16 +35,19 @@ struct Node {
     }
 };
 
-static Node* GenerateRandomTree(int max_val, int max_level, vector<int>& vals) {
+
+static Node* GenerateRandomTree(int max_val, int max_level, int& max_width) {
     int level = 1;
 
     queue<Node*> que;
     Node* ans = nullptr;
+    int cur_level_width = 0;
     if (Math::random() > 0.5) {
         Node* node = new Node(RandomVal(-max_val, max_val));
-        vals.emplace_back(node->val);
         que.push(node);
         ans = node;
+        cur_level_width = 1;
+        max_width = std::max(cur_level_width, max_width);
     } else {
         return nullptr;
     }
@@ -64,12 +67,10 @@ static Node* GenerateRandomTree(int max_val, int max_level, vector<int>& vals) {
             cur->right = Math::random() > 0.5 ? nullptr : new Node(RandomVal(-max_val, max_val));
             if (cur->left != nullptr) {
                 que.push(cur->left);
-                vals.emplace_back(cur->left->val);
             }
 
             if (cur->right != nullptr) {
                 que.push(cur->right);
-                vals.emplace_back(cur->right->val);
             }
 
         }
@@ -77,7 +78,9 @@ static Node* GenerateRandomTree(int max_val, int max_level, vector<int>& vals) {
         if (que.empty()) {
             break;
         }
-
+    
+        cur_level_width = que.size();
+        max_width = std::max(cur_level_width, max_width);
         ++level;
     }
 
@@ -128,24 +131,39 @@ static bool IsEqual(const vector<int>& vals1, const vector<int>& vals2) {
 }  // namespace
 
 
-static void LevelTraverse(Node* cur, vector<int>& vals) {
-    if (cur == nullptr) {
-        return;
+static int MaxWidth(Node* head) {
+    if (head == nullptr) {
+        return 0;
     }
 
     queue<Node*> que;
-    que.push(cur);
+    que.push(head);
+    // 当前层，最右节点是谁
+    Node* cur_end = head;
+    // 下一层，最右节点是谁
+    Node* next_end = nullptr;
+    int max = 0;
+    int cur_level_nodes = 0;
     while (!que.empty()) {
-        Node* node = que.front();
-        vals.emplace_back(node->val);
+        Node* cur = que.front();
         que.pop();
-        if (node->left) {
-            que.push(node->left);
+        if (cur->left != nullptr) {
+            que.push(cur->left);
+            next_end = cur->left;
         }
-        if (node->right) {
-            que.push(node->right);
+        if (cur->right != nullptr) {
+            que.push(cur->right);
+            next_end = cur->right;
+        }
+        cur_level_nodes++;
+        if (cur == cur_end) {
+            max = std::max(max, cur_level_nodes);
+            cur_level_nodes = 0;
+            cur_end = next_end;
         }
     }
+
+    return max;
 }
 
 
@@ -153,16 +171,13 @@ int main(int argc, char* argv[]) {
     cout << "test start..." << endl;
     int max_val = 100;
     int max_level = 30;
-    int test_times = 100000;
+    int test_times = 100;
 
     for (int i = 0; i < test_times; ++i) {
-        vector<int> vals1, vals2;
-        Node* tree = GenerateRandomTree(max_val, max_level, vals1);
-        LevelTraverse(tree, vals2);
-        if (!IsEqual(vals1, vals2)) {
+        int max_width = 0;
+        Node* tree = GenerateRandomTree(max_val, max_level, max_width);
+        if (MaxWidth(tree) != max_width) {
             cout << "test failed" << endl;
-            Print(vals1);
-            Print(vals2);
             FreeTree(tree);
             break;
         }
