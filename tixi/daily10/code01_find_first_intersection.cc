@@ -393,7 +393,6 @@ static ListNode* NoLoop(ListNode* head1, ListNode* head2) {
     【要求】
         如果两个链表长度之和为N，时间复杂度请达到O(N)，额外空间复杂度 请达到O(1)
 */
-
 static ListNode* getIntersectionNode(ListNode* head1, ListNode* head2) {
     if (head1 == nullptr || head2 == nullptr) {
         return nullptr;
