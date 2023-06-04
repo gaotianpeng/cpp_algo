@@ -67,16 +67,6 @@ static ListNode* RandomList(int max_n, int min_val, int max_val) {
         int pos = RandomVal(0, lists.size() - 1);
         lists[lists.size() - 1]->next = lists[pos];
     }
-    lists[lists.size() - 1]->next = nullptr;
-    ListNode* node = lists[0];
-    while (node != nullptr) {
-        --cnt;
-        node = node->next;
-    }
-
-    if (cnt != 0) {
-        cout << "leak --------" << endl;
-    }
 
     return lists[0];
 }
@@ -160,7 +150,6 @@ static std::pair<ListNode*, ListNode*> GenRandomList(
     ListNode* list1 = RandomList(max_n, min_val, max_val);
     ListNode* list2 = RandomList(max_n, min_val, max_val);
 
-
     double probability = Math::random();
     if (probability < 0.5) {
         return {list1, list2};
@@ -189,8 +178,6 @@ static std::pair<ListNode*, ListNode*> GenRandomList(
         nodes2.emplace_back(cur);
         cur = cur->next;
     }
-    
-    ListNode* end2 = cur;
 
     if (nodes1.size() == 0 || nodes2.size() == 0) {
         return {list1, list2};
@@ -198,20 +185,9 @@ static std::pair<ListNode*, ListNode*> GenRandomList(
 
     int pos1 = RandomVal(0, nodes1.size() - 1);
     int pos2 = RandomVal(0, nodes2.size() - 1);
-    cur = nodes2[pos2]->next;
     nodes2[pos2]->next = nodes1[pos1];
-
-    vector<ListNode*> nodes3;
-    while (cur != nullptr) {
-        if (cur == end2) {
-            break;
-        }
-        nodes3.emplace_back(cur);
-        cur = cur->next;
-    }
-
-    for (auto& elem: nodes3) {
-        delete elem;
+    for (int i = pos2 + 1; i < nodes2.size(); ++i) {
+        delete nodes2[i];
     }
 
     return {list1, list2};
