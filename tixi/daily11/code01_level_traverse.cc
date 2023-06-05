@@ -60,8 +60,10 @@ static Node* GenerateRandomTree(int max_val, int max_level, vector<int>& vals) {
         while (!cur_level_nodes.empty()) {
             Node* cur = cur_level_nodes.front();
             cur_level_nodes.pop();
-            cur->left = Math::random() > 0.5 ? nullptr : new Node(RandomVal(-max_val, max_val));
-            cur->right = Math::random() > 0.5 ? nullptr : new Node(RandomVal(-max_val, max_val));
+            cur->left = Math::random() > 0.5 ? nullptr :
+                    new Node(RandomVal(-max_val, max_val));
+            cur->right = Math::random() > 0.5 ? nullptr :
+                    new Node(RandomVal(-max_val, max_val));
             if (cur->left != nullptr) {
                 que.push(cur->left);
                 vals.emplace_back(cur->left->val);
@@ -71,7 +73,6 @@ static Node* GenerateRandomTree(int max_val, int max_level, vector<int>& vals) {
                 que.push(cur->right);
                 vals.emplace_back(cur->right->val);
             }
-
         }
 
         if (que.empty()) {
@@ -127,7 +128,9 @@ static bool IsEqual(const vector<int>& vals1, const vector<int>& vals2) {
 
 }  // namespace
 
-
+/*
+    实现二叉树的按层遍历
+*/
 static void LevelTraverse(Node* cur, vector<int>& vals) {
     if (cur == nullptr) {
         return;

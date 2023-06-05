@@ -160,7 +160,9 @@ static void PrintTree(Node* node) {
 
 }  // namespace
 
-
+/*
+    求二叉树最宽的层有多少个节点
+*/
 static int MaxWidth(Node* head) {
     if (head == nullptr) {
         return 0;
