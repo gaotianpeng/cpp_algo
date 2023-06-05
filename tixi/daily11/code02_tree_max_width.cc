@@ -168,11 +168,10 @@ static int MaxWidth(Node* head) {
 
     queue<Node*> que;
     que.push(head);
-    // 当前层，最右节点是谁
     Node* cur_end = head;
-    // 下一层，最右节点是谁
     Node* next_end = nullptr;
-    int max = 0;
+    
+    int ans = 1;
     int cur_level_nodes = 0;
     while (!que.empty()) {
         Node* cur = que.front();
@@ -185,15 +184,16 @@ static int MaxWidth(Node* head) {
             que.push(cur->right);
             next_end = cur->right;
         }
+
         cur_level_nodes++;
         if (cur == cur_end) {
-            max = std::max(max, cur_level_nodes);
-            cur_level_nodes = 0;
+            ans = std::max(cur_level_nodes, ans);
             cur_end = next_end;
+            cur_level_nodes = 0;
         }
     }
 
-    return max;
+    return ans;
 }
 
 static int test(Node* node) {
