@@ -1,7 +1,8 @@
 #include <algorithm>
 #include <iostream>
-#include <random>
 #include <queue>
+#include <stack>
+#include <random>
 #include <vector>
 
 using namespace std;
@@ -27,8 +28,10 @@ static int RandomVal(int min_val, int max_val) {
 
 struct Node {
     int val  = 0;
+    Node* parent = nullptr;
     Node* left = nullptr;
     Node* right = nullptr;
+
     Node(int v):val(v) {
     }
 };
@@ -40,6 +43,7 @@ static Node* GenerateRandomTree(int max_val, int max_level) {
     Node* ans = nullptr;
     if (Math::random() > 0.5) {
         Node* node = new Node(RandomVal(-max_val, max_val));
+        node->parent = nullptr;
         que.push(node);
         ans = node;
     } else {
@@ -57,15 +61,19 @@ static Node* GenerateRandomTree(int max_val, int max_level) {
         while (!cur_level_nodes.empty()) {
             Node* cur = cur_level_nodes.front();
             cur_level_nodes.pop();
+
             cur->left = Math::random() > 0.5 ? nullptr : 
                     new Node(RandomVal(-max_val, max_val));
             cur->right = Math::random() > 0.5 ? nullptr : 
                     new Node(RandomVal(-max_val, max_val));
-
+    
             if (cur->left != nullptr) {
+                cur->left->parent = cur;
                 que.push(cur->left);
             }
+
             if (cur->right != nullptr) {
+                cur->right->parent = cur;
                 que.push(cur->right);
             }
         }
@@ -154,78 +162,101 @@ static void PrintTree(Node* node) {
     cout << "------------ binary tree ----------" << endl;
 }
 
-}  // namespace
-
-/*
-    求二叉树最宽的层有多少个节点
-*/
-static int MaxWidth(Node* head) {
+static Node* GetRandomNodeFromBT(Node* head) {
     if (head == nullptr) {
-        return 0;
+        return nullptr;
     }
 
     queue<Node*> que;
+    vector<Node*> nodes;
     que.push(head);
-    Node* cur_end = head;
-    Node* next_end = nullptr;
-    
-    int ans = 0;
-    int cur_level_nodes = 0;
     while (!que.empty()) {
         Node* cur = que.front();
         que.pop();
-        if (cur->left != nullptr) {
+        nodes.emplace_back(cur);
+        if (cur->left) {
             que.push(cur->left);
-            next_end = cur->left;
         }
-        if (cur->right != nullptr) {
+        if (cur->right) {
             que.push(cur->right);
-            next_end = cur->right;
-        }
-
-        cur_level_nodes++;
-        if (cur == cur_end) {
-            ans = std::max(cur_level_nodes, ans);
-            cur_end = next_end;
-            cur_level_nodes = 0;
         }
     }
 
-    return ans;
+    int n = nodes.size();
+    return nodes[RandomVal(0, n - 1)];
 }
 
-static int test(Node* node) {
+}  // namespace
+
+/*
+    二叉树结构如下定义：
+    Class Node {
+        V value;
+        Node left;
+        Node right;
+        Node parent;
+    }
+    给你二叉树中的某个节点，返回该节点的后继节点
+
+    某一节点的后继节点是二叉树中序遍历序列中该节点的后一节点
+*/
+static Node* GetLeftMost(Node* node) {
     if (node == nullptr) {
-        return 0;
+        return nullptr;
     }
 
-    int ans = 0;
-    queue<Node*> que;
-    queue<Node*> cur_level_nodes;
-    que.push(node);
-    int cur_level_width = que.size();
-    ans = std::max(cur_level_width, ans);
-    while (!que.empty()) {
-        while (!que.empty()) {
-            cur_level_nodes.push(que.front());
-            que.pop();
-        }
-
-        while (!cur_level_nodes.empty()) {
-            Node* cur = cur_level_nodes.front();
-            cur_level_nodes.pop();
-            if (cur->left != nullptr) {
-                que.push(cur->left);
-            }
-            if (cur->right != nullptr) {
-                que.push(cur->right);
-            }
-        }
-        cur_level_width = que.size();
-        ans = std::max(ans, cur_level_width);
+    while (node->left != nullptr) {
+        node = node->left;
     }
 
-    return ans;
+    return node;
+}
+
+static Node* GetSuccessorNode(Node* head) {
+    if (head == nullptr) {
+        return nullptr;
+    }
+
+    if (head->right != nullptr) {
+        return GetLeftMost(head->right);
+    } else {
+        Node* parent = head->parent;
+        while (parent != nullptr && parent->right == head) {
+            head = parent;
+            parent = head->parent;
+        }
+
+        return parent;
+    }
+}
+
+static Node* test(Node* head, Node* node) {
+    if (node == nullptr) {
+        return nullptr;
+    }
+
+    vector<Node*> in_nodes;
+    stack<Node*> nodes;
+    Node* cur = head;
+    while (!nodes.empty() || cur != nullptr) {
+        if (cur != nullptr) {
+            nodes.push(cur);
+            cur = cur->left;
+        } else {
+            cur = nodes.top();
+            in_nodes.emplace_back(cur);
+            nodes.pop();
+            cur = cur->right;
+        }
+    }
+
+    for (int i = 0; i < in_nodes.size(); ++i) {
+        if (node == in_nodes[i] && i != in_nodes.size() - 1) {
+            return in_nodes[i+1];
+        }
+    }
+    
+    return nullptr;
 }
 
 int main(int argc, char* argv[]) {
@@ -235,15 +266,27 @@ int main(int argc, char* argv[]) {
     int test_times = 100000;
 
     for (int i = 0; i < test_times; ++i) {
-        Node* tree = GenerateRandomTree(max_val, max_level);
-        if (MaxWidth(tree) != test(tree)) {
+        Node* head = GenerateRandomTree(max_val, max_level);
+        Node* node = GetRandomNodeFromBT(head);
+        if (GetSuccessorNode(node) != test(head, node)) {
+            auto ret1 = GetSuccessorNode(node);
+            auto ret2 = test(head, node);
+            if (node != nullptr) {
+                cout << node << "++" << node->val <<endl;
+            }
+            if (ret1 != nullptr) {
+                cout << ret1 << "--" << ret1->val <<endl;
+            }
+            if (ret2 != nullptr) {
+                cout << ret2 << "***" << ret2->val <<endl;
+            }
             cout << "test failed" << endl;
-            PrintTree(tree);
-            FreeTree(tree);
+            PrintTree(head);
+            FreeTree(head);
             break;
         }
 
-        FreeTree(tree);
+        FreeTree(head);
     }
 
     cout << "test end" << endl;
