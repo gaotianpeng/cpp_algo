@@ -1,7 +1,8 @@
 #include <algorithm>
 #include <iostream>
-#include <random>
 #include <queue>
+#include <random>
+#include <stack>
 #include <vector>
 
 using namespace std;
@@ -184,6 +185,43 @@ static bool IsCBT(Node* head) {
     return process(head).is_cbt;
 }
 
+static bool IsCBT1(Node* head) {
+    if (head == nullptr) {
+        return true;
+    }
+
+    queue<Node*> que;
+    que.push(head);
+    bool leaf = false;
+
+    while (!que.empty()) {
+        Node* cur = que.front();
+        que.pop();
+
+        if (cur->left != nullptr) {
+            if (leaf) {
+                return false;
+            }
+
+            que.push(cur->left);
+        } else {
+            leaf = true;
+        }
+
+        if (cur->right != nullptr) {
+            if (leaf) {
+                return false;
+            }
+
+            que.push(cur->right);
+        } else {
+            leaf = true;
+        }
+    }
+
+    return true;
+}
+
 static bool test(Node* head) {
     if (head == nullptr) {
         return true;
@@ -233,6 +271,20 @@ int main(int argc, char* argv[]) {
         if (IsCBT(tree) != test(tree)) {
             PrintTree(tree);
             cout << IsCBT(tree) << endl;
+            cout << test(tree) << endl;
+            cout << "test failed" << endl;
+            FreeTree(tree);
+            break;
+        }
+
+        FreeTree(tree);
+    }
+
+    for (int i = 0; i < test_times; ++i) {
+        Node* tree = GenerateRandomTree(max_val, max_level);
+        if (IsCBT1(tree) != test(tree)) {
+            PrintTree(tree);
+            cout << IsCBT1(tree) << endl;
             cout << test(tree) << endl;
             cout << "test failed" << endl;
             FreeTree(tree);
