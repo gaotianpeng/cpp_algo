@@ -200,7 +200,7 @@ static Node* GetRandomNodeFromBT(Node* head) {
 
     某一节点的后继节点是二叉树中序遍历序列中该节点的后一节点
 */
-static Node* GetLeftMost(Node* node) {
+static Node* GetLeftestNode(Node* node) {
     if (node == nullptr) {
         return nullptr;
     }
@@ -211,19 +211,18 @@ static Node* GetLeftMost(Node* node) {
 
     return node;
 }
-
-static Node* GetSuccessorNode(Node* head) {
-    if (head == nullptr) {
+static Node* GetSuccessorNode(Node* node) {
+    if (node == nullptr) {
         return nullptr;
     }
 
-    if (head->right != nullptr) {
-        return GetLeftMost(head->right);
+    if (node->right != nullptr) {
+        return GetLeftestNode(node->right);
     } else {
-        Node* parent = head->parent;
-        while (parent != nullptr && parent->right == head) {
-            head = parent;
-            parent = head->parent;
+        Node* parent = node->parent;
+        while (parent != nullptr && parent->right == node) {
+            node = parent;
+            parent = node->parent;
         }
 
         return parent;
@@ -231,7 +230,7 @@ static Node* GetSuccessorNode(Node* head) {
 }
 
 static Node* test(Node* head, Node* node) {
-    if (node == nullptr) {
+    if (head == nullptr || node == nullptr) {
         return nullptr;
     }
 
@@ -244,8 +243,8 @@ static Node* test(Node* head, Node* node) {
             cur = cur->left;
         } else {
             cur = nodes.top();
-            in_nodes.emplace_back(cur);
             nodes.pop();
+            in_nodes.emplace_back(cur);
             cur = cur->right;
         }
     }
@@ -255,7 +254,7 @@ static Node* test(Node* head, Node* node) {
             return in_nodes[i+1];
         }
     }
-    
+
     return nullptr;
 }
 
@@ -269,17 +268,6 @@ int main(int argc, char* argv[]) {
         Node* head = GenerateRandomTree(max_val, max_level);
         Node* node = GetRandomNodeFromBT(head);
         if (GetSuccessorNode(node) != test(head, node)) {
-            auto ret1 = GetSuccessorNode(node);
-            auto ret2 = test(head, node);
-            if (node != nullptr) {
-                cout << node << "++" << node->val <<endl;
-            }
-            if (ret1 != nullptr) {
-                cout << ret1 << "--" << ret1->val <<endl;
-            }
-            if (ret2 != nullptr) {
-                cout << ret2 << "***" << ret2->val <<endl;
-            }
             cout << "test failed" << endl;
             PrintTree(head);
             FreeTree(head);
