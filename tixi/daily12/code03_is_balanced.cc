@@ -131,64 +131,53 @@ static void PrintTree(Node* node) {
     判断二叉树是否是搜索二叉树
 */
 struct Info {
-    int min;
-    int max;
-    bool is_bst;
-    bool is_valid;
+    int height;
+    bool is_balanced;
 
-    Info(int in, int ax, bool bst, bool valid)
-        :min(in), max(ax), is_bst(bst), is_valid(valid) {
+    Info(int h, bool b):height(h), is_balanced(b) {
     }
 };
 
 static Info process(Node* head) {
     if (head == nullptr) {
-        return Info(0, 0, true, false);
+        return Info(-1, true);
     }
 
+    bool is_balanced = true;
     Info left_info = process(head->left);
     Info right_info = process(head->right);
-
-    int min_val = head->val;
-    if (left_info.is_valid) {
-        min_val = std::min(min_val, left_info.min);
-    }
-    if (right_info.is_valid) {
-        min_val = std::min(min_val, right_info.min);
-    }
-    
-    int max_val = head->val;
-    if (left_info.is_valid) {
-        max_val = std::max(max_val, left_info.max);
-    }
-    if (right_info.is_valid) {
-        max_val = std::max(max_val, right_info.max);
+    if (!left_info.is_balanced || !right_info.is_balanced) {
+        is_balanced = false;
     }
 
-    bool bst = true;
-    if (left_info.is_valid && !left_info.is_bst) {
-        bst = false;
-    }
-    if (right_info.is_valid && !right_info.is_bst) {
-        bst = false;
-    }
-    if (left_info.is_valid && left_info.max > head->val) {
-        bst = false;
-    }
-    if (right_info.is_valid && right_info.min < head->val) {
-        bst = false;
+    if (std::abs(left_info.height - right_info.height) > 1) {
+        is_balanced = false;
     }
 
-    return Info(min_val, max_val, bst, true);
+    int height = std::max(left_info.height, right_info.height) + 1;
+    return Info(height, is_balanced);
 }
 
-static bool IsBST(Node* head) {
+static bool IsBalanced(Node* head) {
     if (head == nullptr) {
         return true;
     }
 
-    Info ans = process(head);
-    return ans.is_bst;
+    return process(head).is_balanced;
+}
+
+static int process1(Node* node, bool& is_balanced) {
+    if (node == nullptr || !is_balanced) {
+        return -1;
+    }
+
+    int left_h = process1(node->left, is_balanced);
+    int right_h = process1(node->right, is_balanced);
+    if (std::abs(left_h - right_h) > 1) {
+        is_balanced = false;
+    }
+
+    return std::max(left_h, right_h) + 1;
 }
 
 static bool test(Node* head) {
@@ -196,28 +185,9 @@ static bool test(Node* head) {
         return true;
     }
 
-    vector<int> in_nodes;
-    stack<Node*> nodes;
-    Node* cur = head;
-    while (!nodes.empty() || cur != nullptr) {
-        if (cur != nullptr) {
-            nodes.push(cur);
-            cur = cur->left;
-        } else {
-            cur = nodes.top();
-            nodes.pop();
-            in_nodes.emplace_back(cur->val);
-            cur = cur->right;
-        }
-    }
-
-    for (int i = 1; i < in_nodes.size(); i++) {
-        if (in_nodes[i - 1] > in_nodes[i]) {
-            return false;
-        }
-    }
-
-    return true;
+    bool is_balanced = true;
+    process1(head, is_balanced);
+    return is_balanced;
 }
 
 int main(int argc, char* argv[]) {
@@ -228,10 +198,8 @@ int main(int argc, char* argv[]) {
 
     for (int i = 0; i < test_times; ++i) {
         Node* tree = GenerateRandomTree(max_val, max_level);
-        if (IsBST(tree) != test(tree)) {
+        if (IsBalanced(tree) != test(tree)) {
             PrintTree(tree);
-            cout << IsBST(tree) << endl;
-            cout << test(tree) << endl;
             cout << "test failed" << endl;
             FreeTree(tree);
             break;
