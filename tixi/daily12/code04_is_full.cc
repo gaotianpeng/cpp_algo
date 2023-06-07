@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 #include <queue>
 #include <random>
@@ -128,56 +129,41 @@ static void PrintTree(Node* node) {
 }  // namespace
 
 /*
-    判断二叉树是否是平衡二叉树
+    判断二叉树是否是满二叉树
 */
 struct Info {
     int height;
-    bool is_balanced;
+    bool is_full;
 
-    Info(int h, bool b):height(h), is_balanced(b) {
+    Info(int h, bool full)
+        :height(h), is_full(full) {
     }
 };
 
 static Info process(Node* head) {
     if (head == nullptr) {
-        return Info(-1, true);
+        return Info(0, true);
     }
 
-    bool is_balanced = true;
     Info left_info = process(head->left);
     Info right_info = process(head->right);
-    if (!left_info.is_balanced || !right_info.is_balanced) {
-        is_balanced = false;
-    }
-
-    if (std::abs(left_info.height - right_info.height) > 1) {
-        is_balanced = false;
-    }
-
+    
     int height = std::max(left_info.height, right_info.height) + 1;
-    return Info(height, is_balanced);
+    bool is_full = false;
+    if (left_info.is_full && right_info.is_full &&
+        left_info.height == right_info.height) {
+            is_full = true;
+    }
+
+    return Info(height, is_full);
 }
 
-static bool IsBalanced(Node* head) {
+static bool IsFull(Node* head) {
     if (head == nullptr) {
         return true;
     }
 
-    return process(head).is_balanced;
-}
-
-static int process1(Node* node, bool& is_balanced) {
-    if (node == nullptr || !is_balanced) {
-        return -1;
-    }
-
-    int left_h = process1(node->left, is_balanced);
-    int right_h = process1(node->right, is_balanced);
-    if (std::abs(left_h - right_h) > 1) {
-        is_balanced = false;
-    }
-
-    return std::max(left_h, right_h) + 1;
+    return process(head).is_full;
 }
 
 static bool test(Node* head) {
@@ -185,9 +171,37 @@ static bool test(Node* head) {
         return true;
     }
 
-    bool is_balanced = true;
-    process1(head, is_balanced);
-    return is_balanced;
+    queue<Node*> que;
+    que.push(head);
+
+    int cur_level_nodes = 0;
+    Node* cur_end = head;
+    Node* next_end = nullptr;
+    int level = 0;
+    while (!que.empty()) {
+        Node* cur = que.front();
+        que.pop();
+        if (cur->left != nullptr) {
+            que.push(cur->left);
+            next_end = cur->left;
+        }
+        if (cur->right != nullptr) {
+            que.push(cur->right);
+            next_end = cur->right;
+        }
+
+        ++cur_level_nodes;
+        if (cur == cur_end) {
+            if (cur_level_nodes != std::pow(2, level)) {
+                return false;
+            }
+            ++level;
+            cur_level_nodes = 0;
+            cur_end = next_end;
+        }
+    }
+
+    return true;
 }
 
 int main(int argc, char* argv[]) {
@@ -198,8 +212,10 @@ int main(int argc, char* argv[]) {
 
     for (int i = 0; i < test_times; ++i) {
         Node* tree = GenerateRandomTree(max_val, max_level);
-        if (IsBalanced(tree) != test(tree)) {
+        if (IsFull(tree) != test(tree)) {
             PrintTree(tree);
+            cout << IsFull(tree) << endl;
+            cout << test(tree) << endl;
             cout << "test failed" << endl;
             FreeTree(tree);
             break;
