@@ -219,6 +219,7 @@ static int distance(const unordered_map<Node*, Node*>& parent_map,
     while (!node1_set.contains(cur)) {
         cur = parent_map.at(cur);
     }
+
     Node* lowest_ancestor = cur;
     cur = node1;
     int distance1 = 1;
