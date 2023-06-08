@@ -160,6 +160,7 @@ int main(int argc, char* argv[]) {
             cout << "test failed" << endl;
             PrintArr(ans1);
             PrintArr(ans2);
+            FreeBinaryTree(root);
             break;
         }
         FreeBinaryTree(root);

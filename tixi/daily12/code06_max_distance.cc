@@ -131,16 +131,14 @@ static void PrintTree(Node* node) {
 }  // namespace
 
 /*
-    定一棵二叉树的头节点head，任何两个节点之间都存在距离，
+    给定一棵二叉树的头节点head，任何两个节点之间都存在距离，
     返回整棵二叉树的最大距离
 */
 struct Info {
     int max_distance;
     int height;
 
-    Info(int m, int h) {
-        max_distance = m;
-        height = h;
+    Info(int m, int h):max_distance(m), height(h) {
     }
 };
 
@@ -148,13 +146,18 @@ static Info process(Node* node) {
     if (node == nullptr) {
         return Info(0, 0);
     }
+
     Info left_info = process(node->left);
     Info right_info = process(node->right);
+
     int height = std::max(left_info.height, right_info.height) + 1;
+
     int p1 = left_info.max_distance;
     int p2 = right_info.max_distance;
     int p3 = left_info.height + right_info.height + 1;
+
     int max_distance = std::max(std::max(p1, p2), p3);
+
     return Info(max_distance, height);
 }
 
