@@ -103,62 +103,99 @@ static void FreeList(ListNode* head) {
 
 } // namespace
 
+static ListNode* ReverseList(ListNode* head) {
+    ListNode* pre = nullptr;
+    ListNode* next = nullptr;
 
-ListNode* ReOrder(ListNode* head) {
-    return nullptr;
-}
-
-ListNode* test(ListNode* head) {
-    if (head == nullptr) {
-        return nullptr;
+    while (head != nullptr) {
+        next = head->next;
+        head->next = pre;
+        pre = head;
+        head = next;
     }
 
-    vector<ListNode*> even_nodes;
-    vector<ListNode*> odd_nodes;
-    int i = 0;
+    return pre;
+}
+/*
+    https://leetcode.cn/problems/reorder-list/
+    141 重排链表
+        给定一个单链表 L 的头节点 head ，单链表 L 表示为
+        L0 → L1 → … → Ln - 1 → Ln
+        请将其重新排列后变为：
+        L0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → 
+*/
+void ReOrder(ListNode* head) {
+    if (head == nullptr || head->next == nullptr || head->next->next == nullptr) {
+        return ;
+    }
+
+    ListNode* slow = head->next;
+    ListNode* fast = head->next->next;
+
+    while (fast->next != nullptr && fast->next->next != nullptr) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    ListNode* reverse = slow->next;
+    slow->next = nullptr;
+    reverse = ReverseList(reverse);
+
+    while (head != nullptr && reverse != nullptr) {
+        ListNode* next1 = head->next;
+        ListNode* next2 = reverse->next;
+        head->next = reverse;
+        reverse->next = next1;
+        head = next1;
+        reverse = next2;
+    }
+}
+
+void test(ListNode* head) {
+    if (head == nullptr || head->next == nullptr || head->next->next == nullptr) {
+        return ;
+    }
+
+    vector<ListNode*> nodes;
     ListNode* cur = head;
     while (cur != nullptr) {
-        ++i;
-        if ((i & 1) == 0) {
-            even_nodes.emplace_back(cur);
-        } else {
-            odd_nodes.emplace_back(cur);
-        }
+        nodes.emplace_back(cur);
         cur = cur->next;
     }
 
-    int even_n = even_nodes.size();
-    int odd_n = odd_nodes.size();
-    
-    for (int i = 0; i < even_n; ++i) {
-        odd_nodes[i]->next = even_nodes[even_n - i - 1];
-        even_nodes[even_n - i - 1]->next =
-            i + 1 < odd_n ? odd_nodes[i + 1] : nullptr;
-    }
+    int n = nodes.size();
+    int i = 0;
 
-    return odd_nodes[0];
+    for (int i = 0; i < n/2; ++i) {
+        nodes[i]->next = nodes[ n - i - 1];
+        nodes[n - i - 1]->next = nodes[i+1];
+    }
+    
+    nodes[n/2]->next = nullptr;
 }
 
 int main(int argc, char* argv[]) {
     cout << "test start..." << endl;
     int max = 10000;
     int min = -10000;
-    int max_n = 10;
-    int test_times = 10;
+    int max_n = 30;
+    int test_times = 50000;
 
     for (int i = 0; i < test_times; ++i) {
        ListNode* head1 = RandomList(max_n, min, max);
        ListNode* head2 = CopyList(head1);
-       ListNode* rev1 = ReOrder(head1);
-       ListNode* rev2 = test(head2);
+       ReOrder(head1);
+       test(head2);
 
-       if (!IsEqual(rev1, rev2)) {
+       if (!IsEqual(head1, head2)) {
             cout << "test failed" << endl;
+            FreeList(head1);
+            FreeList(head2);
             break;
        }
 
-       FreeList(rev1);
-       FreeList(rev2);
+       FreeList(head1);
+       FreeList(head2);
     }
 
     cout << "test end" << endl;
