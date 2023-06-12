@@ -2,7 +2,6 @@
 #include <random>
 #include <vector>
 #include <algorithm>
-
 using namespace std;
 
 /*
@@ -103,57 +102,95 @@ static void FreeList(ListNode* head) {
 
 } // namespace
 
-ListNode* ReverseList(ListNode* head) {
-    ListNode* pre = nullptr;
-    ListNode* next = nullptr;
-    while (head != nullptr) {
-        next = head->next;
-        head->next = pre;
-        pre = head;
-        head = next;
+/*
+    https://leetcode.cn/problems/odd-even-linked-list/
+    328 奇偶链表
+        给定单链表的头节点 head ，将所有索引为奇数的节点和索引为偶数的节点分别组合在一起，然后返回重新排序的列表
+        第一个节点的索引被认为是 奇数 ， 第二个节点的索引为 偶数 ，以此类推
+
+        示例
+            输入: head = [1,2,3,4,5]
+            输出: [1,3,5,2,4]
+*/
+static ListNode* oddEvenList(ListNode* head) {
+    if (head == nullptr || head->next == nullptr || head->next->next == nullptr) {
+        return head;
     }
-    return pre;
+
+    ListNode* evenHead = head->next;
+    ListNode* odd = head;
+    ListNode* even = evenHead;
+
+    while (even != nullptr && even->next != nullptr) {
+        odd->next = even->next;
+        odd = odd->next;
+        even->next = odd->next;
+        even = even->next;
+    }
+    odd->next = evenHead;
+
+    return head;
 }
 
-ListNode* test(ListNode* head) {
-    if (head == nullptr) {
-        return nullptr;
+static ListNode* test(ListNode* head) {
+    if (head == nullptr || head->next == nullptr || head->next->next == nullptr) {
+        return head;
     }
 
-    vector<ListNode*> lists;
-    while (head != nullptr) {
-        lists.emplace_back(head);
-        head = head->next;
-    }
+    ListNode* even_head = head->next;
+    ListNode* odd = head;
+    ListNode* even = head->next;
+    ListNode* cur = head->next->next;
+    bool odd_sign = true;
 
-    for (int i = lists.size() - 1; i > 0; --i) {
-        lists[i]->next = lists[i-1];
+    while (cur != nullptr) {
+        if (odd_sign) {
+            odd->next = cur;
+            odd = odd->next;
+            
+        } else {
+            even->next = cur;
+            even = even->next;
+        }
+        
+        odd_sign = !odd_sign;
+        cur = cur->next;
     }
-    lists[0]->next = nullptr;
+    even->next = nullptr;
+    odd->next = even_head;
 
-    return lists[lists.size()  - 1];
+    return head;
 }
+
 
 int main(int argc, char* argv[]) {
     cout << "test start..." << endl;
-    int max = 100;
-    int min = -100;
-    int max_n = 30;
-    int test_times = 100000;
+    int max = 10000;
+    int min = -10000;
+    int max_n = 5;
+    int test_times = 50000;
 
-    for (int i = 0; i < test_times; ++i) {
-       ListNode* head1 = RandomList(max_n, min, max);
-       ListNode* head2 = CopyList(head1);
-       ListNode* rev1 = ReverseList(head1);
-       ListNode* rev2 = test(head2);
+    bool sign = true;
 
-       if (!IsEqual(rev1, rev2)) {
+    for (int i = 0; i < 10; ++i) {
+        ListNode* head1 = RandomList(max_n, min, max);
+        ListNode* head2 = CopyList(head1);
+
+        ListNode* list1 = oddEvenList(head1);
+        ListNode* list2 = test(head2);
+        if (!IsEqual(list1, list2)) {
             cout << "test failed" << endl;
-            break; 
-       }
+            PrintList(list1);
+            PrintList(list2);
 
-       FreeList(rev1);
-       FreeList(rev2);
+            FreeList(head1);
+            FreeList(head2);
+
+            break;
+        }
+
+        FreeList(head1);
+        // FreeList(head2);
     }
 
     cout << "test end" << endl;
