@@ -103,16 +103,9 @@ static void FreeList(ListNode* head) {
 
 } // namespace
 
-ListNode* ReverseList(ListNode* head) {
-    ListNode* pre = nullptr;
-    ListNode* next = nullptr;
-    while (head != nullptr) {
-        next = head->next;
-        head->next = pre;
-        pre = head;
-        head = next;
-    }
-    return pre;
+
+ListNode* ReOrder(ListNode* head) {
+    return nullptr;
 }
 
 ListNode* test(ListNode* head) {
@@ -120,36 +113,48 @@ ListNode* test(ListNode* head) {
         return nullptr;
     }
 
-    vector<ListNode*> lists;
-    while (head != nullptr) {
-        lists.emplace_back(head);
-        head = head->next;
+    vector<ListNode*> even_nodes;
+    vector<ListNode*> odd_nodes;
+    int i = 0;
+    ListNode* cur = head;
+    while (cur != nullptr) {
+        ++i;
+        if ((i & 1) == 0) {
+            even_nodes.emplace_back(cur);
+        } else {
+            odd_nodes.emplace_back(cur);
+        }
+        cur = cur->next;
     }
 
-    for (int i = lists.size() - 1; i > 0; --i) {
-        lists[i]->next = lists[i-1];
+    int even_n = even_nodes.size();
+    int odd_n = odd_nodes.size();
+    
+    for (int i = 0; i < even_n; ++i) {
+        odd_nodes[i]->next = even_nodes[even_n - i - 1];
+        even_nodes[even_n - i - 1]->next =
+            i + 1 < odd_n ? odd_nodes[i + 1] : nullptr;
     }
-    lists[0]->next = nullptr;
 
-    return lists[lists.size()  - 1];
+    return odd_nodes[0];
 }
 
 int main(int argc, char* argv[]) {
     cout << "test start..." << endl;
-    int max = 100;
-    int min = -100;
-    int max_n = 30;
-    int test_times = 100000;
+    int max = 10000;
+    int min = -10000;
+    int max_n = 10;
+    int test_times = 10;
 
     for (int i = 0; i < test_times; ++i) {
        ListNode* head1 = RandomList(max_n, min, max);
        ListNode* head2 = CopyList(head1);
-       ListNode* rev1 = ReverseList(head1);
+       ListNode* rev1 = ReOrder(head1);
        ListNode* rev2 = test(head2);
 
        if (!IsEqual(rev1, rev2)) {
             cout << "test failed" << endl;
-            break; 
+            break;
        }
 
        FreeList(rev1);
