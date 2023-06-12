@@ -124,7 +124,7 @@ static ListNode* ReverseList(ListNode* head) {
         请将其重新排列后变为：
         L0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → 
 */
-void ReOrder(ListNode* head) {
+static void ReOrder(ListNode* head) {
     if (head == nullptr || head->next == nullptr || head->next->next == nullptr) {
         return ;
     }
@@ -151,7 +151,7 @@ void ReOrder(ListNode* head) {
     }
 }
 
-void test(ListNode* head) {
+static void test(ListNode* head) {
     if (head == nullptr || head->next == nullptr || head->next->next == nullptr) {
         return ;
     }
