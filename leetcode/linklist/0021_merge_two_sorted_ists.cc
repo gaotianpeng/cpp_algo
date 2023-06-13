@@ -139,14 +139,7 @@ static ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
         pre = pre->next;
     }
 
-    ListNode* cur  = list1 != nullptr ? list1 : list2;
-    while (cur != nullptr) {
-        pre->next = cur;
-        pre = pre->next;
-        cur = cur->next;
-    }
-
-    pre->next = nullptr;
+    pre->next = list1 != nullptr ? list1 : list2;
 
     return ans;
 }
@@ -185,7 +178,6 @@ static ListNode* test(ListNode* list1, ListNode* list2) {
         nodes[i-1]->next = nodes[i];
     }
     nodes[nodes.size() - 1]->next = nullptr;
-
 
     return nodes[0];
 }
