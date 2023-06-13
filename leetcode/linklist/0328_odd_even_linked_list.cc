@@ -172,7 +172,7 @@ int main(int argc, char* argv[]) {
 
     bool sign = true;
 
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < test_times; ++i) {
         ListNode* head1 = RandomList(max_n, min, max);
         ListNode* head2 = CopyList(head1);
 
@@ -182,7 +182,6 @@ int main(int argc, char* argv[]) {
             cout << "test failed" << endl;
             PrintList(list1);
             PrintList(list2);
-
             FreeList(head1);
             FreeList(head2);
 
@@ -190,7 +189,7 @@ int main(int argc, char* argv[]) {
         }
 
         FreeList(head1);
-        // FreeList(head2);
+        FreeList(head2);
     }
 
     cout << "test end" << endl;
