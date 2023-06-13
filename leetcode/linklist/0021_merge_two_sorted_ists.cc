@@ -104,21 +104,10 @@ static void FreeList(ListNode* head) {
 
 } // namespace
 
-static ListNode* ReverseList(ListNode* head) {
-    ListNode* pre = nullptr;
-    ListNode* next = nullptr;
-
-    while (head != nullptr) {
-        next = head->next;
-        head->next = pre;
-        pre = head;
-        head = next;
-    }
-
-    return pre;
-}
 /*
+    https://leetcode.cn/problems/merge-two-sorted-lists/
     0021 合并两个有序链表
+        将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的
 */
 static ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
     if (list1 == nullptr) {
@@ -157,7 +146,7 @@ static ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
         cur = cur->next;
     }
 
-    // pre->next = nullptr;
+    pre->next = nullptr;
 
     return ans;
 }
@@ -171,40 +160,32 @@ static ListNode* test(ListNode* list1, ListNode* list2) {
         return list1;
     }
 
-    auto func = [](ListNode* node1, ListNode* node2) -> bool {
-        if (node1 == nullptr) {
-            return true;
+    vector<ListNode*> nodes;
+    while (list1 != nullptr && list2 != nullptr) {
+        if (list1->val <= list2->val) {
+            nodes.emplace_back(list1);
+            list1 = list1->next;
+        } else {
+            nodes.emplace_back(list2);
+            list2 = list2->next;
         }
-        if (node2 == nullptr) {
-            return false;
-        }
-        return node1->val <= node2->val;
-    };
-
-    std::vector<ListNode*> nodes;
-    ListNode* cur = list1;
-    while (cur != nullptr) {
-        nodes.emplace_back(cur);
-        cur = cur->next;
     }
 
-    cur = list2;
-    while (cur != nullptr) {
-        nodes.emplace_back(cur);
-        cur = cur->next;
+    while (list1 != nullptr) {
+        nodes.emplace_back(list1);
+        list1 = list1->next;
     }
 
-    if (nodes.size() < 2) {
-        return nodes[0];
+    while (list2 != nullptr) {
+        nodes.emplace_back(list2);
+        list2 = list2->next;
     }
 
-    // 使用自定义函数进行排序
-    std::sort(nodes.begin(), nodes.end(), func);
     for (int i = 1; i < nodes.size(); ++i) {
-        nodes[i - 1]->next = nodes[i];
+        nodes[i-1]->next = nodes[i];
     }
-
     nodes[nodes.size() - 1]->next = nullptr;
+
 
     return nodes[0];
 }
