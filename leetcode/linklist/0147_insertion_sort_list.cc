@@ -110,30 +110,28 @@ static void FreeList(ListNode* head) {
     0147 对链表进行插入排序
         给定单个链表的头 head ，使用 插入排序 对链表进行排序，并返回 排序后链表的头
 */
-static ListNode* insertNode(ListNode* head, ListNode* node) {
-    if (head == nullptr || node == nullptr) {
-        return head;
+static ListNode* insertNode(ListNode* list, ListNode* node) {
+    if (list == nullptr || node == nullptr) {
+        return list;
     }
 
-    ListNode* cur = head;
     ListNode* pre = nullptr;
+    ListNode* cur = list;
     while (cur != nullptr) {
         if (cur->val > node->val) {
             break;
         }
-        pre = cur; 
+        pre = cur;
         cur = cur->next;
     }
 
     if (pre == nullptr) {
-        node->next = head;
+        node->next = list;
         return node;
     } else {
-        ListNode* next = pre->next;
+        node->next = pre->next;
         pre->next = node;
-        node->next = next;
-
-        return head;
+        return list;
     }
 }
 
@@ -142,17 +140,16 @@ static ListNode* insertionSortList(ListNode* list) {
         return list;
     }
 
-    ListNode* next = list->next;
-    ListNode* cur_head = list;
-    cur_head->next = nullptr;
-    ListNode* ans = nullptr;
+    ListNode* ans = list;
+    ListNode* next = ans->next;
+    ans->next = nullptr;
     while (next != nullptr) {
-        ListNode* tmp_next = next->next;
-        cur_head = insertNode(cur_head, next);
-        next = tmp_next;
+        ListNode* next_next = next->next;
+        ans = insertNode(ans, next);
+        next = next_next;
     }
 
-    return cur_head;
+    return ans;
 }
 
 
@@ -167,7 +164,8 @@ static ListNode* test(ListNode* list) {
         return list;
     }
 
-    priority_queue<std::pair<int, ListNode*>, vector<std::pair<int, ListNode*>>, Comp> queue;
+    priority_queue<std::pair<int, ListNode*>, 
+        vector<std::pair<int, ListNode*>>, Comp> queue;
 
     while (list != nullptr) {
         queue.push(std::make_pair(list->val, list));
