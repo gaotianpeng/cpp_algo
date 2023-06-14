@@ -111,11 +111,69 @@ static void FreeList(ListNode* head) {
         给你一个单链表的头节点 head ，请你判断该链表是否为回文链表。如果是，返回 true ；否则，返回 false 
 */
 
-bool isPalindrome(ListNode* head) {
-    return true;
+static ListNode* reverseList(ListNode* head) {
+    ListNode* pre = nullptr;
+    ListNode* next = nullptr;
+
+    while (head != nullptr) {
+        next = head->next;
+        head->next = pre;
+        pre = head;
+        head = next;
+    }
+
+    return pre;
 }
 
-bool test(ListNode* head) {
+static bool isPalindrome(ListNode* head) {
+    if (head == nullptr || head->next == nullptr) {
+        return true;
+    }
+
+    bool ans = true;
+
+    ListNode* slow = head;
+    ListNode* fast = head;
+    while (fast->next != nullptr && fast->next->next != nullptr) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    ListNode* reverse_head = slow->next;
+    slow->next = nullptr;
+    reverse_head = reverseList(reverse_head);
+    ListNode* cur = reverse_head;
+    while (cur != nullptr && head != nullptr) {
+        if (cur->val != head->val) {
+            ans = false;
+            break;
+        }
+        cur = cur->next;
+        head = head->next;
+    }
+
+    slow->next = reverseList(reverse_head);
+    return ans;
+}
+
+static bool test(ListNode* head) {
+    if (head == nullptr || head->next == nullptr) {
+        return true;
+    }
+
+    vector<ListNode*> nodes;
+    while (head != nullptr) {
+        nodes.emplace_back(head);
+        head = head->next;
+    }
+
+    int n = nodes.size();
+    for (int i = 0; i < n / 2; ++i) {
+        if (nodes[i]->val != nodes[n - i - 1]->val) {
+            return false;
+        }
+    }
+    
     return true;
 }
 
@@ -127,14 +185,17 @@ int main(int argc, char* argv[]) {
     int test_times = 100000;
 
     for (int i = 0; i < test_times; ++i) {
-        ListNode* head = RandomSortedList(max_n, min, max);
-        if (isPalindrome(head) != test(head)) {
+        ListNode* head1 = RandomSortedList(max_n, min, max);
+        ListNode* head2 = CopyList(head1);
+        if (isPalindrome(head1) != test(head2)) {
             cout << "test failed" << endl;
-            FreeList(head);
+            FreeList(head1);
+            FreeList(head2);
             break;
         }
 
-        FreeList(head);
+        FreeList(head1);
+        FreeList(head2);
     }
 
     cout << "test end" << endl;
