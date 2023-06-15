@@ -11,7 +11,7 @@ using WriteLock = std::unique_lock<std::shared_mutex>;
 
 int a = 10;
 
- std::shared_mutex rwlock;
+std::shared_mutex rwlock;
 
 void Read() {
     ReadLock read_lock(rwlock);
