@@ -11,15 +11,18 @@ using WriteLock = std::unique_lock<std::shared_mutex>;
 
 int a = 10;
 
+ std::shared_mutex rwlock;
+
 void Read() {
-    ReadLock read_lock;
+    ReadLock read_lock(rwlock);
     cout << std::this_thread::get_id() << " read : " <<a << endl;
     std::this_thread::sleep_for(std::chrono::microseconds(100));
 }
 
 void Write() {
-    WriteLock write_lock;
+    WriteLock write_lock(rwlock);
     a = 20;
+    cout << std::this_thread::get_id() << " write : " << a << endl;
 }
 
 void test() {
