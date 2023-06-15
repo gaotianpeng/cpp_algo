@@ -42,6 +42,5 @@ void test() {
 
 int main(int argc, char* argv[]) {
     test();
-    cout <<  "for test" << endl;
     return 0;
 }
