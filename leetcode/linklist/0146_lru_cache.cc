@@ -68,7 +68,7 @@ public:
 
     
     void MoveNodeToTail(Node* node) {
-        if (head == nullptr || node == nullptr || head == tail
+        if (node == nullptr || head == tail
                 || node == tail) {
             return;
         }
