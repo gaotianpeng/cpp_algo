@@ -14,9 +14,12 @@ public:
         static std::uniform_real_distribution<> distribution(0.0, 1.0);
         return distribution(engine);
     }
-
-
 }; // class Math
+
+static int RandomVal(int min_val, int max_val) {
+    return (int)(Math::random() * (max_val - min_val)) + min_val;
+}
+
 
 } // namespace
 
@@ -40,6 +43,14 @@ public:
     NodeDoubleLinkedList() {
     }
 
+    ~NodeDoubleLinkedList() {
+        while (head != nullptr) {
+            Node* next = head->next;
+            delete head;
+            head = next;
+        }
+    }
+
     void AddNode(Node* node) {
         if (node == nullptr) {
             return;
@@ -57,15 +68,8 @@ public:
 
     
     void MoveNodeToTail(Node* node) {
-        if (node == nullptr) {
-            return;
-        }
-
-        if (head == nullptr) {
-            return;
-        }
-
-        if (head == tail) {
+        if (head == nullptr || node == nullptr || head == tail
+                || node == tail) {
             return;
         }
 
@@ -75,10 +79,7 @@ public:
             if (head) {
                 head->last = nullptr;
             }
-        } else if (tail == node) {
-            return;
-        } 
-        else {
+        }  else {
             node->last->next = node->next;
             node->next->last = node->last;
         }
@@ -106,6 +107,15 @@ public:
         }
 
         return ans;
+    }
+
+    void Print() {
+        Node * cur = head;
+        while (cur != nullptr) {
+            cout << "<" << cur->key << ", " << cur->value << "> ";
+            cur = cur->next;
+        }
+        cout << endl;
     }
 
 private:
@@ -147,6 +157,10 @@ public:
         }
     }
 
+    void Print() {
+        node_list_.Print();
+    }
+
 private:
     void removeMostUnusedCache() {
         Node* node_to_remove = node_list_.remvoeHead();
@@ -162,9 +176,119 @@ private:
     NodeDoubleLinkedList node_list_;
 };
 
+class TestLRUCache {
+public:
+    TestLRUCache(int capacity):capacity_(capacity) {
+    }
+    
+    int get(int key) {
+        int i = 0;
+        bool exist = false;
+        int ans = -1;
+        for (i = 0; i < cache_.size(); ++i) {
+            if (cache_[i].first == key) {
+                exist = true;
+                ans = cache_[i].second;
+                break;
+            }
+        }
+        
+        if (!exist) {
+            return ans;
+        }
+
+        for (int j = i + 1; j < cache_.size(); ++j) {
+            cache_[j - 1] = cache_[j];
+        }
+        cache_[cache_.size() - 1] = std::make_pair(key, ans);
+        return ans;
+    }
+
+    void put(int key, int value) {
+        int i = 0;
+        bool exist = false;
+        for (i = 0; i < cache_.size(); ++i) {
+            if (cache_[i].first == key) {
+                exist = true;
+                break;
+            }
+        }
+        
+        if (!exist) {
+            cache_.emplace_back(std::make_pair(key, value));
+            if (cache_.size() == capacity_ + 1) {
+                removeUnusedHead();
+            }
+        } else {
+            for (int j = i + 1; j < cache_.size(); ++j) {
+                cache_[j-1] = cache_[j];
+            }
+            cache_[cache_.size() - 1] = std::make_pair(key, value);
+        }
+    }
+
+    void Print() {
+        for (int i = 0; i < cache_.size(); ++i) {
+            cout << "<" << cache_[i].first << ", " << cache_[i].second << "> ";
+        }
+        cout << endl;
+    }
+
+private:
+    void removeUnusedHead()  {
+        for (int i = 1; i < cache_.size(); ++i) {
+            cache_[i-1] = cache_[i];
+        }
+        cache_.pop_back();
+    }
+
+private:
+    int capacity_;
+    std::vector<std::pair<int, int>> cache_;
+};
+
 int main(int argc, char* argv[]) {
-    LRUCache cache(1);
-    cache.put(2, 1);
-    cache.get(2);
+    cout << "test start" << endl;
+    int test_times = 10000;
+    int min_val = 1;
+    int max_val = 20;
+    bool success = true;
+
+    for (int i = 0; i < test_times; ++i) {
+        if (!success) {
+            cout << "test failed" << endl;
+            break;
+        }
+
+        int capacity = RandomVal(0, 10);
+        LRUCache cache(capacity);
+        TestLRUCache test_cache(capacity);
+
+        std::vector<int> key_sets;
+        for (int idx = 0; idx < 10; ++idx) {
+            key_sets.emplace_back(RandomVal(min_val, max_val));
+        }
+
+        for (int j = 0; j < 1000; ++j) {
+            int key = key_sets[RandomVal(0, key_sets.size() - 1)];
+            if (Math::random() < 0.5) {
+                int value = RandomVal(min_val, max_val);
+                cache.put(key, value);
+                test_cache.put(key, value);
+            } else {
+                if (cache.get(key) != test_cache.get(key)) {
+                    cout << cache.get(key) << endl;
+                    cout << test_cache.get(key) << endl;
+                    success = false;
+                    cache.Print();
+                    test_cache.Print();
+                    break;
+                }
+            }
+        }
+    }
+
+    cout << "test end" << endl;
+
     return 0;
 }
