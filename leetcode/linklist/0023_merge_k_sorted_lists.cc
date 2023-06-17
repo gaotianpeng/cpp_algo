@@ -2,6 +2,7 @@
 #include <random>
 #include <vector>
 #include <algorithm>
+#include <queue>
 
 using namespace std;
 
@@ -20,12 +21,17 @@ public:
     }
 };
 
-static void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
+static void RandomSortedArr(vector<int>& out, int max_n, int min_val, int max_val) {
 	int len = (int)(Math::random() * max_n);
 	for (int i = 0; i < len; i++) {
 		int val = (int)(Math::random() * (max_val - min_val + 1)) + min_val;
 		out.emplace_back(val);
 	}
+    std::sort(out.begin(), out.end());
+}
+
+static int RandomVal(int min_val, int max_val) {
+    return (int)(Math::random()*(max_val - min_val)) + min_val;
 }
 
 struct ListNode{
@@ -38,7 +44,7 @@ struct ListNode{
 
 static ListNode* RandomSortedList(int max_n, int min_val, int max_val) {
     vector<int> out;
-    RandomArr(out, max_n, min_val, max_val);
+    RandomSortedArr(out, max_n, min_val, max_val);
     std::sort(out.begin(), out.end());
     vector<ListNode*> lists;
     for (auto& elem: out) {
@@ -144,71 +150,104 @@ static ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
     return ans;
 }
 
-static ListNode* test(ListNode* list1, ListNode* list2) {
-    if (list1 == nullptr) {
-        return list2;
+static ListNode* merge(vector <ListNode*> &lists, int l, int r) {
+    if (l == r) return lists[l];
+    if (l > r) return nullptr;
+    int mid = (l + r) >> 1;
+    return mergeTwoLists(merge(lists, l, mid), merge(lists, mid + 1, r));
+}
+
+static ListNode* mergeKLists(vector<ListNode*>& lists) {
+    return merge(lists, 0, lists.size() - 1);
+}
+
+struct Comp {
+    bool operator() (std::pair<ListNode*, int> a, std::pair<ListNode*, int> b) {
+        return a.first->val > b.first->val;
+    }
+};
+
+ListNode* test(vector<ListNode*>& lists) {
+    if (lists.size() == 0) {
+        return nullptr;
     }
 
-    if (list2 == nullptr) {
-        return list1;
+    if (lists.size() == 1) {
+        return lists[0];
     }
 
-    vector<ListNode*> nodes;
-    while (list1 != nullptr && list2 != nullptr) {
-        if (list1->val <= list2->val) {
-            nodes.emplace_back(list1);
-            list1 = list1->next;
-        } else {
-            nodes.emplace_back(list2);
-            list2 = list2->next;
+    int k = lists.size();
+    int cur_pos = -1;
+    priority_queue<std::pair<ListNode*, int>, std::vector<std::pair<ListNode*, int>>, Comp> min_heap;
+
+    for (int i = 0; i < lists.size(); ++i) {
+        ListNode* cur = lists[i];
+        if (cur != nullptr) {
+            min_heap.push({cur, i});
         }
     }
 
-    while (list1 != nullptr) {
-        nodes.emplace_back(list1);
-        list1 = list1->next;
+    if (min_heap.empty()) {
+        return nullptr;
     }
 
-    while (list2 != nullptr) {
-        nodes.emplace_back(list2);
-        list2 = list2->next;
+
+    std::pair<ListNode*, int> head = min_heap.top();
+    min_heap.pop();
+    
+    ListNode* ans = head.first;
+    if (head.first->next != nullptr) {
+        min_heap.push({head.first->next, head.second});
     }
 
-    for (int i = 1; i < nodes.size(); ++i) {
-        nodes[i-1]->next = nodes[i];
+    ListNode* pre = ans;
+    while (!min_heap.empty()) {
+        std::pair<ListNode*, int> cur_min = min_heap.top();
+        min_heap.pop();
+        pre->next = cur_min.first;
+        if (cur_min.first->next != nullptr) {
+            min_heap.push({cur_min.first->next, cur_min.second});
+        }
+        pre = pre->next;
     }
-    nodes[nodes.size() - 1]->next = nullptr;
+    pre ->next = nullptr;
 
-    return nodes[0];
+    
+    return ans;
 }
 
 int main(int argc, char* argv[]) {
     cout << "test start..." << endl;
+
     int max = 100;
     int min = -100;
-    int max_n = 10;
-    int test_times = 100000;
-
+    int max_n = 20;
+    int test_times = 10000;
+    int max_vec_n = 30;
+    
     for (int i = 0; i < test_times; ++i) {
-        ListNode* head1 = RandomSortedList(max_n, min, max);
-        ListNode* head2 = RandomSortedList(max_n, min, max);
-        ListNode* head11 = CopyList(head1);
-        ListNode* head22 = CopyList(head2);
+        int vec_n = RandomVal(0, max_vec_n);
+        vector<ListNode*> list1;
+        vector<ListNode*> list2;
+        for (int j = 0; j < vec_n; ++j) {
+            ListNode* head1 = RandomSortedList(max_n, min, max);
+            ListNode* head2 = CopyList(head1);
+            list1.emplace_back(head1);
+            list2.emplace_back(head2);
+        }
 
-        ListNode* ans1 = mergeTwoLists(head1, head2);
-        ListNode* ans2 = test(head11, head22);
+        ListNode* ans1 = mergeKLists(list1);
+        ListNode* ans2 = test(list2);
         if (!IsEqual(ans1, ans2)) {
             cout << "test failed" << endl;
             FreeList(ans1);
             FreeList(ans2);
             break;
         }
-
         FreeList(ans1);
         FreeList(ans2);
     }
 
     cout << "test end" << endl;
-
     return 0;
 }
