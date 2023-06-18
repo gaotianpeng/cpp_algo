@@ -1,9 +1,9 @@
 #include <algorithm>
 #include <iostream>
 #include <random>
-#include <set>
 #include <map>
-#include <queue>
+#include <stack>
+#include <vector>
 
 using namespace std;
 
@@ -112,83 +112,123 @@ static void FreeList(ListNode* head) {
 } // namespace
 
 /*
-    https://leetcode.cn/problems/remove-duplicates-from-sorted-list-ii/
-    84. 删除排序链表中的重复元素 II
-        定一个已排序的链表的头 head ，删除原始链表中所有重复数字的节点，只留下不同的数字 。返回 已排序的链表 。
+    https://leetcode.cn/problems/reverse-nodes-in-k-group/
+    25. K 个一组翻转链表
+    给你链表的头节点 head ，每 k 个节点一组进行翻转，请你返回修改后的链表。
+    k 是一个正整数，它的值小于或等于链表的长度。如果节点总数不是 k 的整数倍，那么请将最后剩余的节点保持原有顺序。
+    你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换
+
 */
-static ListNode* deleteDuplicates(ListNode* head) {
-    if (!head) {
-        return head;
-    }
-    
-    ListNode* dummy = new ListNode(0);
-    dummy->next = head;
-
-    ListNode* cur = dummy;
-    while (cur->next && cur->next->next) {
-        if (cur->next->val == cur->next->next->val) {
-            int x = cur->next->val;
-            while (cur->next && cur->next->val == x) {
-                ListNode* tmp = cur->next;
-                cur->next = cur->next->next;
-                delete tmp;
-            }
-        }
-        else {
-            cur = cur->next;
-        }
+static ListNode* reverseList(ListNode* head) {
+    ListNode* pre = nullptr;
+    ListNode* next = nullptr;
+    while (head != nullptr) {
+        next = head->next;
+        head->next = pre;
+        pre = head;
+        head = next;
     }
 
-    ListNode* ans = dummy->next;
-    delete dummy;
-
-    return ans;
+    return pre;
 }
 
-static ListNode* test(ListNode* head) {
-    if (head == nullptr || head->next == nullptr) {
-        return head;
-    } 
+static pair<ListNode*, ListNode*> reverseList(ListNode* head, ListNode* tail) {
+    ListNode* prev = tail->next;
+    ListNode* p = head;
+    while (prev != tail) {
+        ListNode* nex = p->next;
+        p->next = prev;
+        prev = p;
+        p = nex;
+    }
+    return {tail, head};
+}
 
-    map<int, int> key_n_map;
-    ListNode* cur = head;
-    while (cur != nullptr) {
-        auto iter = key_n_map.find(cur->val);
-        if (iter != key_n_map.end()) {
-            int cnt = iter->second;
-            key_n_map.erase(iter);
-            key_n_map.insert({cur->val, cnt + 1});
-        } else {
-            key_n_map.insert({cur->val, 1});
-        }
-        cur = cur->next;
+static ListNode* reverseKGroup(ListNode* head, int k) {
+    if (head == nullptr ||head->next == nullptr) {
+        return head;
     }
 
-    cur = head;
+    ListNode dummy(0);
+    dummy.next = head;
+    ListNode* pre = &dummy;
+
+    while (head) {
+        ListNode* tail = pre;
+        for (int i = 0; i < k; ++i) {
+            tail = tail->next;
+            if (!tail) {
+                return dummy.next;
+            }
+        }
+        ListNode* next = tail->next;
+        tie(head, tail) = reverseList(head, tail);
+        pre->next = head;
+        tail->next = next;
+        pre = tail;
+        head = tail->next;
+    }
+
+    return dummy.next;
+}
+
+
+static ListNode* test(ListNode* head, int k) {
+    if (head == nullptr || head->next == nullptr) {
+        return head;
+    }
+
+    ListNode* cur = head;
     vector<ListNode*> nodes;
 
     while (cur != nullptr) {
-        auto iter = key_n_map.find(cur->val);
-        if (iter->second == 1) {
-            nodes.emplace_back(cur);
-            cur = cur->next;
-        } else {
-            ListNode* tmp = cur;
-            cur = cur->next;
-            delete tmp;
+        nodes.emplace_back(cur);
+        cur = cur->next;
+    }
+
+    int n = nodes.size();
+    if (n < k) {
+        return head;
+    }
+
+    ListNode* ans = nodes[k-1];
+    ListNode dummy(0);
+    ListNode* pre = &dummy;
+
+    int kgroups = n / k;
+
+    stack<ListNode*> cur_k_node;
+    if (n == k) {
+        return ReverseList(head);
+    }
+
+    for (int i = 0; i < n; ++i) {
+        cur_k_node.push(nodes[i]); 
+
+        if ( i == kgroups * k - 1) {
+            while (!cur_k_node.empty()) {
+                ListNode* cur = cur_k_node.top();
+                cur_k_node.pop();
+                pre->next = cur;
+                pre = cur;
+            }
+
+            pre->next = nodes[i+1];
+
+            break;
+        }
+
+        if (((i+1) % k) == 0) {
+            while (!cur_k_node.empty()) {
+                ListNode* cur = cur_k_node.top();
+                cur_k_node.pop();
+                pre->next = cur;
+                pre = cur;
+            }
         }
     }
 
-    if (nodes.size() == 0) {
-        return nullptr;
-    }
-
-    for (int i = 1; i < nodes.size(); ++i) {
-        nodes[i-1]->next = nodes[i];
-    }
-    nodes[nodes.size() - 1]->next = nullptr;
-
-    return nodes[0];
+    return ans;
 }
 
 int main(int argc, char* argv[]) {
@@ -200,19 +240,7 @@ int main(int argc, char* argv[]) {
     int test_times = 50000;
     
     for (int i = 0; i < test_times; ++i) {
-        ListNode* head1 = RandomSortedList(max_n, min, max);
-        ListNode* head2 = CopyList(head1);
 
-        ListNode* ans1 = deleteDuplicates(head1);
-        ListNode* ans2 = test(head2);
-        if (!IsEqual(ans1, ans2)) {
-            cout << "test failed" << endl;
-            FreeList(ans1);
-            FreeList(ans2);
-            break;
-        } 
-        FreeList(ans1);
-        FreeList(ans2);
     }
 
     cout << "test end" << endl;
