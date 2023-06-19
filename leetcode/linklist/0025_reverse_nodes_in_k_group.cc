@@ -118,10 +118,9 @@ static void FreeList(ListNode* head) {
     给你链表的头节点 head ，每 k 个节点一组进行翻转，请你返回修改后的链表。
     k 是一个正整数，它的值小于或等于链表的长度。如果节点总数不是 k 的整数倍，那么请将最后剩余的节点保持原有顺序。
     你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换
-
 */
 
-static pair<ListNode*, ListNode*> reverseList(ListNode* head, ListNode* tail) {
+static std::pair<ListNode*, ListNode*> reverseListNode(ListNode* head, ListNode* tail) {
     ListNode* prev = tail->next;
     ListNode* cur = head;
     while (prev != tail) {
@@ -135,16 +134,15 @@ static pair<ListNode*, ListNode*> reverseList(ListNode* head, ListNode* tail) {
 }
 
 static ListNode* reverseKGroup(ListNode* head, int k) {
-    if (head == nullptr ||head->next == nullptr ||
-        k == 0 || k == 1) {
+    if (head == nullptr || head->next == nullptr || k < 2) {
         return head;
     }
 
     ListNode dummy(0);
     dummy.next = head;
     ListNode* pre = &dummy;
-
-    while (head) {
+    
+    while (head != nullptr) {
         ListNode* tail = pre;
         for (int i = 0; i < k; ++i) {
             tail = tail->next;
@@ -153,7 +151,7 @@ static ListNode* reverseKGroup(ListNode* head, int k) {
             }
         }
         ListNode* next = tail->next;
-        tie(head, tail) = reverseList(head, tail);
+        tie(head, tail) = reverseListNode(head, tail);
         pre->next = head;
         tail->next = next;
         pre = tail;
@@ -177,8 +175,7 @@ ListNode* reverse(ListNode* head) {
 }
 
 static ListNode* test(ListNode* head, int k) {
-    if (head == nullptr || head->next == nullptr ||
-            k == 0 || k == 1) {
+    if (head == nullptr || head->next == nullptr || k < 2) {
         return head;
     }
 
