@@ -123,12 +123,12 @@ static void FreeList(ListNode* head) {
 
 static pair<ListNode*, ListNode*> reverseList(ListNode* head, ListNode* tail) {
     ListNode* prev = tail->next;
-    ListNode* p = head;
+    ListNode* cur = head;
     while (prev != tail) {
-        ListNode* nex = p->next;
-        p->next = prev;
-        prev = p;
-        p = nex;
+        ListNode* next = cur->next;
+        cur->next = prev;
+        prev = cur;
+        cur = next;
     }
 
     return {tail, head};
