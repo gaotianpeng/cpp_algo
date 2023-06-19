@@ -140,12 +140,12 @@ static ListNode* reverseKGroup(ListNode* head, int k) {
     ListNode dummy(0);
     dummy.next = head;
     ListNode* prev = &dummy;
-
+    
     while (head != nullptr) {
         ListNode* tail = prev;
         for (int i = 0; i < k; ++i) {
             tail = tail->next;
-            if (!tail) {
+            if (tail == nullptr) {
                 return dummy.next;
             }
         }
