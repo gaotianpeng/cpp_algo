@@ -135,7 +135,8 @@ static pair<ListNode*, ListNode*> reverseList(ListNode* head, ListNode* tail) {
 }
 
 static ListNode* reverseKGroup(ListNode* head, int k) {
-    if (head == nullptr ||head->next == nullptr) {
+    if (head == nullptr ||head->next == nullptr ||
+        k == 0 || k == 1) {
         return head;
     }
 
@@ -177,11 +178,8 @@ ListNode* reverse(ListNode* head) {
 }
 
 static ListNode* test(ListNode* head, int k) {
-    if (head == nullptr || head->next == nullptr) {
-        return head;
-    }
-
-    if (k == 1) {
+    if (head == nullptr || head->next == nullptr ||
+            k == 0 || k == 1) {
         return head;
     }
 
@@ -236,7 +234,7 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < test_times; ++i) {
         ListNode* head1 = RandomList(max_n, min, max);
         ListNode* head2 = CopyList(head1);
-        int k = RandomVal(2, max_n);
+        int k = RandomVal(0, max_n);
         ListNode* ans1 = reverseKGroup(head1, k);
         ListNode* ans2 = test(head2, k);
         if (!IsEqual(ans1, ans2)) {
