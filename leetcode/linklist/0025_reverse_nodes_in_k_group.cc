@@ -2,8 +2,9 @@
 #include <iostream>
 #include <random>
 #include <map>
-#include <stack>
+#include <queue>
 #include <vector>
+#include <stack>
 
 using namespace std;
 
@@ -22,13 +23,12 @@ public:
     }
 };
 
-static void RandomSortedArr(vector<int>& out, int max_n, int min_val, int max_val) {
+static void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
 	int len = (int)(Math::random() * max_n);
 	for (int i = 0; i < len; i++) {
 		int val = (int)(Math::random() * (max_val - min_val + 1)) + min_val;
 		out.emplace_back(val);
 	}
-    std::sort(out.begin(), out.end());
 }
 
 static int RandomVal(int min_val, int max_val) {
@@ -43,10 +43,9 @@ struct ListNode{
     }
 };
 
-static ListNode* RandomSortedList(int max_n, int min_val, int max_val) {
+static ListNode* RandomList(int max_n, int min_val, int max_val) {
     vector<int> out;
-    RandomSortedArr(out, max_n, min_val, max_val);
-    std::sort(out.begin(), out.end());
+    RandomArr(out, max_n, min_val, max_val);
     vector<ListNode*> lists;
     for (auto& elem: out) {
         lists.emplace_back(new ListNode(elem));
@@ -75,6 +74,7 @@ static ListNode* CopyList(ListNode* head) {
         ans = ans->next;
         head = head->next;
     }
+
     return ans_head;
 }
 
@@ -98,6 +98,7 @@ static bool IsEqual(ListNode* head1, ListNode* head2) {
     if (head1 != nullptr || head2 != nullptr) {
         return false;
     }
+
     return true;
 }
 
@@ -119,18 +120,6 @@ static void FreeList(ListNode* head) {
     你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换
 
 */
-static ListNode* reverseList(ListNode* head) {
-    ListNode* pre = nullptr;
-    ListNode* next = nullptr;
-    while (head != nullptr) {
-        next = head->next;
-        head->next = pre;
-        pre = head;
-        head = next;
-    }
-
-    return pre;
-}
 
 static pair<ListNode*, ListNode*> reverseList(ListNode* head, ListNode* tail) {
     ListNode* prev = tail->next;
@@ -141,6 +130,7 @@ static pair<ListNode*, ListNode*> reverseList(ListNode* head, ListNode* tail) {
         prev = p;
         p = nex;
     }
+
     return {tail, head};
 }
 
@@ -173,62 +163,66 @@ static ListNode* reverseKGroup(ListNode* head, int k) {
 }
 
 
+ListNode* reverse(ListNode* head) {
+    ListNode* pre = nullptr;
+    ListNode* next = nullptr;
+    while (head != nullptr) {
+        next = head->next;
+        head->next = pre;
+        pre = head;
+        head = next;
+    }
+
+    return pre;
+}
+
 static ListNode* test(ListNode* head, int k) {
     if (head == nullptr || head->next == nullptr) {
         return head;
     }
 
+    if (k == 1) {
+        return head;
+    }
+
     ListNode* cur = head;
-    vector<ListNode*> nodes;
+    std::vector<ListNode*> nodes;
 
     while (cur != nullptr) {
         nodes.emplace_back(cur);
         cur = cur->next;
     }
 
-    int n = nodes.size();
-    if (n < k) {
+    if (nodes.size() < k) {
         return head;
     }
+    if (nodes.size() == k) {
+        return reverse(head);
+    }
 
-    ListNode* ans = nodes[k-1];
+    int n = nodes.size();
+    int kgroup = n / k;
+    for (int i = 0; i < kgroup; ++i) {
+        nodes[i * k + k - 1]->next = nullptr;
+    }
+    
+    int step = 0;
     ListNode dummy(0);
     ListNode* pre = &dummy;
-
-    int kgroups = n / k;
-
-    stack<ListNode*> cur_k_node;
-    if (n == k) {
-        return ReverseList(head);
+    while (step < kgroup) {
+        ListNode* temp = reverse(nodes[step * k]);
+        pre->next = temp;
+        pre = nodes[step * k];
+        ++step;
     }
 
-    for (int i = 0; i < n; ++i) {
-        cur_k_node.push(nodes[i]); 
-
-        if ( i == kgroups * k - 1) {
-            while (!cur_k_node.empty()) {
-                ListNode* cur = cur_k_node.top();
-                cur_k_node.pop();
-                pre->next = cur;
-                pre = cur;
-            }
-
-            pre->next = nodes[i+1];
-
-            break;
-        }
-
-        if (((i+1) % k) == 0) {
-            while (!cur_k_node.empty()) {
-                ListNode* cur = cur_k_node.top();
-                cur_k_node.pop();
-                pre->next = cur;
-                pre = cur;
-            }
-        }
+    if (n % k == 0) {
+        pre->next = nullptr;
+    } else {
+        pre->next = nodes[kgroup * k];
     }
 
-    return ans;
+    return dummy.next;
 }
 
 int main(int argc, char* argv[]) {
@@ -237,10 +231,25 @@ int main(int argc, char* argv[]) {
     int max = 100;
     int min = -100;
     int max_n = 20;
-    int test_times = 50000;
+    int test_times = 10000;
     
     for (int i = 0; i < test_times; ++i) {
+        ListNode* head1 = RandomList(max_n, min, max);
+        ListNode* head2 = CopyList(head1);
+        int k = RandomVal(2, max_n);
+        ListNode* ans1 = reverseKGroup(head1, k);
+        ListNode* ans2 = test(head2, k);
+        if (!IsEqual(ans1, ans2)) {
+            cout << "test failed" << endl;
+            PrintList(ans1);
+            PrintList(ans2);
+            FreeList(ans1);
+            FreeList(ans2);
+            break;
+        }
 
+        FreeList(ans1);
+        FreeList(ans2);
     }
 
     cout << "test end" << endl;
