@@ -163,7 +163,6 @@ static ListNode* reverseKGroup(ListNode* head, int k) {
     return dummy.next;
 }
 
-
 ListNode* reverse(ListNode* head) {
     ListNode* pre = nullptr;
     ListNode* next = nullptr;
@@ -193,9 +192,6 @@ static ListNode* test(ListNode* head, int k) {
 
     if (nodes.size() < k) {
         return head;
-    }
-    if (nodes.size() == k) {
-        return reverse(head);
     }
 
     int n = nodes.size();
