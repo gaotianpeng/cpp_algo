@@ -123,22 +123,29 @@ static int RandomVal(int min, int max) {
 /*
     https://leetcode.cn/problems/swapping-nodes-in-a-linked-list/
     1721. 交换链表中的节点
-        给你链表的头节点 head 和一个整数 k 。
-        交换 链表正数第 k 个节点和倒数第 k 个节点的值后，返回链表的头节点（链表 从 1 开始索引）。
-
+        给你链表的头节点head和一个整数k 
+        交换 链表正数第k个节点和倒数第k个节点的值后，返回链表的头节点（链表从1开始索引）。
 */
+
 static ListNode* swapNodes(ListNode* head, int k) {
+    if (head == nullptr || head->next == nullptr) {
+        return head;
+    }
+
     ListNode* fast = head;
-    for(int i = 1 ; i < k ; i ++){
+    for(int i = 1 ; i < k ; i++){
         fast = fast->next;
     }
-    ListNode* temp = fast;
+
+    ListNode* kth_node = fast;
     ListNode* slow = head;
-    while(fast->next){ 
+    while (fast->next != nullptr) { 
         fast = fast->next;
         slow = slow->next;
     }
-    swap(slow->val, temp->val);
+
+    swap(slow->val, kth_node->val);
+
     return head;
 }
 
