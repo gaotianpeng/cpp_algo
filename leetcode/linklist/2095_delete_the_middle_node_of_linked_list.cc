@@ -104,12 +104,12 @@ static void FreeList(ListNode* head) {
 
 /*
     https://leetcode.cn/problems/delete-the-middle-node-of-a-linked-list/
-    2095. 删除链表的中间节点
-        给你一个链表的头节点 head 。删除 链表的 中间节点 ，并返回修改后的链表的头节点 head 。
-        长度为 n 链表的中间节点是从头数起第 ⌊n / 2⌋ 个节点（下标从 0 开始），其中 ⌊x⌋ 表示小于或等于 x 的最大整数。
+    2095. 删除链表的中间节点(下中点)
+        给你一个链表的头节点head。删除链表的中间节点，并返回修改后的链表的头节点head
+        长度为n链表的中间节点是从头数起第 ⌊n / 2⌋ 个节点（下标从 0 开始），其中 ⌊x⌋ 表示小于或等于 x 的最大整数。
         对于 n = 1、2、3、4 和 5 的情况，中间节点的下标分别是 0、1、1、2 和 2 。
-
 */
+
 static ListNode* deleteMiddle(ListNode* head) {
     if (head == nullptr) {
         return nullptr;
@@ -120,6 +120,7 @@ static ListNode* deleteMiddle(ListNode* head) {
         return nullptr;
     }
     
+    // 1) find middle node，prev save the previous node of the middle node to delete
     ListNode* slow = head;
     ListNode* fast = head;
     ListNode* pre = nullptr;
@@ -128,9 +129,12 @@ static ListNode* deleteMiddle(ListNode* head) {
         pre = slow;
         slow = slow->next;
     }
+
+    // 2）delete middle node
     ListNode* next = pre->next;
     pre->next = pre->next->next;
     delete next;
+
     return head;
 }
 

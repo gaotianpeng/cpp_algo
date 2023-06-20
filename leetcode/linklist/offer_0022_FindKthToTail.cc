@@ -122,8 +122,8 @@ static ListNode* getKthFromEnd(ListNode* head, int k) {
         return nullptr;
     }
 
-    int n = 0;
     ListNode* cur = head;
+    int n = 0;
     while (cur != nullptr) {
         ++n;
         cur = cur->next;
@@ -138,12 +138,13 @@ static ListNode* getKthFromEnd(ListNode* head, int k) {
     }
 
     int step = n - k;
+    cur = head;
     while (step > 0) {
+        cur = cur->next;
         --step;
-        head = head->next;
     }
 
-    return head;
+    return cur;
 }
 
 static ListNode* test(ListNode* head, int k) {
