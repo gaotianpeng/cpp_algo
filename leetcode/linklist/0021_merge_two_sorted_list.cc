@@ -106,8 +106,8 @@ static void FreeList(ListNode* head) {
 
 /*
     https://leetcode.cn/problems/merge-two-sorted-lists/
-    0021 合并两个有序链表
-        将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的
+    21 合并两个有序链表
+        将两个升序链表合并为一个新的升序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的
 */
 static ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
     if (list1 == nullptr) {
@@ -142,6 +142,43 @@ static ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
     pre->next = list1 != nullptr ? list1 : list2;
 
     return ans;
+}
+
+static ListNode* mergeTwoLists1(ListNode* list1, ListNode* list2) {
+    if (list1 == nullptr) {
+        return list2;
+    }
+
+    if (list2 == nullptr) {
+        return list1;
+    }
+
+    ListNode dummy(0);
+    ListNode* pre = &dummy;
+    while (list1 != nullptr && list2 != nullptr) {
+        if (list1->val <= list2->val) {
+            pre->next = list1;
+            list1 = list1->next;
+        } else {
+            pre->next = list2;
+            list2 = list2->next;
+        }
+        pre = pre->next;
+    }
+
+    while (list1 != nullptr) {
+        pre->next = list1;
+        pre = pre->next;
+        list1 = list1->next;
+    }
+
+    while (list2 != nullptr) {
+        pre->next = list2;
+        pre = pre->next;
+        list2 = list2->next;
+    }
+
+    return dummy.next;
 }
 
 static ListNode* test(ListNode* list1, ListNode* list2) {
@@ -192,20 +229,26 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < test_times; ++i) {
         ListNode* head1 = RandomSortedList(max_n, min, max);
         ListNode* head2 = RandomSortedList(max_n, min, max);
-        ListNode* head11 = CopyList(head1);
+        ListNode* head12 = CopyList(head1);
         ListNode* head22 = CopyList(head2);
-
+        ListNode* head13 = CopyList(head1);
+        ListNode* head23 = CopyList(head2);
+ 
         ListNode* ans1 = mergeTwoLists(head1, head2);
-        ListNode* ans2 = test(head11, head22);
-        if (!IsEqual(ans1, ans2)) {
+        ListNode* ans2 = test(head12, head22);
+        ListNode* ans3 = mergeTwoLists1(head13, head23);
+        if (!IsEqual(ans1, ans2) || !IsEqual(ans2, ans2)) {
             cout << "test failed" << endl;
             FreeList(ans1);
             FreeList(ans2);
+            FreeList(ans3);
             break;
         }
 
+
         FreeList(ans1);
         FreeList(ans2);
+        FreeList(ans3);
     }
 
     cout << "test end" << endl;
