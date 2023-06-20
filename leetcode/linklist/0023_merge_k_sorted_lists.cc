@@ -155,10 +155,28 @@ static ListNode* merge(std::vector<ListNode*>& lists, int left, int right) {
 
     return mergeTwoSortedList(merge(lists, left, mid), merge(lists, mid + 1, right));
 }
+
 static ListNode* mergeKLists(std::vector<ListNode*>& lists) {
     return merge(lists, 0, lists.size() - 1);
 }
 
+ListNode* mergeKLists1(std::vector<ListNode*>& lists) {
+    if (lists.empty()) {
+        return nullptr;
+    }
+
+    int interval = 1;
+    int n = lists.size();
+
+    while (interval < n) {
+        for (int i = 0; i < n - interval; i += interval * 2) {
+            lists[i] = mergeTwoSortedList(lists[i], lists[i + interval]);
+        }
+        interval <<= 1;
+    }
+
+    return lists[0];
+}
 struct Comp {
     bool operator() (std::pair<ListNode*, int> a, std::pair<ListNode*, int> b) {
         return a.first->val > b.first->val;
@@ -225,23 +243,30 @@ int main(int argc, char* argv[]) {
         int vec_n = RandomVal(0, max_vec_n);
         vector<ListNode*> list1;
         vector<ListNode*> list2;
+        vector<ListNode*> list3;
         for (int j = 0; j < vec_n; ++j) {
             ListNode* head1 = RandomSortedList(max_n, min, max);
             ListNode* head2 = CopyList(head1);
+            ListNode* head3 = CopyList(head1);
             list1.emplace_back(head1);
             list2.emplace_back(head2);
+            list3.emplace_back(head3);
         }
 
         ListNode* ans1 = mergeKLists(list1);
         ListNode* ans2 = test(list2);
-        if (!IsEqual(ans1, ans2)) {
+        ListNode* ans3 = mergeKLists1(list3);
+        if (!IsEqual(ans1, ans2) || !IsEqual(ans2, ans3)) {
             cout << "test failed" << endl;
             FreeList(ans1);
             FreeList(ans2);
+            FreeList(ans3);
             break;
         }
+
         FreeList(ans1);
         FreeList(ans2);
+        FreeList(ans3);
     }
 
     cout << "test end" << endl;
