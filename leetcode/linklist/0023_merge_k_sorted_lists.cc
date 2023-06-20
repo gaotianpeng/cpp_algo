@@ -110,6 +110,13 @@ static void FreeList(ListNode* head) {
 
 } // namespace
 
+/*
+    https://leetcode.cn/problems/merge-k-sorted-lists/
+    23 合并K个升序链表
+        给你一个链表数组，每个链表都已经按升序排列。
+        请你将所有链表合并到一个升序链表中，返回合并后的链表。
+*/
+
 static ListNode* mergeTwoSortedList(ListNode* list1, ListNode* list2) {
     if (list1 == nullptr) {
         return list2;
