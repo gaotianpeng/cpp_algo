@@ -110,18 +110,16 @@ static void FreeList(ListNode* head) {
 
 } // namespace
 
-static ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+static ListNode* mergeTwoSortedList(ListNode* list1, ListNode* list2) {
     if (list1 == nullptr) {
         return list2;
     }
-
     if (list2 == nullptr) {
         return list1;
     }
 
     ListNode dummy(0);
     ListNode* prev = &dummy;
-    
     while (list1 != nullptr && list2 != nullptr) {
         auto& cur_node = list1->val <= list2->val ? list1 : list2;
         prev->next = cur_node;
@@ -144,14 +142,20 @@ static ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
     return dummy.next;
 }
 
-static ListNode* merge(vector <ListNode*> &lists, int l, int r) {
-    if (l == r) return lists[l];
-    if (l > r) return nullptr;
-    int mid = (l + r) >> 1;
-    return mergeTwoLists(merge(lists, l, mid), merge(lists, mid + 1, r));
-}
+static ListNode* merge(std::vector<ListNode*>& lists, int left, int right) {
+    if (left == right) {
+        return lists[left];
+    }
 
-static ListNode* mergeKLists(vector<ListNode*>& lists) {
+    if (left > right) {
+        return nullptr;
+    }
+
+    int mid = left + ((right - left) >> 1);
+
+    return mergeTwoSortedList(merge(lists, left, mid), merge(lists, mid + 1, right));
+}
+static ListNode* mergeKLists(std::vector<ListNode*>& lists) {
     return merge(lists, 0, lists.size() - 1);
 }
 
@@ -184,7 +188,6 @@ ListNode* test(vector<ListNode*>& lists) {
     if (min_heap.empty()) {
         return nullptr;
     }
-
 
     std::pair<ListNode*, int> head = min_heap.top();
     min_heap.pop();
