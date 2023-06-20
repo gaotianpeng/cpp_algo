@@ -1,8 +1,7 @@
-#include <algorithm>
 #include <iostream>
 #include <random>
-#include <deque>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 /*
@@ -26,10 +25,6 @@ static void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
 		int val = (int)(Math::random() * (max_val - min_val + 1)) + min_val;
 		out.emplace_back(val);
 	}
-}
-
-static int RandomVal(int min, int max) {
-    return (int)(Math::random()*(max - min + 1)) + min;
 }
 
 struct ListNode{
@@ -105,82 +100,123 @@ static void FreeList(ListNode* head) {
     }
 }
 
+static int RandomVal(int min, int max) {
+    return (int)(Math::random() * (max - min)) + min;
+}
+
+static std::pair<int, int> RandomLR(int min, int max) {
+    int val1 = RandomVal(min, max);
+    int val2 = RandomVal(min, max);
+    
+    if (val1 <= val2) {
+        return {val1, val2};
+    } else {
+        return {val2, val1};
+    }
+}
+
+static int GetListLen(ListNode* head) {
+    int ans = 0;
+    while (head != nullptr) {
+        ++ans;
+        head = head->next;
+    }
+
+    return ans;
+}
+
 } // namespace
 
 /*
-    https://leetcode.cn/problems/rotate-list/
-    61 旋转链表
-        给你一个链表的头节点 head ，旋转链表，将链表每个节点向右移动 k 个位置。
+    https://leetcode.cn/problems/reverse-linked-list-ii/
+    92 反转链表2
+        给你单链表的头指针head和两个整数left和right ，
+        其中left <= right 请你反转从位置left到位置right的链表节点，
+        返回反转后的链表 
+
 */
-static ListNode* rotateRight(ListNode* head, int k) {
-    if (head == nullptr || head->next == nullptr || k == 0) {
-        return head;
-    }
-
+static std::pair<ListNode*, ListNode*> reverseList(ListNode* head, ListNode* tail) {
+    ListNode* prev = tail->next;
     ListNode* cur = head;
-    int n = 0;
-
-    ListNode dummy(0);
-    ListNode* prev = &dummy;
-
-    while (cur != nullptr) {
-        ++n;
-        prev->next = cur;
-        prev = prev->next;
-        cur = cur->next;
+    while (prev != tail) {
+        ListNode* next = cur->next;
+        cur->next = prev;
+        prev = cur;
+        cur = next;
     }
 
-    k = k % n;
-    
-    prev->next = head;
-
-    int i = 0;
-    cur = head;
-    while (i < n - k) {
-        prev->next = cur;
-        prev = prev->next;
-        cur = cur->next;
-        ++i;
-    }
-    prev->next = nullptr;
-
-    return cur;
+    return {tail, head};
 }
 
-static ListNode* test(ListNode* head, int k) {
-    if (head == nullptr || head->next == nullptr || k == 0) {
+static ListNode* reverseBetween(ListNode* head, int left, int right) {
+    if (head == nullptr || head->next == nullptr || left == right) {
         return head;
     }
 
-    deque<ListNode*> nodes;
     ListNode* cur = head;
-    while (cur != nullptr) {
-        nodes.emplace_back(cur);
+    ListNode dummy(0);
+    ListNode* prev = &dummy;
+    prev->next = head;
+    
+    int i = 1;
+    while (i < left) {
+        prev->next = cur;
+        prev = prev->next;
         cur = cur->next;
-    }
-
-    int n = nodes.size();
-    k = k % n;
-    int i = 0;
-    while (i < k) {
-        ListNode* cur = nodes.back();
-        nodes.pop_back();
-        nodes.emplace_front(cur);
         ++i;
     }
 
-    nodes.back()->next = nullptr;
-
-    ListNode dummy(0);
-    ListNode* prev = &dummy;
-    while (!nodes.empty()) {
-        ListNode* cur = nodes.front();
-        nodes.pop_front();
+    ListNode* rev_head = prev->next;
+    ListNode* pos1 = prev;
+    while (i <= right) {
         prev->next = cur;
         prev = prev->next;
+        cur = cur->next;
+        ++i;
     }
 
+    prev->next = nullptr;
+    tie(rev_head, prev) = reverseList(rev_head, prev);
+    pos1->next = rev_head;
+    prev->next = cur;
+    
     return dummy.next;
+}
+
+static ListNode* reverseList(ListNode* head) {
+    ListNode* prev = nullptr;
+    ListNode* next = nullptr;
+    while (head != nullptr) {
+        ListNode* next = head->next;
+        head->next = prev;
+        prev = head;
+        head = next;
+    }
+
+    return prev;
+}
+
+static ListNode* test(ListNode* head, int left, int right) {
+    if (head == nullptr || head->next == nullptr || left == right) {
+        return head;
+    }
+
+    vector<ListNode*> nodes;
+    while (head != nullptr) {
+        nodes.emplace_back(head);
+        head = head->next;
+    }
+
+    nodes[right - 1]->next = nullptr;
+    ListNode* rev_head = reverseList(nodes[left - 1]);
+    nodes[left-1]->next = right < nodes.size() ? nodes[right] : nullptr;
+    
+    if (left == 1) {
+        return rev_head;
+    } else {
+        nodes[left-2]->next = rev_head;
+        return nodes[0];
+    }
 }
 
 int main(int argc, char* argv[]) {
@@ -193,9 +229,10 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < test_times; ++i) {
         ListNode* head1 = RandomList(max_n, min, max);
         ListNode* head2 = CopyList(head1);
-        int k = RandomVal(0, max_n);
-        ListNode* ans1 = rotateRight(head1, k);
-        ListNode* ans2 = test(head2, k);
+
+        std::pair<int, int> lr = RandomLR(1, GetListLen(head1));
+        ListNode* ans1 = reverseBetween(head1, lr.first, lr.second);
+        ListNode* ans2 = test(head2, lr.first, lr.second);
 
         if (!IsEqual(ans1, ans2)) {
             cout << "test failed" << endl;
