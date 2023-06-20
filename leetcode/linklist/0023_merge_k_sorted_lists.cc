@@ -110,11 +110,6 @@ static void FreeList(ListNode* head) {
 
 } // namespace
 
-/*
-    https://leetcode.cn/problems/merge-two-sorted-lists/
-    0021 合并两个有序链表
-        将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的
-*/
 static ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
     if (list1 == nullptr) {
         return list2;
@@ -124,30 +119,29 @@ static ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
         return list1;
     }
 
-    ListNode* ans = list1->val < list2->val ? list1: list2;
-    if (ans == list1) {
+    ListNode dummy(0);
+    ListNode* prev = &dummy;
+    
+    while (list1 != nullptr && list2 != nullptr) {
+        auto& cur_node = list1->val <= list2->val ? list1 : list2;
+        prev->next = cur_node;
+        prev = prev->next;
+        cur_node = cur_node->next;
+    }
+
+    while (list1 != nullptr) {
+        prev->next = list1;
+        prev = prev->next;
         list1 = list1->next;
-    } else {
+    }
+
+    while (list2 != nullptr) {
+        prev->next = list2;
+        prev = prev->next;
         list2 = list2->next;
     }
 
-    ListNode* pre = ans;
-
-    while (list1 != nullptr && list2 != nullptr) {
-        if (list1->val <= list2->val) {
-            pre->next = list1;
-            list1 = list1->next;
-        } else {
-            pre->next = list2;
-            list2 = list2->next;
-        }
-
-        pre = pre->next;
-    }
-
-    pre->next = list1 != nullptr ? list1 : list2;
-
-    return ans;
+    return dummy.next;
 }
 
 static ListNode* merge(vector <ListNode*> &lists, int l, int r) {
@@ -212,7 +206,6 @@ ListNode* test(vector<ListNode*>& lists) {
     }
     pre ->next = nullptr;
 
-    
     return ans;
 }
 
