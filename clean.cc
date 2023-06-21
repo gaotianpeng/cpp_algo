@@ -17,8 +17,8 @@ static void traverse_directory(const fs::path& root_path) {
                 && entry.path().filename().string()[0] != '.') {
                 stack.push(entry.path());
             } else if (entry.is_regular_file()) {
-                fs::file_status fileStatus = fs::status(entry.path());
-                if ((fileStatus.permissions() & fs::perms::owner_exec) != fs::perms::none) {
+                fs::file_status file_status = fs::status(entry.path());
+                if ((file_status.permissions() & fs::perms::owner_exec) != fs::perms::none) {
                     std::cout << "delete file: " << entry.path().filename() << std::endl;
                     fs::remove(entry.path());
                     cout << entry.path().string() << endl;
