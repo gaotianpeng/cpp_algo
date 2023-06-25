@@ -125,14 +125,76 @@ static int GetListLen(ListNode* head) {
     将这两数相加会返回一个新的链表。
     你可以假设除了数字 0 之外，这两个数字都不会以零开头。
 */
-ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-    return nullptr;
+static ListNode* reverse(ListNode* head){
+    ListNode* pre = nullptr;
+    ListNode* next = nullptr;
+
+    while (head != nullptr) {
+        next = head->next;
+        head->next = pre;
+        pre = head;
+        head = next;
+    }
+
+    return pre;
 }
-    
+
+static ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+    if (l1 == nullptr) {
+        return l2;
+    }
+    if (l2 == nullptr) {
+        return l1;
+    }
+
+    ListNode* rev1 = reverse(l1);
+    ListNode* rev2 = reverse(l2);
+
+    ListNode* cur1 = rev1;
+    ListNode* cur2 = rev2;
+    int carry = 0;
+    ListNode dummy(0);
+    ListNode* pre = &dummy;
+
+
+    while (cur1 != nullptr && cur2 != nullptr) {
+        ListNode* cur = new ListNode((cur1->val + cur2->val +carry) % 10);
+        carry = (cur1->val + cur2->val +carry) / 10;
+        pre->next = cur;
+        pre = pre->next;
+        cur1 = cur1->next;
+        cur2 = cur2->next;
+    }
+    while (cur1 != nullptr) {
+        ListNode* cur = new ListNode((cur1->val + carry) % 10);
+        carry = (cur1->val + carry) / 10;
+        pre->next = cur;
+        pre = pre->next;
+        cur1 = cur1->next;
+    }
+
+    while (cur2 != nullptr) {
+        ListNode* cur = new ListNode((cur2->val + carry) % 10);
+        carry = (cur2->val + carry) / 10;
+        pre->next = cur;
+        pre = pre->next;
+        cur2 = cur2->next;
+    }
+
+    if (carry != 0) {
+        pre->next = new ListNode(carry);
+    }
+
+    reverse(rev1);
+    reverse(rev2);
+
+    return reverse(dummy.next);
+}
+
 ListNode* test(ListNode* l1, ListNode* l2) {
     return nullptr;
 }
-    
+
 int main(int argc, char* argv[]) {
     cout << "test start..." << endl;
 
