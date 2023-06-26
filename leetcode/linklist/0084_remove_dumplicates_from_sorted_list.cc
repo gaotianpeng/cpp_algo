@@ -114,7 +114,8 @@ static void FreeList(ListNode* head) {
 /*
     https://leetcode.cn/problems/remove-duplicates-from-sorted-list-ii/
     84. 删除排序链表中的重复元素 II
-        定一个已排序的链表的头 head ，删除原始链表中所有重复数字的节点，只留下不同的数字 。返回 已排序的链表 。
+        定一个已排序的链表的头 head ，删除原始链表中所有重复数字的节点，只留下不同的数字 。
+        返回 已排序的链表 
 */
 static ListNode* deleteDuplicates(ListNode* head) {
     if (!head) {

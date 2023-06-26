@@ -2,7 +2,7 @@
 #include <random>
 #include <vector>
 #include <algorithm>
-#include <queue>
+#include <deque>
 
 using namespace std;
 
@@ -165,26 +165,21 @@ static ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
         cur1 = cur1->next;
         cur2 = cur2->next;
     }
-    while (cur1 != nullptr) {
-        ListNode* cur = new ListNode((cur1->val + carry) % 10);
-        carry = (cur1->val + carry) / 10;
-        pre->next = cur;
-        pre = pre->next;
-        cur1 = cur1->next;
-    }
 
-    while (cur2 != nullptr) {
-        ListNode* cur = new ListNode((cur2->val + carry) % 10);
-        carry = (cur2->val + carry) / 10;
-        pre->next = cur;
+    ListNode* cur = cur1 == nullptr ? cur2 : cur1;
+    while (cur != nullptr) {
+        ListNode* temp = new ListNode((cur->val + carry) % 10);
+        carry = (cur->val + carry) / 10;
+        pre->next = temp;
         pre = pre->next;
-        cur2 = cur2->next;
+        cur = cur->next;
     }
 
     if (carry != 0) {
         pre->next = new ListNode(carry);
     }
 
+    // 恢复现场
     reverse(rev1);
     reverse(rev2);
 
@@ -192,7 +187,65 @@ static ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
 }
 
 ListNode* test(ListNode* l1, ListNode* l2) {
-    return nullptr;
+    if (l1 == nullptr) {
+        return l2;
+    }
+
+    if (l2 == nullptr) {
+        return l1;
+    }
+
+    deque<ListNode*> nodes1;
+    deque<ListNode*> nodes2;
+    ListNode* cur = l1;
+    while (cur != nullptr) {
+        nodes1.emplace_back(cur);
+        cur = cur->next;
+    }
+    
+    cur = l2;
+    while (cur != nullptr) {
+        nodes2.emplace_back(cur);
+        cur = cur->next;
+    }
+
+    int carry = 0;
+    ListNode dummy(0);
+    ListNode* prev = &dummy;
+    while (!nodes1.empty() && !nodes2.empty()) {
+        ListNode* tmp_node1 = nodes1.back();
+        ListNode* tmp_node2 = nodes2.back();
+        nodes1.pop_back();
+        nodes2.pop_back();
+        cur = new ListNode((tmp_node1->val + tmp_node2->val + carry) % 10);
+        carry = (tmp_node1->val + tmp_node2->val + carry) / 10;
+        prev->next = cur;
+        prev = prev->next;
+    }
+
+    while (!nodes1.empty()) {
+        ListNode* tmp_node = nodes1.back();
+        nodes1.pop_back();
+        cur = new ListNode((tmp_node->val + carry) % 10);
+        carry = (tmp_node->val + carry) / 10;
+        prev->next = cur;
+        prev = prev->next;
+    }
+
+    while (!nodes2.empty()) {
+        ListNode* tmp_node = nodes2.back();
+        nodes2.pop_back();
+        cur = new ListNode((tmp_node->val + carry) % 10);
+        carry = (tmp_node->val + carry) / 10;
+        prev->next = cur;
+        prev = prev->next;
+    }
+
+    if (carry != 0) {
+        prev->next = new ListNode(carry);
+    }
+
+    return reverse(dummy.next);
 }
 
 int main(int argc, char* argv[]) {
@@ -200,27 +253,35 @@ int main(int argc, char* argv[]) {
 
     int max = 9;
     int min = 0;
-    int max_n = 100;
+    int max_n = 10;
     int test_times = 10000;
     
     for (int i = 0; i < test_times; ++i) {
         ListNode* head1 = RandomList(max_n, min, max);
         ListNode* head2 = RandomList(max_n, min, max);
-        int len = GetListLen(head1);
-        int n = RandomVal(0, len);
         ListNode* ans1 = addTwoNumbers(head1, head2);
         ListNode* ans2 = test(head1, head2);
         if (!IsEqual(ans1, ans2)) {
+            PrintList(head1);
+            PrintList(head2);
+            PrintList(ans1);
+            PrintList(ans2);
             cout << "test failed" << endl;
-            FreeList(ans1);
-            FreeList(ans2);
+            if (ans1 != ans2) {
+                FreeList(ans1);
+                FreeList(ans2);
+            }
+
             FreeList(head1);
             FreeList(head2);
             break;
         }
 
-        FreeList(ans1);
-        FreeList(ans2);
+        if (ans1 != ans2) {
+            FreeList(ans1);
+            FreeList(ans2);
+        }
+
         FreeList(head1);
         FreeList(head2);
     }
