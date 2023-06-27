@@ -146,7 +146,6 @@ static ListNode* partition(ListNode* head, int x) {
     ListNode* prev2 = &dummy2;
 
     ListNode* cur = head;
-    
     while (cur != nullptr) {
         if (cur->val < x) {
             prev1->next = cur;
