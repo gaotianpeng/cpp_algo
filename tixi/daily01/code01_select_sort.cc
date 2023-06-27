@@ -78,12 +78,14 @@ static void SelectSort(vector<int>& arr) {
     for (int i = 0; i < n; ++i) {
         int min_idx = i;
         for (int j = i + 1; j < n; j++) {
-            min_idx = arr[j] < arr[min_idx] ? j : min_idx; 
+            if (arr[j] < arr[min_idx]) {
+                min_idx = j;
+            }
         }
         if (min_idx != i) {
             Swap(arr, min_idx, i);
         }
-    }   
+    }
 }
 
 /*
