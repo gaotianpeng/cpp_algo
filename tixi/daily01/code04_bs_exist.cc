@@ -41,13 +41,16 @@ static void PrintArr(const vector<int>& arr) {
 
 } // namespace
 
+/*
+    在一个有序数组中，找某个数是否存在
+*/
 static bool IsExist(vector<int>& arr, int target) {
-    if (arr.size() == 0) {
+    if (arr.size() < 1) {
         return false;
     }
-    int n = arr.size();
+
     int left = 0;
-    int right = n - 1;
+    int right = arr.size() - 1;
     while (left < right) {
         int mid = left + ((right - left) >> 1);
         if (arr[mid] == target) {

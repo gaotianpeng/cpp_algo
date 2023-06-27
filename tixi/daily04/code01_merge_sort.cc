@@ -61,48 +61,51 @@ static void Swap(vector<int>& arr, int i, int j) {
 
 } // namespace
 
+
 static void merge(vector<int>& arr, int left, int mid, int right) {
     int n = right - left + 1;
-    int* helper = new int[n];
+    int* helper = new int[n]{0};
     int left_index = left;
     int right_index = mid + 1;
     int index = 0;
     while (left_index <= mid && right_index <= right) {
-        helper[index++] = arr[left_index] <= arr[right_index] ? arr[left_index++]
-            : arr[right_index++];
+        helper[index++] = arr[left_index] <= arr[right_index] ? 
+                arr[left_index++] : arr[right_index++];
     }
+
     while (left_index <= mid) {
         helper[index++] = arr[left_index++];
     }
+
     while (right_index <= right) {
         helper[index++] = arr[right_index++];
     }
+
     for (int i = 0; i < n; ++i) {
         arr[left + i] = helper[i];
     }
+
     delete [] helper;
 }
-
 
 static void process(vector<int>& arr, int left, int right) {
     if (left == right) {
         return;
     }
 
-    int mid = left +((right - left) >> 1);
+    int mid = left + ((right - left) >> 1);
     process(arr, left, mid);
     process(arr, mid + 1, right);
     merge(arr, left, mid, right);
 }
 
 static void MergeSort(vector<int>& arr) {
-    if (arr.size() < 2) {
+    if (arr.empty() || arr.size() < 2) {
         return;
     }
 
     process(arr, 0, arr.size() - 1);
 }
-
 
 int main(int argc, char* argv[]) {
     cout << "test start..." << endl;

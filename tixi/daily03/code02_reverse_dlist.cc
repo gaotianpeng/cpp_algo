@@ -123,16 +123,18 @@ static void FreeList(DListNode* head) {
 
 
 DListNode* ReverseDList(DListNode* head) {
-    DListNode* pre = nullptr;
+    DListNode* prev = nullptr;
     DListNode* next = nullptr;
+
     while (head != nullptr) {
         next = head->next;
-        head->next = pre;
+        head->next = prev;
         head->last = next;
-        pre = head;
+        prev = head;
         head = next;
     }
-    return pre;
+
+    return prev;
 }
 
 DListNode* test(DListNode* head) {

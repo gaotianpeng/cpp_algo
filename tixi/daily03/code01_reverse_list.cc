@@ -104,15 +104,17 @@ static void FreeList(ListNode* head) {
 } // namespace
 
 ListNode* ReverseList(ListNode* head) {
-    ListNode* pre = nullptr;
+    ListNode* prev = nullptr;
     ListNode* next = nullptr;
+
     while (head != nullptr) {
         next = head->next;
-        head->next = pre;
-        pre = head;
+        head->next = prev;
+        prev = head;
         head = next;
     }
-    return pre;
+
+    return prev;
 }
 
 ListNode* test(ListNode* head) {
