@@ -110,7 +110,7 @@ int main(int argc, char* argv[]) {
     int max = 100;
     int min = -100;
     int max_n = 30;
-    int test_times = 10;
+    int test_times = 50000;
 
     for (int i = 0; i < test_times; ++i) {
         vector<int> arr1, arr2;
