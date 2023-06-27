@@ -90,22 +90,24 @@ static void MergeSort(vector<int>& arr) {
 
     int merge_size = 1;
     int n = arr.size();
+
     while (merge_size < n) {
         int left = 0;
         while (left < n) {
-            if (merge_size > n - left) {
+            if (n - left < merge_size) {
                 break;
             }
+
             int mid = left + merge_size - 1;
-            int right = mid + std::min(n - mid - 1, merge_size);
+            int right = mid + std::min(merge_size, n - mid - 1);
             merge(arr, left, mid, right);
             left = right + 1;
         }
 
-
         if (merge_size > n / 2) {
             break;
         }
+
         merge_size <<= 1;
     }
 }

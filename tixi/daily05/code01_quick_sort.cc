@@ -73,14 +73,15 @@ static int partition(vector<int>& arr, int left, int right) {
     int index = left;
     while (index < right) {
         if (arr[index] <= arr[right]) {
-            ++less;
-            Swap(arr, less, index);
+            Swap(arr, ++less, index);
         }
         ++index;
     }
+
     Swap(arr, ++less, right);
     return less;
 }
+
 
 static void process(vector<int>& arr, int left, int right) {
     if (left >= right) {
@@ -92,6 +93,10 @@ static void process(vector<int>& arr, int left, int right) {
     process(arr, mid + 1, right);
 }
 
+/*
+    Partition过程
+    给定一个数组arr，和一个整数num。请把小于等于num的数放在数组的左边，大于num的数放在数组的右边
+*/
 static void QuickSort(vector<int>& arr) {
     if (arr.size() < 2) {
         return;
