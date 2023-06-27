@@ -60,7 +60,8 @@ static void Swap(vector<int>& arr, int i, int j) {
 }
 }  // namespace
 
-static std::pair<int, int> partition(vector<int>& arr, int left, int right) {
+
+static pair<int, int> partition(vector<int>& arr, int left, int right) {
     if (left > right) {
         return {-1, -1};
     }
@@ -72,19 +73,20 @@ static std::pair<int, int> partition(vector<int>& arr, int left, int right) {
     int less = left - 1;
     int more = right;
     int index = left;
+
     while (index < more) {
-        if (arr[index] < arr[right]) {
-            Swap(arr,index, ++less);
+        if (arr[index] == arr[right]) {
             ++index;
-        } else if (arr[index] > arr[right]) {
-            Swap(arr, index, --more);
+        } else if (arr[index] < arr[right]) {
+            Swap(arr, index, ++less);
+            ++index;
         } else {
-            ++index;
+            Swap(arr, --more, index);
         }
     }
 
-    Swap(arr, more, right);
-    return {less + 1, more};
+    Swap(arr, right, more);
+    return {++less, more};
 }
 
 static void process(vector<int>& arr, int left, int right) {
