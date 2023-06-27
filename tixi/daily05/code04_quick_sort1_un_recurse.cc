@@ -1,7 +1,8 @@
+#include <algorithm>
 #include <iostream>
 #include <random>
+#include <stack>
 #include <vector>
-#include <algorithm>
 using namespace std;
 
 /*
@@ -60,6 +61,13 @@ static void Swap(vector<int>& arr, int i, int j) {
 }
 }  // namespace
 
+struct Op {
+    int left = -1;
+    int right = -1;
+    
+    Op(int l, int r): left(l), right(r) {}
+};
+
 static std::pair<int, int> partition(vector<int>& arr, int left, int right) {
     if (left > right) {
         return {-1, -1};
@@ -88,22 +96,26 @@ static std::pair<int, int> partition(vector<int>& arr, int left, int right) {
     return {++less, more};
 }
 
-static void process(vector<int>& arr, int left, int right) {
-    if (left >= right) {
-        return;
-    }
-
-    std::pair<int, int> equal_area = partition(arr, left, right);
-    process(arr, left, equal_area.first -1);
-    process(arr, equal_area.second + 1, right);
-}
-
 static void QuickSort(vector<int>& arr) {
     if (arr.size() < 2) {
         return;
     }
 
-    process(arr, 0, arr.size() - 1);
+    int n = arr.size();
+    std::pair<int, int> equal_area = partition(arr, 0, n - 1);
+    stack<Op> ops;
+    ops.push({0, equal_area.first - 1});
+    ops.push({equal_area.second + 1, n - 1});
+
+    while (!ops.empty()) {
+        Op cur_op = ops.top();
+        ops.pop();
+        if (cur_op.left < cur_op.right) {
+            std::pair<int, int> equal_area = partition(arr, cur_op.left, cur_op.right);
+            ops.push({cur_op.left, equal_area.first - 1});
+            ops.push({equal_area.second + 1, cur_op.right});
+        }
+    }
 }
 
 int main(int argc, char* argv[]) {
