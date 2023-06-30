@@ -105,11 +105,6 @@ static void FreeList(ListNode* head) {
 
 } // namespace
 
-/*
-    https://leetcode.cn/problems/7WHec2/
-    offer 077 链表排序
-        给定链表的头结点 head ，请将其按 升序 排列并返回 排序后的链表 。
-*/
 static ListNode* reverse(ListNode* head) {
     ListNode* pre = nullptr;
     ListNode* next = nullptr;
@@ -126,27 +121,25 @@ static ListNode* reverse(ListNode* head) {
 
 static ListNode* plusOne(ListNode* head) {
     if (head == nullptr) {
-        return nullptr;
+        return head;
     }
 
     ListNode* rev = reverse(head);
     int carry = 1;
+
     ListNode dummy(0);
     ListNode* pre = &dummy;
+
     while (rev != nullptr) {
         int sum = rev->val + carry;
         rev->val = sum % 10;
+        carry = sum / 10;
         pre->next = rev;
         pre = pre->next;
-
-        carry = sum / 10;
-        if (carry == 0) {
-            break;
-        }
         rev = rev->next;
     }
 
-    if (carry != 0) {
+    if (carry == 1) {
         pre->next = new ListNode(1);
     }
 
