@@ -44,16 +44,17 @@ static void PrintArray(const vector<int>& arr) {
     给定两个等长有序列数组，返回两个数组的上中位数
     s1 = [1, 2, 3, 4]
     s2 = [1, 3, 5, 6]
-    返回 第4小的数 3
+    返回第4小的数 3
 */
 
 static int GetUpMedian(const vector<int>& arr1, const vector<int>& arr2) {
     int len = arr1.size() + arr2.size();
-
+    
     int start1 = 0;
     int end1 = arr1.size() - 1;
     int start2 = 0;
-    int end2 = end1;
+    int end2 = arr2.size() - 1;
+
     int mid1 = 0;
     int mid2 = 0;
 
@@ -61,28 +62,27 @@ static int GetUpMedian(const vector<int>& arr1, const vector<int>& arr2) {
         mid1 = (start1 + end1) / 2;
         mid2 = (start2 + end2) / 2;
 
-        // 两个数组中点位置相等
         if (arr1[mid1] == arr2[mid2]) {
             return arr1[mid1];
         }
 
-        // 两个数组中点位置不相等
-        if (((end1 - start1 + 1) & 1)== 1) {// 1) 奇数长度
+        if (((end1 - start1 + 1) & 1) == 1) { // 奇数长度
             if (arr1[mid1] > arr2[mid2]) {
-                if (arr2[mid2] >= arr1[mid1 - 1]) {
+                if (arr2[mid2] >= arr1[mid1-1]) {
                     return arr2[mid2];
                 }
+                
                 end1 = mid1 - 1;
                 start2 = mid2 + 1;
             } else {
                 if (arr1[mid1] >= arr2[mid2 - 1]) {
                     return arr1[mid1];
                 }
-
                 start1 = mid1 + 1;
                 end2 = mid2 - 1;
             }
-        } else {// 2) 偶数长度
+            
+        } else { // 偶数长度
             if (arr1[mid1] > arr2[mid2]) {
                 end1 = mid1;
                 start2 = mid2 + 1;
@@ -93,6 +93,7 @@ static int GetUpMedian(const vector<int>& arr1, const vector<int>& arr2) {
         }
     }
 
+    
     return std::min(arr1[start1], arr2[start2]);
 }
 
