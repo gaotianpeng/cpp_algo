@@ -27,6 +27,7 @@ static void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
         int val = (int)(Math::random() * (max_val - min_val + 1)) + min_val;
         out.emplace_back(val);
     }
+    std::sort(out.begin(), out.end());
 }
 
 static void CopyArray(const vector<int>& src, vector<int>& out) {
@@ -39,21 +40,6 @@ static int RandomVal(int min, int max) {
     return (int)(Math::random()*(max - min + 1)) + min;
 }
 
-static bool IsEqual(const vector<int>& arr1, const vector<int>& arr2) {
-    if (arr1.size() != arr2.size
-        return false
-    }
-
-    if (arr1[0] == arr2[1] && arr1[1] == arr2[0]) {
-        return true;
-    }
-
-    if (arr1[0] == arr2[0] && arr1[1] == arr2[1]) {
-      return true;  
-    } 
-
-    return false;
-}
 
 } // namespace
 
@@ -61,15 +47,30 @@ static bool IsEqual(const vector<int>& arr1, const vector<int>& arr2) {
     https://leetcode.cn/problems/two-sum/
     0004 寻找两个正序数组的中位数
     给定两个大小分别为 m 和 n 的正序（从小到大）数组 nums1 和 nums2。请你找出并返回这两个正序数组的 中位数
-    算法的时间复杂度应该为 O(log (m+n)) 。
+    算法的时间复杂度应该为 O(log (m+n)) 
 */
 double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+    
     return 0.0;
 }
 
 double test(vector<int>& nums1, vector<int>& nums2) {
-    
-    return 0.0;
+    vector<int> all_nums;
+    for (auto& elem: nums1) {
+        all_nums.emplace_back(elem);
+    }
+
+    for (auto& elem: nums2) {
+        all_nums.emplace_back(elem);        
+    }
+
+    std::sort(all_nums.begin(), all_nums.end());
+    int n = all_nums.size();
+    if (n % 2 == 1) {
+        return (double)all_nums[n/2];
+    } else {
+        return (double)(all_nums[n/2 -1] + all_nums[n/2])/2;
+    }
 }
 
 int main(int argc, char* argv[]) {
