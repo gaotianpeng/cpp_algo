@@ -36,7 +36,6 @@ static int RandomVal(int min, int max) {
 static int reverse(int x) {
     bool neg = ((x >> 31) & 1) == 1;
     x = neg ? x : -x;
-    int int_max = std::numeric_limits<int>::max();
     int int_min = std::numeric_limits<int>::min();
 
     int m = int_min / 10;
