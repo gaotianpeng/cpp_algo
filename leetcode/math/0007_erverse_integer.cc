@@ -33,24 +33,24 @@ static int RandomVal(int min, int max) {
     假设环境不允许存储 64 位整数（有符号或无符号）。
 */
 
-static int reverse(int x) {
-    bool neg = ((x >> 31) & 1) == 1;
-    x = neg ? x : -x;
-    int int_min = std::numeric_limits<int>::min();
+static int reverse(int num) {
+    bool neg = ((num >> 31) & 1) == 1;
+    num = neg ? num : -num;
 
-    int m = int_min / 10;
-    int o = int_min % 10;
+    int m = std::numeric_limits<int>::min() / 10;
+    int o = std::numeric_limits<int>::min() % 10;
 
     int res = 0;
-    while (x != 0) {
-        if (res < m || (res == m && x / 10 < o)) {
+    while (num != 0) {
+        if (res < m  || (res == m && num / 10 < o)) {
             return 0;
         }
-        res = res * 10 + x % 10;
-        x = x / 10;
+
+        res = res * 10 + num % 10;
+        num = num / 10;
     }
 
-    return neg? res : std::abs(res);
+    return neg ? res : std::abs(res);
 }
 
 static int test(int num) {
