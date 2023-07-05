@@ -11,9 +11,9 @@ namespace {
 class Math {
 public:
     static double random() {
-        random_device rd;
-        default_random_engine engine(rd());
-        uniform_real_distribution<> distribution(0.0, 1.0);
+        static random_device rd;
+        static default_random_engine engine(rd());
+        static uniform_real_distribution<> distribution(0.0, 1.0);
 
         return distribution(engine);
     }
