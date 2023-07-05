@@ -249,7 +249,7 @@ private:
 
 int main(int argc, char* argv[]) {
     cout << "test start" << endl;
-    int test_times = 10000;
+    int test_times = 100000;
     int min_val = 1;
     int max_val = 20;
     bool success = true;
