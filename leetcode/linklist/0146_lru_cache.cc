@@ -51,7 +51,7 @@ public:
         }
     }
 
-    void AddNode(Node* node) {
+    void addNode(Node* node) {
         if (node == nullptr) {
             return;
         }
@@ -65,9 +65,8 @@ public:
             tail = node;
         }
     }
-
     
-    void MoveNodeToTail(Node* node) {
+    void moveNodeToTail(Node* node) {
         if (node == nullptr || head == tail
                 || node == tail) {
             return;
@@ -109,13 +108,29 @@ public:
         return ans;
     }
 
-    void Print() {
-        Node * cur = head;
-        while (cur != nullptr) {
-            cout << "<" << cur->key << ", " << cur->value << "> ";
-            cur = cur->next;
+    void removeNode(Node* node) {
+        if (node == nullptr) {
+            return;
         }
-        cout << endl;
+
+        if (head == node) {
+            head = head->next;
+            if (head) {
+                head->last = nullptr;
+            }
+            node->next = nullptr;
+        } else if (tail == node) {
+            tail = tail->last;
+            if (tail) {
+                tail->next = nullptr;
+            }
+            node->last = nullptr;
+        } else {
+            node->next->last = node->last;
+            node->last->next = node->next;
+            node->last = nullptr;
+            node->next = nullptr;
+        }
     }
 
 private:
@@ -136,7 +151,7 @@ public:
         }
 
         Node* node = iter->second;
-        node_list_.MoveNodeToTail(node);
+        node_list_.moveNodeToTail(node);
         
         return node->value;
     }
@@ -146,19 +161,24 @@ public:
         if (iter == key_node_map_.end()) {
             Node* new_node = new Node(key, value);
             key_node_map_.insert({key, new_node});
-            node_list_.AddNode(new_node);
+            node_list_.addNode(new_node);
             if (key_node_map_.size() == capacity_ + 1) {
                 removeMostUnusedCache();
             }
         } else {
             Node* node = key_node_map_[key];
             node->value = value;
-            node_list_.MoveNodeToTail(node);
+            node_list_.moveNodeToTail(node);
         }
     }
 
-    void Print() {
-        node_list_.Print();
+    void Delete(int key) {
+        auto iter = key_node_map_.find(key);
+        if (iter != key_node_map_.end()) {
+            node_list_.removeNode(iter->second);
+            delete iter->second;
+            key_node_map_.erase(key);
+        }
     }
 
 private:
@@ -227,11 +247,22 @@ public:
         }
     }
 
-    void Print() {
-        for (int i = 0; i < cache_.size(); ++i) {
-            cout << "<" << cache_[i].first << ", " << cache_[i].second << "> ";
+    void Delete(int key) {
+        int i = 0;
+        bool exist = false;
+        for (i = 0; i < cache_.size(); ++i) {
+            if (cache_[i].first == key) {
+                exist = true;
+                break;
+            }
         }
-        cout << endl;
+
+        if (exist) {
+            for (int j = i; j < cache_.size() - 1; ++j) {
+                cache_[j] = cache_[j+1];
+            }
+            cache_.pop_back();
+        }
     }
 
 private:
@@ -249,7 +280,7 @@ private:
 
 int main(int argc, char* argv[]) {
     cout << "test start" << endl;
-    int test_times = 100000;
+    int test_times = 1000;
     int min_val = 1;
     int max_val = 20;
     bool success = true;
@@ -269,21 +300,23 @@ int main(int argc, char* argv[]) {
             key_sets.emplace_back(RandomVal(min_val, max_val));
         }
 
-        for (int j = 0; j < 1000; ++j) {
+        for (int j = 0; j < 10000; ++j) {
             int key = key_sets[RandomVal(0, key_sets.size() - 1)];
-            if (Math::random() < 0.5) {
+            double p = Math::random();
+            if (p < 0.4) {
                 int value = RandomVal(min_val, max_val);
                 cache.put(key, value);
                 test_cache.put(key, value);
-            } else {
+            } else if (p < 0.7){
                 if (cache.get(key) != test_cache.get(key)) {
                     cout << cache.get(key) << endl;
                     cout << test_cache.get(key) << endl;
                     success = false;
-                    cache.Print();
-                    test_cache.Print();
                     break;
                 }
+            } else {
+                cache.Delete(p);
+                test_cache.Delete(p);
             }
         }
     }
