@@ -74,10 +74,9 @@ static void SelectSort(vector<int>& arr) {
         return;
     }
 
-    int n = arr.size();
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < arr.size(); ++i) {
         int min_idx = i;
-        for (int j = i + 1; j < n; j++) {
+        for (int j = i + 1; j < arr.size(); ++j) {
             if (arr[j] < arr[min_idx]) {
                 min_idx = j;
             }
