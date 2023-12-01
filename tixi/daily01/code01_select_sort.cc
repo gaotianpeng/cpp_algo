@@ -100,12 +100,14 @@ static void SelectSort1(vector<int>& arr) {
         return;
     }
 
-    int n = arr.size();
-    for (int i = n - 1; i >= 0; --i) {
+    for (int i = arr.size() - 1; i > 0; --i) {
         int max_idx = i;
         for (int j = 0; j < i; j++) {
-            max_idx = arr[j] > arr[max_idx] ? j : max_idx;
-        }
+            if (arr[j] > arr[max_idx]) {
+                max_idx = j;
+            }
+        } 
+
         if (max_idx != i) {
             Swap(arr, i, max_idx);
         }
