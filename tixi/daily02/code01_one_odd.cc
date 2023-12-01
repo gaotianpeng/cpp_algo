@@ -67,7 +67,7 @@ static void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
     while (arr_len > 0) {
         int even_times = RandomEven(arr_len);
         int even_time_val = RandomVal(max_val, min_val);
-        while (vals.contains(even_time_val)) {
+        while (vals.find(even_time_val) != vals.end()) {
             even_time_val = RandomVal(max_val, min_val);
         }
         vals.insert(even_time_val);
@@ -118,7 +118,7 @@ static int test(vector<int>& arr) {
     unordered_map<int, int> map;
     for (int i = 0; i < arr.size(); ++i) {
         int key = arr[i];
-        if (map.contains(key)) {
+        if (map.find(key) != map.end()) {
             int val = map[key];
             map.erase(key);
             map[key] = val + 1;
