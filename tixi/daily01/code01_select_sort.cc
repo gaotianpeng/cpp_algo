@@ -74,13 +74,15 @@ static void SelectSort(vector<int>& arr) {
         return;
     }
 
-    for (int i = 0; i < arr.size(); ++i) {
+    int n = arr.size();
+    for (int i = 0; i < n; ++i) {
         int min_idx = i;
-        for (int j = i + 1; j < arr.size(); ++j) {
+        for (int j = i + 1; j < n; ++j) {
             if (arr[j] < arr[min_idx]) {
                 min_idx = j;
             }
         }
+
         if (min_idx != i) {
             Swap(arr, min_idx, i);
         }
@@ -100,16 +102,17 @@ static void SelectSort1(vector<int>& arr) {
         return;
     }
 
-    for (int i = arr.size() - 1; i > 0; --i) {
+    int n = arr.size();
+    for (int i = n - 1; i > 0; i--) {
         int max_idx = i;
         for (int j = 0; j < i; j++) {
             if (arr[j] > arr[max_idx]) {
                 max_idx = j;
             }
-        } 
+        }
 
         if (max_idx != i) {
-            Swap(arr, i, max_idx);
+            Swap(arr, max_idx, i);
         }
     }
 }
