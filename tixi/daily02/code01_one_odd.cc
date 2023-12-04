@@ -102,8 +102,8 @@ static int GetOneOdd(vector<int>& arr) {
         return -1;
     }
 
-    int ans = 0;
-    for (int i = 0; i < arr.size(); ++i) {
+    int ans = arr[0];
+    for (int i = 1; i < arr.size(); ++i) {
         ans ^= arr[i];
     }
 
