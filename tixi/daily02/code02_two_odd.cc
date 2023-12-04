@@ -128,16 +128,16 @@ static bool IsEqual(const std::pair<int, int>& a, const std::pair<int, int>& b) 
        传入数组的中数据合理性由外部保证
 */
 static std::pair<int, int> GetTwoOdd(vector<int>& arr) {
-    int xor1 = 0;
+    int xor1 = arr[0];
     int n = arr.size();
-    for (int i = 0; i < n; ++i) {
+    for (int i = 1; i < n; ++i) {
         xor1 ^= arr[i];
     }
 
-    int right_one = xor1 & (-xor1);
     int xor2 = 0;
+    int rightone = xor1 & (-xor1);
     for (int i = 0; i < n; ++i) {
-        if ((arr[i] & right_one) == 0) {
+        if ((arr[i] & rightone) != 0) {
             xor2 ^= arr[i];
         }
     }
