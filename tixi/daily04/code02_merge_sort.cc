@@ -63,23 +63,28 @@ static void Swap(vector<int>& arr, int i, int j) {
 
 static void merge(vector<int>& arr, int left, int mid, int right) {
     int n = right - left + 1;
+
     int* helper = new int[n];
-    int left_index = left;
-    int right_index = mid + 1;
+    int idx1 = left;
+    int idx2 = mid + 1;
     int index = 0;
-    while (left_index <= mid && right_index <= right) {
-        helper[index++] = arr[left_index] <= arr[right_index] ? arr[left_index++]
-            : arr[right_index++];
+
+    while (idx1 <= mid && idx2 <= right) {
+        helper[index++] = arr[idx1] <= arr[idx2] ? arr[idx1++] : arr[idx2++];
     }
-    while (left_index <= mid) {
-        helper[index++] = arr[left_index++];
+
+    while (idx1 <= mid) {
+        helper[index++] = arr[idx1++];
     }
-    while (right_index <= right) {
-        helper[index++] = arr[right_index++];
+
+    while (idx2 <= right) {
+        helper[index++] = arr[idx2++];
     }
+
     for (int i = 0; i < n; ++i) {
-        arr[left + i] = helper[i];
+        arr[left+i] = helper[i];
     }
+
     delete [] helper;
 }
 
@@ -90,7 +95,6 @@ static void MergeSort(vector<int>& arr) {
 
     int merge_size = 1;
     int n = arr.size();
-
     while (merge_size < n) {
         int left = 0;
         while (left < n) {
@@ -104,7 +108,7 @@ static void MergeSort(vector<int>& arr) {
             left = right + 1;
         }
 
-        if (merge_size > n / 2) {
+        if (merge_size > n/2) {
             break;
         }
 
