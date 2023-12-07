@@ -75,6 +75,7 @@ static int partition(vector<int>& arr, int left, int right) {
         if (arr[index] <= arr[right]) {
             Swap(arr, ++less, index);
         }
+
         ++index;
     }
 
@@ -82,15 +83,14 @@ static int partition(vector<int>& arr, int left, int right) {
     return less;
 }
 
-
 static void process(vector<int>& arr, int left, int right) {
     if (left >= right) {
         return;
     }
 
-    int mid = partition(arr, left, right);
-    process(arr, left, mid - 1);
-    process(arr, mid + 1, right);
+    int part = partition(arr, left, right);
+    process(arr, left, part - 1);
+    process(arr, part + 1, right);
 }
 
 /*
@@ -104,6 +104,8 @@ static void QuickSort(vector<int>& arr) {
 
     process(arr, 0, arr.size() - 1);
 }
+
+
 
 int main(int argc, char* argv[]) {
     cout << "test start..." << endl;
