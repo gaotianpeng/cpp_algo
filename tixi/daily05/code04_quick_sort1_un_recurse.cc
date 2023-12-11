@@ -62,10 +62,11 @@ static void Swap(vector<int>& arr, int i, int j) {
 }  // namespace
 
 struct Op {
+    Op(int l, int r):left(l), right(r) {
+    }
+
     int left = -1;
     int right = -1;
-    
-    Op(int l, int r): left(l), right(r) {}
 };
 
 static std::pair<int, int> partition(vector<int>& arr, int left, int right) {
@@ -80,19 +81,17 @@ static std::pair<int, int> partition(vector<int>& arr, int left, int right) {
     int less = left - 1;
     int more = right;
     int index = left;
-    
     while (index < more) {
-        if (arr[index] == arr[right]) {
-            ++index;
-        } else if (arr[index] < arr[right]) {
-            Swap(arr, ++less, index);
+        if (arr[index] < arr[right]) {
+            Swap(arr, ++less, index++);
+        } else if (arr[index] == arr[right]) {
             ++index;
         } else {
-            Swap(arr, index, --more);
+            Swap(arr, --more, index);
         }
     }
 
-    Swap(arr, right, more);
+    Swap(arr, more, right);
     return {++less, more};
 }
 
@@ -101,19 +100,18 @@ static void QuickSort(vector<int>& arr) {
         return;
     }
 
-    int n = arr.size();
-    std::pair<int, int> equal_area = partition(arr, 0, n - 1);
-    stack<Op> ops;
-    ops.push({0, equal_area.first - 1});
-    ops.push({equal_area.second + 1, n - 1});
+    stack<Op> st;
+    std::pair<int, int> area = partition(arr, 0, arr.size() - 1);
+    st.push(Op(0, area.first - 1));
+    st.push(Op(area.second + 1, arr.size() - 1));
 
-    while (!ops.empty()) {
-        Op cur_op = ops.top();
-        ops.pop();
-        if (cur_op.left < cur_op.right) {
-            std::pair<int, int> equal_area = partition(arr, cur_op.left, cur_op.right);
-            ops.push({cur_op.left, equal_area.first - 1});
-            ops.push({equal_area.second + 1, cur_op.right});
+    while (!st.empty()) {
+        Op op = st.top();
+        st.pop();
+        if (op.left < op.right) {
+            std::pair<int, int> area = partition(arr, op.left, op.right);
+            st.push(Op(op.left, area.first - 1));
+            st.push(Op(area.second + 1, op.right));  
         }
     }
 }
