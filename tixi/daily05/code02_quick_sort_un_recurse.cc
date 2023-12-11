@@ -61,8 +61,16 @@ static void Swap(vector<int>& arr, int i, int j) {
 }
 }  // namespace
 
+struct Op {
+    Op(int l, int r):left(l), right(r)  {
+    }
+
+    int left = -1;
+    int right = -1;
+};
+
 static int partition(vector<int>& arr, int left, int right) {
-    if (left > right) {
+    if (left > right ) {
         return -1;
     }
 
@@ -76,20 +84,14 @@ static int partition(vector<int>& arr, int left, int right) {
         if (arr[index] <= arr[right]) {
             Swap(arr, ++less, index);
         }
+
         ++index;
     }
 
     Swap(arr, ++less, right);
+
     return less;
 }
-
-struct Op {
-    int left = 0;
-    int right = 0;
-    
-    Op(int l, int r): left(l), right(r) {
-    }
-};
 
 /*
     Partition过程
@@ -100,19 +102,17 @@ static void QuickSort(vector<int>& arr) {
         return;
     }
 
-    int n = arr.size();
-    int mid = partition(arr, 0, n - 1);
-    stack<Op> ops;
-    ops.push(Op(0, mid - 1));
-    ops.push(Op(mid + 1, n - 1));
-    
-    while (!ops.empty()) {
-        Op cur_op = ops.top();
-        ops.pop();
-        if (cur_op.left < cur_op.right) {
-            int mid = partition(arr, cur_op.left, cur_op.right);
-            ops.push(Op(cur_op.left, mid - 1));
-            ops.push(Op(mid + 1, cur_op.right));
+    int part_pos = partition(arr, 0, arr.size() - 1);
+    stack<Op> st;
+    st.push(Op(0, part_pos - 1));
+    st.push(Op(part_pos + 1, arr.size() - 1));
+    while (!st.empty()) {
+        Op op = st.top();
+        st.pop();
+        if (op.left < op.right) {
+            int part_pos = partition(arr, op.left, op.right);
+            st.push(Op(op.left, part_pos - 1));
+            st.push(Op(part_pos + 1, op.right));
         }
     }
 }
