@@ -88,9 +88,9 @@ static void process(vector<int>& arr, int left, int right) {
         return;
     }
 
-    int part = partition(arr, left, right);
-    process(arr, left, part - 1);
-    process(arr, part + 1, right);
+    int part_pos = partition(arr, left, right);
+    process(arr, left, part_pos - 1);
+    process(arr, part_pos + 1, right);
 }
 
 /*
