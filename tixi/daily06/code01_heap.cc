@@ -75,7 +75,7 @@ private:
 class HeapMap {
 public:
     HeapMap(int limit):limit_(limit) {
-        data_ = new int[limit_];
+        data_ = new int[limit];
     }
 
     ~HeapMap() {
@@ -96,43 +96,44 @@ public:
 
     void push(int val) {
         if (full()) {
-            throw logic_error("heap is full");
+            throw logic_error("Heap is full!!!");
         }
 
-        data_[size_] = val;
-        heapinsert(size_++, data_);
+        data_[size_] = val; 
+        heap_insert(size_++, data_);
     }
 
     int pop() {
         if (empty()) {
-            throw logic_error("heap is empty");
+            throw logic_error("Heap is empty!!!");
         }
 
-        int ans = data_[0];
-        swap(0, --size_);
-        heapify(0, data_, size_);
-        return ans;
+        int ret = data_[0];
+        swap(0, size_ - 1);
+        heapify(0, data_, --size_);
+        return ret;
     }
 
 private:
     void heapify(int index, int* arr, int heap_size) {
         int left = 2 * index + 1;
         while (left < heap_size) {
-            int largest = left + 1 < heap_size && arr[left+1] > arr[left] ?
-                left + 1 : left;
-            if (largest == index) {
+            int larger = left + 1 < heap_size ? 
+                (arr[left] < arr[left + 1] ? left + 1: left) : left;
+            if (larger == index) {
                 break;
             }
-            swap(largest, index);
-            index = largest;
+
+            swap(larger, index);
+            index = larger;
             left = 2 * index + 1;
         }
+
     }
 
-    void heapinsert(int index, int* arr) {
-        while (arr[index] > arr[(index - 1) / 2]) {
-            swap(index, (index - 1)/2);
-            index = (index - 1) / 2;
+    void heap_insert(int index, int* arr) {
+        while (arr[index] > arr[(index - 1)/2]) {
+            swap(index, (index - 1) /2);
         }
     }
 
@@ -140,13 +141,14 @@ private:
         if (i == j) {
             return;
         }
+
         int tmp = data_[i];
         data_[i] = data_[j];
         data_[j] = tmp;
     }
 
 private:
-    int limit_;
+    int limit_ = 0;
     int size_ = 0;
     int* data_ = nullptr;
 };
