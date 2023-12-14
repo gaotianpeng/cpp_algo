@@ -82,16 +82,12 @@ public:
         delete [] data_;
     }
 
-    int size() const {
-        return size_;
-    }
-
-    bool empty() const {
+    bool empty() {
         return size_ == 0;
     }
 
-    bool full() const {
-        return size_ == limit_;
+    bool full() {
+        return limit_ == size_;
     }
 
     void push(int val) {
@@ -99,7 +95,7 @@ public:
             throw logic_error("Heap is full!!!");
         }
 
-        data_[size_] = val; 
+        data_[size_] = val;
         heap_insert(size_++, data_);
     }
 
@@ -109,31 +105,32 @@ public:
         }
 
         int ret = data_[0];
-        swap(0, size_ - 1);
-        heapify(0, data_, --size_);
+        swap(0, --size_);
+        heapify(0, data_, size_);
         return ret;
     }
 
 private:
+    void heap_insert(int index, int* arr) {
+        // (0-1)/2 = 0, while 中不用加 index >= 0条件
+        while (arr[index] > arr[(index - 1) / 2]) {
+            swap(index, (index - 1) / 2);
+            index = (index - 1) / 2;
+        }
+    }
+    
     void heapify(int index, int* arr, int heap_size) {
-        int left = 2 * index + 1;
+        int left = 2*index + 1;
         while (left < heap_size) {
-            int larger = left + 1 < heap_size ? 
-                (arr[left] < arr[left + 1] ? left + 1: left) : left;
-            if (larger == index) {
+            int largest = left + 1 < heap_size && arr[left] < arr[left + 1] ? left + 1: left;
+
+            if (index == largest) {
                 break;
             }
 
-            swap(larger, index);
-            index = larger;
+            swap(largest, index);
+            index = largest;
             left = 2 * index + 1;
-        }
-
-    }
-
-    void heap_insert(int index, int* arr) {
-        while (arr[index] > arr[(index - 1)/2]) {
-            swap(index, (index - 1) /2);
         }
     }
 
@@ -148,8 +145,8 @@ private:
     }
 
 private:
-    int limit_ = 0;
     int size_ = 0;
+    int limit_  = 0;
     int* data_ = nullptr;
 };
 } // namespace
