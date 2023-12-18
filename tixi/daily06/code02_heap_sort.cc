@@ -61,25 +61,27 @@ static void Swap(vector<int>& arr, int i, int j) {
 
 } // namespace
 
-static void HeapInsert(vector<int>& arr, int index) {
-    while (arr[index] > arr[(index - 1) / 2]) {
-        Swap(arr, index, (index - 1) / 2);
-        index = (index - 1) / 2;
+static void Heapify(vector<int>& arr, int index, int heap_size) {
+    int left = index * 2 + 1;
+    while (left < heap_size) {
+        int larger = left + 1 < heap_size && arr[left] < arr[left + 1] ? 
+            left + 1 : left;
+        
+        larger = arr[larger] > arr[index] ? larger: index;
+        if (larger == index) {
+            break;
+        }
+
+        Swap(arr, index, larger);
+        index = larger;
+        left = index * 2 + 1;
     }
 }
 
-static void Heapify(vector<int>& arr, int index, int heap_size) {
-    int left = 2 * index + 1;
-    while (left < heap_size) {
-        int largest = left + 1 < heap_size && arr[left + 1] > arr[left] ? 
-            left + 1: left;
-        largest = arr[index] < arr[largest] ? largest : index;
-        if (largest == index) {
-            break;
-        }
-        Swap(arr, index, largest);
-        index = largest;
-        left = 2 * index + 1;
+static void HeapInsert(vector<int>& arr, int index) {
+    while (arr[index] > arr[(index - 1) / 2]) {
+        Swap(arr, index, (index - 1)/2);
+        index = (index - 1) / 2;
     }
 }
 
@@ -92,8 +94,7 @@ static void HeapSort(vector<int>& arr) {
     for (int i = 0; i < heap_size; ++i) {
         HeapInsert(arr, i);
     }
-    
-    Swap(arr, 0, --heap_size);
+
     while (heap_size > 0) {
         Heapify(arr, 0, heap_size);
         Swap(arr, 0, --heap_size);
