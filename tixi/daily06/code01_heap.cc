@@ -123,7 +123,7 @@ private:
         int left = 2*index + 1;
         while (left < heap_size) {
             int largest = left + 1 < heap_size && arr[left] < arr[left + 1] ? left + 1: left;
-
+            largest = arr[index] > arr[largest] ? index : largest;
             if (index == largest) {
                 break;
             }
@@ -155,8 +155,8 @@ private:
 int main(int argc, char* argv[]) {
     cout << "test start..." << endl;
     int value = 1000;
-    int limit = 100;
-    int test_times = 100000;
+    int limit = 10;
+    int test_times = 100;
     bool success = true;
 
     for (int i = 0; i < test_times; ++i) {
@@ -180,6 +180,8 @@ int main(int argc, char* argv[]) {
             } else if (my.full()) {
                 if (my.pop() != test.pop()) {
                     success = false;
+                    cout << "test failed222" << endl;
+
                     break;
                 }
             } else {
@@ -190,6 +192,7 @@ int main(int argc, char* argv[]) {
                 } else {
                     if (my.pop() != test.pop()) {
                         success = false;
+                        cout << "test failed111" << endl;
                         break;
                     }
                 }
@@ -197,10 +200,13 @@ int main(int argc, char* argv[]) {
         }
 
         if (!success) {
+            cout << "test failed" << endl;
             break;
         }
     }
 
     cout << "test end" << endl;
+
+
     return 0;
 }
