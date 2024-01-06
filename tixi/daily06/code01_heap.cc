@@ -23,9 +23,11 @@ public:
 class TestHeap {
 public:
     TestHeap(int limit):limit_(limit) {
+        data_ = new int[limit_] {0};
     }
 
     ~TestHeap() {
+        delete [] data_;
     }
 
     int size() const {
@@ -44,7 +46,8 @@ public:
         if (full()) {
             throw logic_error("heap is full");
         }
-        data_.emplace_back(val);
+        // data_.emplace_back(val);
+        data_[size_] = val;
         ++size_;
     }
 
@@ -57,18 +60,20 @@ public:
             max_index = data_[max_index] < data_[i] ? i : max_index;
         }
         int ans = data_[max_index];
-        for (int i = max_index; i < size_ - 1; ++i) {
-            data_[i]  = data_[i + 1];
+        if (max_index != size_ - 1) {
+            data_[max_index]  = data_[size_-1];
+            --size_;
+        } else {
+            --size_;
         }
-        --size_;
         return ans;
     }
 
 
 private:
-    int limit_;
+    int limit_ = 0;
     int size_ = 0;
-    vector<int> data_;
+    int* data_ = nullptr;
 };
 
 // 大根堆
