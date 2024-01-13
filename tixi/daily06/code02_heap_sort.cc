@@ -61,31 +61,30 @@ static void Swap(vector<int>& arr, int i, int j) {
 
 } // namespace
 
-static void Heapify(vector<int>& arr, int index, int heap_size) {
+static void Heapify(std::vector<int>& arr, int index, int heap_size) {
     int left = index * 2 + 1;
     while (left < heap_size) {
-        int larger = left + 1 < heap_size && arr[left] < arr[left + 1] ? 
-            left + 1 : left;
-        
-        larger = arr[larger] > arr[index] ? larger: index;
-        if (larger == index) {
+        int largest = left + 1 < heap_size && arr[left] < arr[left + 1] ? left + 1 : left;
+        largest = arr[index] < arr[largest] ? largest : index;
+        if (largest == index) {
             break;
         }
 
-        Swap(arr, index, larger);
-        index = larger;
+        Swap(arr, index, largest);
+        index = largest;
         left = index * 2 + 1;
     }
 }
 
-static void HeapInsert(vector<int>& arr, int index) {
+static void HeapInsert(std::vector<int>& arr, int index) {
     while (arr[index] > arr[(index - 1) / 2]) {
         Swap(arr, index, (index - 1)/2);
         index = (index - 1) / 2;
     }
 }
 
-static void HeapSort(vector<int>& arr) {
+
+static void HeapSort(std::vector<int>& arr) {
     if (arr.size() < 2) {
         return;
     }
@@ -101,22 +100,23 @@ static void HeapSort(vector<int>& arr) {
     }
 }
 
-static void HeapSort2(vector<int>& arr) {
+static void HeapSort2(std::vector<int>& arr) {
     if (arr.size() < 2) {
         return;
     }
 
-    int n = arr.size();
-    for (int i = n - 1; i >= 0; --i) {
-        Heapify(arr, i, n);
+    int heap_size = arr.size();
+    for (int i = heap_size - 1; i >= 0; --i) {
+        Heapify(arr, i, heap_size);
     }
-    int heap_size = n;
+
     Swap(arr, 0, --heap_size);
     while (heap_size > 0) {
         Heapify(arr, 0, heap_size);
         Swap(arr, 0, --heap_size);
     }
 }
+
 
 int main(int argc, char* argv[]) {
     cout << "test start..." << endl;
