@@ -56,7 +56,7 @@ static void RandomArr(vector<int>& out, int max, int min, int k, int m) {
 
     while (times_m > 0) {
         val = RandomVal(max, min);
-        while (vals.contains(val)) {
+        while (vals.count(val) > 0) {
             val = RandomVal(max, min);
         }
         vals.insert(val);
@@ -107,7 +107,7 @@ static int GetKM(vector<int> arr, int k, int m) {
 static int test(const vector<int>& arr, int k, int m) {
     unordered_map<int, int> map;
     for (auto& elem: arr) {
-        if (map.contains(elem)) {
+        if (map.count(elem) > 0) {
             int count = map[elem];
             map.erase(elem);
             map[elem] = count + 1;
@@ -132,6 +132,7 @@ int main(int argc, char* argv[]) {
     int min = 0;
     int max_m = 30;
     int test_times = 10;
+    bool success = true;
     for (int i = 0; i < test_times; ++i) {
         vector<int> arr;
         int k = 0;
@@ -149,6 +150,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    cout << (success ? "success" :"failed") << endl;
     cout << "test end" << endl;
     return 0;
 }

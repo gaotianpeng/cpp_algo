@@ -74,17 +74,17 @@ static void SelectSort(vector<int>& arr) {
         return;
     }
 
-    int n = arr.size();
-    for (int i = 0; i < n; ++i) {
-        int min_idx = i;
-        for (int j = i + 1; j < n; ++j) {
-            if (arr[j] < arr[min_idx]) {
-                min_idx = j;
+    int N = arr.size();
+    for (int i = 0; i < N; ++i) {
+        int min_index = i;
+        for (int j = i + 1; j < N; j++) {
+            if (arr[j] < arr[min_index]) {
+                min_index = j;
             }
         }
 
-        if (min_idx != i) {
-            Swap(arr, min_idx, i);
+        if (min_index != i) {
+            Swap(arr, i, min_index);
         }
     }
 }
@@ -123,6 +123,7 @@ int main(int argc, char* argv[]) {
     int min = -100;
     int max_n = 30;
     int test_times = 100000;
+    bool success = true;
 
     for (int i = 0; i < test_times; ++i) {
         vector<int> arr1, arr2, arr3;
@@ -135,17 +136,16 @@ int main(int argc, char* argv[]) {
         if (!IsEqual(arr1, arr2)) {
             PrintArr(arr1);
             PrintArr(arr2);
-            cout << "test failed" << endl;
+            success = false;
             break;
         }
         if (!IsEqual(arr1, arr3)) {
-            PrintArr(arr1);
-            PrintArr(arr3);
-            cout << "test failed" << endl;
+            success = false;
             break;
         }
     }
 
+    cout << (success ? "success" : "failed") << endl;
     cout << "test end" << endl;
 
     return 0;

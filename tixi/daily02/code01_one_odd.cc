@@ -101,7 +101,7 @@ static int GetOneOdd(vector<int>& arr) {
     if (arr.size() == 0) {
         return -1;
     }
-
+    
     int ans = arr[0];
     for (int i = 1; i < arr.size(); ++i) {
         ans ^= arr[i];
@@ -143,6 +143,8 @@ int main(int argc, char* argv[]) {
     int min = 0;
     int max_n = 30;
     int test_times = 100000;
+    bool success = true;
+
     for (int i = 0; i < test_times; ++i) {
         vector<int> arr;
         RandomArr(arr, max_n, min, max);
@@ -150,12 +152,13 @@ int main(int argc, char* argv[]) {
             cout << "test failed" << endl;
             cout << GetOneOdd(arr) << endl;
             cout << test(arr) << endl;
-
             PrintArr(arr);
+            success = false;
             break;
         }
     }
 
+    cout << (success ?  "success" : "failed") << endl;
     cout << "test end" << endl;
     return 0;
 }

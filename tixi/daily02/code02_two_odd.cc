@@ -74,7 +74,7 @@ static void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
     arr_len -= odd_times;
     odd_times = RandomOdd(arr_len);
     old_time_val = RandomVal(max_val, min_val);
-    while (vals.contains(old_time_val)) {
+    while (vals.count(old_time_val) > 0) {
         old_time_val = RandomVal(max_val, min_val);
     }
     vals.insert(old_time_val);
@@ -85,7 +85,7 @@ static void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
     while (arr_len > 0) {
         int even_times = RandomEven(arr_len);
         int even_time_val = RandomVal(max_val, min_val);
-        while (vals.contains(even_time_val)) {
+        while (vals.count(even_time_val) > 0) {
             even_time_val = RandomVal(max_val, min_val);
         }
         vals.insert(even_time_val);
@@ -129,27 +129,27 @@ static bool IsEqual(const std::pair<int, int>& a, const std::pair<int, int>& b) 
 */
 static std::pair<int, int> GetTwoOdd(vector<int>& arr) {
     int xor1 = arr[0];
-    int n = arr.size();
-    for (int i = 1; i < n; ++i) {
+    int N = arr.size();
+    for (int i = 1; i < N; ++i) {
         xor1 ^= arr[i];
     }
 
+    int rightOne = xor1 & (-xor1);
     int xor2 = 0;
-    int rightone = xor1 & (-xor1);
-    for (int i = 0; i < n; ++i) {
-        if ((arr[i] & rightone) != 0) {
+    for (int i = 0; i < N; ++i) {
+        if ((arr[i] & rightOne) != 0) {
             xor2 ^= arr[i];
         }
     }
 
-    return {xor2, xor1 ^ xor2};
+    return {xor2, xor2 ^ xor1};
 }
 
 static std::pair<int, int> test(vector<int>& arr) {
     unordered_map<int, int> map;
     for (int i = 0; i < arr.size(); ++i) {
         int key = arr[i];
-        if (map.contains(key)) {
+        if (map.count(key) > 0) {
             int val = map[key];
             map.erase(key);
             map[key] = val + 1;
@@ -175,6 +175,8 @@ int main(int argc, char* argv[]) {
     int min = 0;
     int max_n = 30;
     int test_times = 100000;
+    bool success = true;
+
     for (int i = 0; i < test_times; ++i) {
         vector<int> arr;
         RandomArr(arr, max_n, min, max);
@@ -184,10 +186,12 @@ int main(int argc, char* argv[]) {
             auto ans2 = GetTwoOdd(arr);
             cout << ans1.first << ",  " << ans1.second << endl;
             cout << ans2.first << ",  " << ans2.second << endl;
+            success = false;
             break;
         }
     }
 
+    cout << (success ? "success" : "failed") << endl;
     cout << "test end" << endl;
     return 0;
 }

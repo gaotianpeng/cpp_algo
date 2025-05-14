@@ -66,11 +66,11 @@ static void InsertSort(vector<int>& arr) {
         return;
     }
 
-    int n = arr.size();
-    for (int i = 1; i < n; ++i) {
-        for (int j = i; j > 0; j--) {
+    int N = arr.size();
+    for (int i = 1; i < N; ++i) {
+        for (int j = i; j > 0; --j) {
             if (arr[j] < arr[j-1]) {
-                Swap(arr, j, j - 1);
+                Swap(arr, j, j-1);
             }
         }
     }
@@ -82,6 +82,7 @@ int main(int argc, char* argv[]) {
     int min = -100;
     int max_n = 30;
     int test_times = 100000;
+    bool success = true;
 
     for (int i = 0; i < test_times; ++i) {
         vector<int> arr1, arr2;
@@ -92,12 +93,12 @@ int main(int argc, char* argv[]) {
         if (!IsEqual(arr1, arr2)) {
             PrintArr(arr1);
             PrintArr(arr2);
-            cout << "test failed" << endl;
+            success = false;
             break;
         }
     }
 
+    cout << (success ? "success" : "failed") << endl;
     cout << "test end" << endl;
-
     return 0;
 }

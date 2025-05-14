@@ -86,6 +86,7 @@ int main(int argc, char* argv[]) {
     int min = -100;
     int max_n = 30;
     int test_times = 100000;
+    bool success = true;
 
     for (int i = 0; i < test_times; ++i) {
         vector<int> arr;
@@ -93,12 +94,14 @@ int main(int argc, char* argv[]) {
         std::sort(arr.begin(), arr.end());
         int target = RandomVal(min, max);
         if (IsExist(arr, target) != test(arr, target)) {
-            cout << "test failed" << endl;
+            success = false;
             PrintArr(arr);
+            cout << target << endl;
             break;
         }
     }
 
+    cout << (success ? "success" : "failed") << endl;
     cout << "test end" << endl;
     return 0;
 }

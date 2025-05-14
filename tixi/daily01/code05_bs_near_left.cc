@@ -48,10 +48,11 @@ static int LeftNearestIndex(vector<int>& arr, int target) {
     if (arr.size() == 0) {
         return -1;
     }
-    int ans = -1;
-    int n = arr.size();
+
+    int N = arr.size();
     int left = 0;
-    int right = n - 1;
+    int right = N-1;
+    int ans = -1;
     while (left <= right) {
         int mid = left + ((right - left) >> 1);
         if (arr[mid] >= target) {
@@ -88,19 +89,24 @@ int main(int argc, char* argv[]) {
     int min = -100;
     int max_n = 30;
     int test_times = 100000;
+    bool success = true;
 
     for (int i = 0; i < test_times; ++i) {
         vector<int> arr;
         RandomArr(arr, max_n, min, max);
         std::sort(arr.begin(), arr.end());
         int target = RandomVal(min, max);
-        if (LeftNearestIndex(arr, target) != test(arr, target)) {
-            cout << "test failed" << endl;
+        int ans1 = LeftNearestIndex(arr, target);
+        int ans2 = test(arr, target);
+        if (ans1 != ans2) {
             PrintArr(arr);
+            cout << target << endl;
+            success = true;
             break;
         }
     }
 
+    cout << (success ? "success" : "failed") << endl;
     cout << "test end" << endl;
     return 0;
 }
