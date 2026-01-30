@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Current File (CMake Debug)",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/.current_debug",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Build Current File (Debug)"
+        }
+    ]
+}

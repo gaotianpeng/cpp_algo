@@ -1,0 +1,43 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Current File (Debug)",
+            "type": "shell",
+            "command": "TARGET=$(.vscode/get_target_name.sh ${file} ${workspaceFolder}) && cmake -B build -DCMAKE_BUILD_TYPE=Debug && cmake --build build --target $TARGET && ln -sf $TARGET build/.current_debug",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "Run Current File (Debug)",
+            "type": "shell",
+            "command": "TARGET=$(.vscode/get_target_name.sh ${file} ${workspaceFolder}) && cmake -B build -DCMAKE_BUILD_TYPE=Debug && cmake --build build --target $TARGET && ./build/$TARGET",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "focus": true
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "Run Current File (Release)",
+            "type": "shell",
+            "command": "TARGET=$(.vscode/get_target_name.sh ${file} ${workspaceFolder}) && cmake -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build --target $TARGET && ./build/$TARGET",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "focus": true
+            },
+            "problemMatcher": ["$gcc"]
+        }
+    ]
+}

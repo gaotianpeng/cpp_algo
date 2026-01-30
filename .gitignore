@@ -1,2 +1,23 @@
+# CMake
+build/
+cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+*.cmake
+!CMakeLists.txt
 
-.vscode/
+# 编译输出
+*.exe
+*.out
+*.o
+*.obj
+*.pdb
+*.ilk
+*.log
+
+# VSCode (保留配置，不忽略)
+# .vscode/
+
+# IDE
+.idea/
+.vs/

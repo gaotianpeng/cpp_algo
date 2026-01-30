@@ -22,7 +22,7 @@ int main() {
     pthread_create(&p, NULL, mythread, NULL);
 
     pthread_mutex_lock(&lock);
-     (done == 0) {
+    while (done == 0) {
         pthread_cond_wait(&cond, &lock);
     }
     pthread_mutex_unlock(&lock);
