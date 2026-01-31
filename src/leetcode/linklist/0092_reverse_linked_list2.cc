@@ -1,28 +1,20 @@
 #include <iostream>
-#include <random>
 #include <vector>
 #include <algorithm>
+#include "common/test_utils.h"
 using namespace std;
+using namespace test_utils;
 
 /*
     for test
 */
 namespace {
 
-class Math {
-public:
-    static double random() {
-        static std::random_device rd;
-        static std::default_random_engine engine(rd());
-        static std::uniform_real_distribution<> distribution(0.0, 1.0);
-        return distribution(engine);
-    }
-};
-
+// Custom RandomArr function
 static void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
-	int len = (int)(Math::random() * max_n);
+	int len = (int)(Random::nextDouble() * max_n);
 	for (int i = 0; i < len; i++) {
-		int val = (int)(Math::random() * (max_val - min_val + 1)) + min_val;
+		int val = Random::nextInt(min_val, max_val);
 		out.emplace_back(val);
 	}
 }
@@ -100,13 +92,10 @@ static void FreeList(ListNode* head) {
     }
 }
 
-static int RandomVal(int min, int max) {
-    return (int)(Math::random() * (max - min)) + min;
-}
-
+// Custom RandomLR function
 static std::pair<int, int> RandomLR(int min, int max) {
-    int val1 = RandomVal(min, max);
-    int val2 = RandomVal(min, max);
+    int val1 = Random::nextInt(min, max);
+    int val2 = Random::nextInt(min, max);
     
     if (val1 <= val2) {
         return {val1, val2};

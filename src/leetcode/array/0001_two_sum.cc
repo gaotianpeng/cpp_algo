@@ -1,43 +1,17 @@
 #include <algorithm>
 #include <iostream>
-#include <random>
 #include <map>
 #include <vector>
+#include "common/test_utils.h"
 using namespace std;
+using namespace test_utils;
 
 /*
     for test
 */
 namespace {
 
-class Math {
-public:
-    static double random() {
-        static std::random_device rd;
-        static std::default_random_engine engine(rd());
-        static std::uniform_real_distribution<> distribution(0.0, 1.0);
-        return distribution(engine);
-    }
-};
-
-static void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
-    int len = std::max(2, (int)(Math::random() * max_n));
-    for (int i = 0; i < len; i++) {
-        int val = (int)(Math::random() * (max_val - min_val + 1)) + min_val;
-        out.emplace_back(val);
-    }
-}
-
-static void CopyArray(const vector<int>& src, vector<int>& out) {
-    for (int i = 0; i < src.size(); i++) {
-       out.emplace_back(src[i]); 
-    }
-}
-
-static int RandomVal(int min, int max) {
-    return (int)(Math::random()*(max - min + 1)) + min;
-}
-
+// Custom IsEqual for two-sum problem (order doesn't matter)
 static bool IsEqual(const vector<int>& arr1, const vector<int>& arr2) {
     if (arr1.size() != arr2.size()) {
         return false;
@@ -100,9 +74,9 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < test_times; ++i) {
         vector<int> arr1;
         vector<int> arr2;
-        RandomArr(arr1, max_n, min, max);
-        CopyArray(arr1, arr2);
-        int target = RandomVal(min, max);
+        ArrayUtils::randomArray(arr1, max_n, min, max);
+        ArrayUtils::copyArray(arr1, arr2);
+        int target = Random::nextInt(min, max);
 
         vector<int> ans1 = twoSum(arr1, target);
         vector<int> ans2 = twoSum(arr2, target);

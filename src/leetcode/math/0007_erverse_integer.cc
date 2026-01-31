@@ -1,27 +1,13 @@
 #include <algorithm>
 #include <iostream>
 #include <limits>
-#include <random>
 #include <string>
+#include "common/test_utils.h"
 
 using namespace std;
+using namespace test_utils;
 
 namespace {
-
-class Math {
-public:
-    static double random() {
-        std::random_device rd;
-        std::default_random_engine engine(rd());
-        std::uniform_real_distribution<> distribution(0.0, 1.0);
-        
-        return distribution(engine);
-    } 
-};
-
-static int RandomVal(int min, int max) {
-    return (int)(Math::random() * (max - min + 1)) + min;
-}
 
 } // namespace
 
@@ -82,7 +68,7 @@ int main(int argc, char* argv[]) {
     int max = std::numeric_limits<int>::max();
 
     for (int i = 0; i < test_times; ++i) {
-        int x = RandomVal(min, max);
+        int x = Random::nextInt(min, max);
         int ans1 = reverse(x);
         int ans2 = test(x);
 

@@ -1,63 +1,44 @@
 #include <iostream>
-#include <random>
 #include <vector>
 #include <set>
 #include <algorithm>
 #include <unordered_map>
+#include "common/test_utils.h"
 
 using namespace std;
+using namespace test_utils;
 
 /*
     for test
 */
 namespace {
 
-class Math {
-public:
-    static double random() {
-        static std::random_device rd;
-        static std::default_random_engine engine(rd());
-        static std::uniform_real_distribution<> distribution(0.0, 1.0);
-        return distribution(engine);
-    }
-};
-
-static int RandomVal(int max, int min) {
-    return min + (int) (Math::random() * (max - min + 1));
-}
-
-static void Swap(vector<int>& arr, int i, int j) {
-    int tmp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = tmp;
-}
-
 // k < m, m > 1
 static void RandomKM(int max_n, int& k, int& m) {
-    m = RandomVal(2, max_n);
+    m = Random::nextInt(2, max_n);
     while (m == max_n) {
-        m = RandomVal(2, max_n);
+        m = Random::nextInt(2, max_n);
     }
 
-    k = RandomVal(0, std::min(m - 1, max_n - m));
+    k = Random::nextInt(0, std::min(m - 1, max_n - m));
     while (k == m) {
-        k = RandomVal(0, std::min(m - 1, max_n - m));
+        k = Random::nextInt(0, std::min(m - 1, max_n - m));
     }
 }
 
 static void RandomArr(vector<int>& out, int max, int min, int k, int m) {
-    int times_m = RandomVal(2, m);
+    int times_m = Random::nextInt(2, m);
     set<int> vals;
-    int val = RandomVal(max, min);
+    int val = Random::nextInt(min, max);
     vals.insert(val);
     for (int i = 0; i < k; ++i) {
         out.emplace_back(val);
     }
 
     while (times_m > 0) {
-        val = RandomVal(max, min);
+        val = Random::nextInt(min, max);
         while (vals.count(val) > 0) {
-            val = RandomVal(max, min);
+            val = Random::nextInt(min, max);
         }
         vals.insert(val);
         for (int i = 0; i < m; ++i) {
@@ -68,17 +49,10 @@ static void RandomArr(vector<int>& out, int max, int min, int k, int m) {
 
     int n = out.size();
     for (int i = 0; i < n; ++i) {
-        int index1 = RandomVal(0, n - 1);
-        int index2 = RandomVal(0, n - 1);
-        Swap(out, index1, index2);
+        int index1 = Random::nextInt(0, n - 1);
+        int index2 = Random::nextInt(0, n - 1);
+        ArrayUtils::swap(out, index1, index2);
     }
-}
-
-static void PrintArr(const vector<int>& arr) {
-    for (auto& elem: arr) {
-        cout << elem << " ";
-    }
-    cout << endl;
 }
 
 } // namespace
@@ -141,7 +115,7 @@ int main(int argc, char* argv[]) {
         RandomArr(arr, max, min, k, m);
         if (test(arr, k, m) != GetKM(arr, k, m)) {
             cout << "test faield" << endl;
-            PrintArr(arr);
+            ArrayUtils::printArray(arr);
             cout << k << endl;
             cout << m << endl;
             cout << test(arr, k, m) << endl;

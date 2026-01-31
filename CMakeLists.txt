@@ -5,6 +5,22 @@ project(CppAlgo)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# 添加调试符号和优化选项
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
+    message(STATUS "Build type: Debug (with debug symbols)")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
+    message(STATUS "Build type: Release")
+endif()
+
+# 添加 include 目录
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+
 # 自动查找 src 目录下所有 .cpp, .cc, .c 文件
 file(GLOB_RECURSE CPP_FILES 
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
@@ -42,7 +58,4 @@ foreach(source_file ${CPP_FILES})
     
     # 自动链接 pthread 库（如果需要）
     target_link_libraries(${exe_name} PRIVATE pthread)
-    
-    # 输出信息
-    message(STATUS "Added executable: ${exe_name} from ${source_file}")
 endforeach()

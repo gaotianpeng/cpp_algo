@@ -1,27 +1,15 @@
 #include <iostream>
-#include <random>
 #include <vector>
 #include <stack>
+#include "common/test_utils.h"
 using namespace std;
+using namespace test_utils;
 
 /*
     for test
 */
 namespace {
 
-class Math {
-public:
-    static double random() {
-        static std::random_device rd;
-        static std::default_random_engine engine(rd());
-        static std::uniform_real_distribution<> distribution(0.0, 1.0);
-        return distribution(engine);
-    }
-};
-
-static int RandomVal(int max) {
-    return double(Math::random() * (double)max);
-}
 struct TreeNode {
     TreeNode* left;
     TreeNode* right;
@@ -32,10 +20,10 @@ struct TreeNode {
 };
 
 static TreeNode* generate(int max_level, int cur_level, int max_val) {
-    if (cur_level > max_level || Math::random() > 0.5) {
+    if (cur_level > max_level || Random::nextDouble() > 0.5) {
         return nullptr;
     }
-    TreeNode* node = new TreeNode(RandomVal(max_val));
+    TreeNode* node = new TreeNode(Random::nextInt(0, max_val));
 
     node->left = generate(max_level, ++cur_level, max_val);
     node->right = generate(max_level, ++cur_level, max_val);
@@ -67,27 +55,6 @@ static void FreeBinaryTree(TreeNode* root) {
         delete nodes[i];
     }
 }
-
-static bool IsEqual(const vector<int>& arr1, const vector<int>& arr2) {
-    if (arr1.size() != arr2.size()) {
-        return false;
-    }
-
-    for (int i = 0; i < arr1.size(); ++i) {
-        if (arr1[i] != arr2[i]) {
-            return false;
-        }
-    }
-    return true;
-}
-
-static void PrintArr(const vector<int>& arr) {
-    for (auto& elem: arr) {
-        cout << elem << " ";
-    }
-    cout << endl;
-}
-
 
 static TreeNode* GenerateBinaryTree(int max_level, int max_val) {
     return generate(max_level, 0, max_val);
@@ -156,10 +123,10 @@ int main(int argc, char* argv[]) {
         vector<int> ans1, ans2;
         PreOrder(root, ans1);
         PreMorris(root, ans2);
-        if (!IsEqual(ans1, ans2)) {
+        if (!ArrayUtils::isEqual(ans1, ans2)) {
             cout << "test failed" << endl;
-            PrintArr(ans1);
-            PrintArr(ans2);
+            ArrayUtils::printArray(ans1);
+            ArrayUtils::printArray(ans2);
             FreeBinaryTree(root);
             break;
         }

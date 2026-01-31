@@ -1,41 +1,19 @@
 #include <algorithm>
 #include <iostream>
-#include <random>
 #include <vector>
+#include "common/test_utils.h"
 
 using namespace std;
+using namespace test_utils;
 
 namespace {
 
-class Math {
-public:
-    static double random() {
-        std::random_device r_d;
-        std::default_random_engine engine(r_d());
-        std::uniform_real_distribution<> distribution(0.0, 1.0);
-
-        return distribution(engine);
-    }
-};
-
-static int RandomVal(int min, int max) {
-    return (int)(Math::random()*(max - min + 1)) + min;
-}
-
 static void RandomSortedArray(int len, int min, int max, vector<int>& out) {
     for (int i = 0; i < len; ++i) {
-        out.emplace_back(RandomVal(min, max));
+        out.emplace_back(Random::nextInt(min, max));
     }
 
     std::sort(out.begin(), out.end());
-}
-
-static void PrintArray(const vector<int>& arr) {
-    for (int i = 0; i < arr.size(); ++i) {
-        cout << arr[i] << " ";
-    }
-
-    cout << endl;
 }
 
 } // namespace
@@ -120,7 +98,7 @@ int main(int argc, char* argv[]) {
     int min = 0;
     int max = 100;
     for (int i = 0; i < test_times; ++i) {
-        int len = RandomVal(0, max_n);
+        int len = Random::nextInt(0, max_n);
         vector<int> arr1;
         vector<int> arr2;
         RandomSortedArray(len, min, max, arr1);
@@ -133,8 +111,8 @@ int main(int argc, char* argv[]) {
             cout << GetUpMedian(arr1, arr2) << endl;
             cout << test(arr1, arr2) << endl;
 
-            PrintArray(arr1);
-            PrintArray(arr2);
+            ArrayUtils::printArray(arr1);
+            ArrayUtils::printArray(arr2);
             break;
         }
     }

@@ -1,34 +1,21 @@
 #include <iostream>
-#include <random>
 #include <vector>
 #include <stack>
 #include <string>
+#include "common/test_utils.h"
 using namespace std;
+using namespace test_utils;
 
 /*
     for test
 */
 namespace {
 
-class Math {
-public:
-    static double random() {
-        static std::random_device rd;
-        static std::default_random_engine engine(rd());
-        static std::uniform_real_distribution<> distribution(0.0, 1.0);
-        return distribution(engine);
-    }
-};
-
-static int RandomVal(int max) {
-    return int(Math::random() * (double)max);
-}
-
 static std::string RandomString(int poss, int max_len) {
-    int len = RandomVal(max_len);
+    int len = Random::nextInt(0, max_len);
     std::string ans;
     for (int i = 0; i < len; ++i) {
-        char ch = 'a' + RandomVal(poss);
+        char ch = 'a' + Random::nextInt(0, poss - 1);
         ans.push_back(ch);
     }
     return ans;

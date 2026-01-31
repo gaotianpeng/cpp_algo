@@ -1,25 +1,11 @@
 #include <iostream>
-#include <random>
 #include <map>
+#include "common/test_utils.h"
 
 using namespace std;
+using namespace test_utils;
 
 namespace {
-
-class Math {
-public:
-    static double random() {
-        static std::random_device rd;
-        static std::default_random_engine engine(rd());
-        static std::uniform_real_distribution<> distribution(0.0, 1.0);
-        return distribution(engine);
-    }
-}; // class Math
-
-static int RandomVal(int min_val, int max_val) {
-    return (int)(Math::random() * (max_val - min_val)) + min_val;
-}
-
 
 } // namespace
 
@@ -291,20 +277,20 @@ int main(int argc, char* argv[]) {
             break;
         }
 
-        int capacity = RandomVal(0, 10);
+        int capacity = Random::nextInt(0, 10);
         LRUCache cache(capacity);
         TestLRUCache test_cache(capacity);
 
         std::vector<int> key_sets;
         for (int idx = 0; idx < 10; ++idx) {
-            key_sets.emplace_back(RandomVal(min_val, max_val));
+            key_sets.emplace_back(Random::nextInt(min_val, max_val));
         }
 
         for (int j = 0; j < 10000; ++j) {
-            int key = key_sets[RandomVal(0, key_sets.size() - 1)];
-            double p = Math::random();
+            int key = key_sets[Random::nextInt(0, key_sets.size() - 1)];
+            double p = Random::nextDouble();
             if (p < 0.4) {
-                int value = RandomVal(min_val, max_val);
+                int value = Random::nextInt(min_val, max_val);
                 cache.put(key, value);
                 test_cache.put(key, value);
             } else if (p < 0.7){

@@ -1,64 +1,45 @@
 #include <iostream>
-#include <random>
 #include <vector>
 #include <set>
 #include <algorithm>
 #include <unordered_map>
+#include "common/test_utils.h"
 
 using namespace std;
+using namespace test_utils;
 
 /*
     for test
 */
 namespace {
 
-class Math {
-public:
-    static double random() {
-        static std::random_device rd;
-        static std::default_random_engine engine(rd());
-        static std::uniform_real_distribution<> distribution(0.0, 1.0);
-        return distribution(engine);
-    }
-};
-
-static int RandomVal(int max, int min) {
-    return min + (int) (Math::random() * (double)(max - min));
-}
-
 static int RandomOdd(int max) {
-    int val = (int)(Math::random()*(double(max))) + 1;
+    int val = (int)(Random::nextDouble()*(double(max))) + 1;
     while (val % 2 == 0) {
-        val = (int)(Math::random()*(double(max))) + 1;
+        val = (int)(Random::nextDouble()*(double(max))) + 1;
     }
     return val;
 }
 
 static int RandomEven(int max) {
-    int val = (int)(Math::random()*(double(max))) + 1;
+    int val = (int)(Random::nextDouble()*(double(max))) + 1;
     while (val % 2 != 0) {
-        val = (int)(Math::random()*(double(max))) + 1;
+        val = (int)(Random::nextDouble()*(double(max))) + 1;
     }
     return val;
-}
-
-static void Swap(vector<int>& arr, int i, int j) {
-    int tmp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = tmp;
 }
 
 static void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
     int arr_len = 0;
     while (true) {
-        arr_len = RandomVal(0, max_n) + 1;
+        arr_len = Random::nextInt(0, max_n) + 1;
         if (arr_len % 2 != 0) {
             break;
         }
     }
     int odd_times = RandomOdd(arr_len);
     set<int> vals;
-    int old_time_val = RandomVal(max_val, min_val);
+    int old_time_val = Random::nextInt(min_val, max_val);
     vals.insert(old_time_val);
     for (int i = 0; i < odd_times; ++i) {
         out.emplace_back(old_time_val);
@@ -66,9 +47,9 @@ static void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
     arr_len -= odd_times;
     while (arr_len > 0) {
         int even_times = RandomEven(arr_len);
-        int even_time_val = RandomVal(max_val, min_val);
+        int even_time_val = Random::nextInt(min_val, max_val);
         while (vals.find(even_time_val) != vals.end()) {
-            even_time_val = RandomVal(max_val, min_val);
+            even_time_val = Random::nextInt(min_val, max_val);
         }
         vals.insert(even_time_val);
         for (int i = 0; i < even_times; ++i) {
@@ -78,17 +59,10 @@ static void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
     }
     int n = out.size();
     for (int i = 0; i < n; ++i) {
-        int a = RandomVal(n, 0);
-        int b = RandomVal(n, 0);
-        Swap(out, a, b);
+        int a = Random::nextInt(0, n);
+        int b = Random::nextInt(0, n);
+        ArrayUtils::swap(out, a, b);
     }
-}
-
-static void PrintArr(const vector<int>& arr) {
-    for (auto& elem: arr) {
-        cout << elem << " ";
-    }
-    cout << endl;
 }
 
 } // namespace
@@ -152,7 +126,7 @@ int main(int argc, char* argv[]) {
             cout << "test failed" << endl;
             cout << GetOneOdd(arr) << endl;
             cout << test(arr) << endl;
-            PrintArr(arr);
+            ArrayUtils::printArray(arr);
             success = false;
             break;
         }

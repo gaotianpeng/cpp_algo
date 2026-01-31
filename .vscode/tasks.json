@@ -2,13 +2,25 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build Current File (Debug)",
+            "label": "Build and Run Current File (Debug)",
             "type": "shell",
-            "command": "TARGET=$(.vscode/get_target_name.sh ${file} ${workspaceFolder}) && cmake -B build -DCMAKE_BUILD_TYPE=Debug && cmake --build build --target $TARGET && ln -sf $TARGET build/.current_debug",
+            "command": "REL_PATH=$(python3 -c \"import os.path; print(os.path.relpath('${file}', '${workspaceFolder}/src'))\") && DIR=$(dirname $REL_PATH) && FILENAME=$(basename ${file} .cc) && if [ \"$DIR\" != \".\" ]; then TARGET=$(echo $DIR | tr '/' '_')_${FILENAME}; else TARGET=${FILENAME}; fi && cmake -B build -DCMAKE_BUILD_TYPE=Debug > /dev/null && cmake --build build --target $TARGET && echo '\n========== Running ==========\n' && ./build/$TARGET",
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "focus": true
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "Build Current File (Debug)",
+            "type": "shell",
+            "command": "REL_PATH=$(python3 -c \"import os.path; print(os.path.relpath('${file}', '${workspaceFolder}/src'))\") && DIR=$(dirname $REL_PATH) && FILENAME=$(basename ${file} .cc) && if [ \"$DIR\" != \".\" ]; then TARGET=$(echo $DIR | tr '/' '_')_${FILENAME}; else TARGET=${FILENAME}; fi && cmake -B build -DCMAKE_BUILD_TYPE=Debug > /dev/null && cmake --build build --target $TARGET && ln -sf $(pwd)/build/$TARGET $(pwd)/build/.current_debug",
+            "group": "build",
             "presentation": {
                 "reveal": "always",
                 "panel": "shared"
@@ -16,26 +28,13 @@
             "problemMatcher": ["$gcc"]
         },
         {
-            "label": "Run Current File (Debug)",
+            "label": "Build Current File (Debug) - Verbose",
             "type": "shell",
-            "command": "TARGET=$(.vscode/get_target_name.sh ${file} ${workspaceFolder}) && cmake -B build -DCMAKE_BUILD_TYPE=Debug && cmake --build build --target $TARGET && ./build/$TARGET",
+            "command": "REL_PATH=$(python3 -c \"import os.path; print(os.path.relpath('${file}', '${workspaceFolder}/src'))\") && DIR=$(dirname $REL_PATH) && FILENAME=$(basename ${file} .cc) && if [ \"$DIR\" != \".\" ]; then TARGET=$(echo $DIR | tr '/' '_')_${FILENAME}; else TARGET=${FILENAME}; fi && cmake -B build -DCMAKE_BUILD_TYPE=Debug && cmake --build build --target $TARGET",
             "group": "build",
             "presentation": {
                 "reveal": "always",
-                "panel": "shared",
-                "focus": true
-            },
-            "problemMatcher": ["$gcc"]
-        },
-        {
-            "label": "Run Current File (Release)",
-            "type": "shell",
-            "command": "TARGET=$(.vscode/get_target_name.sh ${file} ${workspaceFolder}) && cmake -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build --target $TARGET && ./build/$TARGET",
-            "group": "build",
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared",
-                "focus": true
+                "panel": "shared"
             },
             "problemMatcher": ["$gcc"]
         }

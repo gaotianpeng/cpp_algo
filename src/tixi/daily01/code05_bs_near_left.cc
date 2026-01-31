@@ -1,45 +1,10 @@
 #include <iostream>
-#include <random>
 #include <vector>
 #include <algorithm>
+#include "common/test_utils.h"
+
 using namespace std;
-
-/*
-    for test
-*/
-namespace {
-
-class Math {
-public:
-    static double random() {
-        static std::random_device rd;
-        static std::default_random_engine engine(rd());
-        static std::uniform_real_distribution<> distribution(0.0, 1.0);
-        return distribution(engine);
-    }
-};
-
-static void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
-	int len = (int)(Math::random() * (max_n + 1));
-	for (int i = 0; i < len; i++) {
-		int val = (int)(Math::random() * (max_val - min_val + 1)) + min_val;
-		out.emplace_back(val);
-	}
-}
-
-static int RandomVal(int min_val, int max_val) {
-    return (int)(Math::random() * (max_val - min_val)) + min_val;
-}
-
-
-static void PrintArr(const vector<int>& arr) {
-    for (auto& elem: arr) {
-        cout << elem << " ";
-    }
-    cout << endl;
-}
-
-} // namespace
+using namespace test_utils;
 
 /*
     在一个有序数组中，找>=某个数最左侧的位置
@@ -93,13 +58,13 @@ int main(int argc, char* argv[]) {
 
     for (int i = 0; i < test_times; ++i) {
         vector<int> arr;
-        RandomArr(arr, max_n, min, max);
+        ArrayUtils::randomArray(arr, max_n, min, max);
         std::sort(arr.begin(), arr.end());
-        int target = RandomVal(min, max);
+        int target = Random::nextInt(min, max);
         int ans1 = LeftNearestIndex(arr, target);
         int ans2 = test(arr, target);
         if (ans1 != ans2) {
-            PrintArr(arr);
+            ArrayUtils::printArray(arr);
             cout << target << endl;
             success = true;
             break;

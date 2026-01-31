@@ -2,28 +2,19 @@
 #include <iostream>
 #include <queue>
 #include <stack>
-#include <random>
 #include <vector>
+#include "common/test_utils.h"
 
 using namespace std;
+using namespace test_utils;
 
 /*
     for test
 */
 namespace {
 
-class Math {
-public:
-    static double random() {
-        static std::random_device rd;
-        static std::default_random_engine engine(rd());
-        static std::uniform_real_distribution<> distribution(0.0, 1.0);
-        return distribution(engine);
-    }
-};
-
 static int RandomVal(int min_val, int max_val) {
-    return (int)(Math::random() * (max_val - min_val + 1)) + min_val;
+    return Random::nextInt(min_val, max_val);
 }
 
 struct Node {
@@ -41,7 +32,7 @@ static Node* GenerateRandomTree(int max_val, int max_level) {
 
     queue<Node*> que;
     Node* ans = nullptr;
-    if (Math::random() > 0.5) {
+    if (Random::nextDouble() > 0.5) {
         Node* node = new Node(RandomVal(-max_val, max_val));
         node->parent = nullptr;
         que.push(node);
@@ -62,9 +53,9 @@ static Node* GenerateRandomTree(int max_val, int max_level) {
             Node* cur = cur_level_nodes.front();
             cur_level_nodes.pop();
 
-            cur->left = Math::random() > 0.5 ? nullptr : 
+            cur->left = Random::nextDouble() > 0.5 ? nullptr : 
                     new Node(RandomVal(-max_val, max_val));
-            cur->right = Math::random() > 0.5 ? nullptr : 
+            cur->right = Random::nextDouble() > 0.5 ? nullptr : 
                     new Node(RandomVal(-max_val, max_val));
     
             if (cur->left != nullptr) {

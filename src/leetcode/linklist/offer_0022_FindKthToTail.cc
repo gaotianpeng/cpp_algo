@@ -1,36 +1,23 @@
 #include <iostream>
-#include <random>
 #include <vector>
 #include <algorithm>
 #include <queue>
+#include "common/test_utils.h"
 
 using namespace std;
+using namespace test_utils;
 
 /*
     for test
 */
 namespace {
 
-class Math {
-public:
-    static double random() {
-        static std::random_device rd;
-        static std::default_random_engine engine(rd());
-        static std::uniform_real_distribution<> distribution(0.0, 1.0);
-        return distribution(engine);
-    }
-};
-
 static void RandomArr(vector<int>& out, int max_n, int min_val, int max_val) {
-    int len = (int)(Math::random() * max_n);
+    int len = (int)(Random::nextDouble() * max_n);
     for (int i = 0; i < len; i++) {
-        int val = (int)(Math::random() * (max_val - min_val + 1)) + min_val;
+        int val = (int)(Random::nextDouble() * (max_val - min_val + 1)) + min_val;
         out.emplace_back(val);
     }
-}
-
-static int RandomVal(int min_val, int max_val) {
-    return (int)(Math::random() * (max_val - min_val)) + min_val;
 }
 
 struct ListNode {
@@ -176,7 +163,7 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < test_times; ++i) {
         ListNode* head1 = RandomList(max_n, min, max);
         ListNode* head2 = CopyList(head1);
-        int k = RandomVal(0, max_k);
+        int k = Random::nextInt(0, max_k);
         ListNode* ans1 = getKthFromEnd(head1, k);
         ListNode* ans2 = test(head2, k);
 

@@ -1,29 +1,20 @@
 #include <algorithm>
 #include <iostream>
 #include <queue>
-#include <random>
 #include <stack>
 #include <vector>
+#include "common/test_utils.h"
 
 using namespace std;
+using namespace test_utils;
 
 /*
     for test
 */
 namespace {
 
-class Math {
-public:
-    static double random() {
-        static std::random_device rd;
-        static std::default_random_engine engine(rd());
-        static std::uniform_real_distribution<> distribution(0.0, 1.0);
-        return distribution(engine);
-    }
-};
-
 static int RandomVal(int min_val, int max_val) {
-    return (int)(Math::random() * (max_val - min_val + 1)) + min_val;
+    return Random::nextInt(min_val, max_val);
 }
 
 struct Node {
@@ -36,7 +27,7 @@ struct Node {
 };
 
 static Node* generate(int cur_level, int max_level, int max_val) {
-    if (cur_level > max_level || Math::random() > 0.6) {
+    if (cur_level > max_level || Random::nextDouble() > 0.6) {
         return nullptr;
     }
 

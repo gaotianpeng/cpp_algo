@@ -1,39 +1,30 @@
 #include <algorithm>
 #include <iostream>
 #include <map>
-#include <random>
 #include <sstream>
 #include <stack>
 #include <vector>
+#include "common/test_utils.h"
 
 using namespace std;
+using namespace test_utils;
 
 /*
     for test
 */
 namespace {
 
-class Math {
-public:
-    static double random() {
-        static std::random_device rd;
-        static std::default_random_engine engine(rd());
-        static std::uniform_real_distribution<> distribution(0.0, 1.0);
-        return distribution(engine);
-    }
-};
-
 static std::string GenRandomString() {
-    int len = (int)(Math::random() * (64+1));
+    int len = (int)(Random::nextDouble() * (64+1));
     stringstream ss;
     for (int i = 0; i < len; ++i) {
-        char ch = (char)(Math::random()*26)  + 'a';
+        char ch = (char)(Random::nextDouble()*26)  + 'a';
         ss << ch;
     }
     return ss.str();
 }
 static vector<std::string> GenRandomStringArray(int max_n) {
-    int len = (int)(Math::random() * (max_n + 1));
+    int len = (int)(Random::nextDouble() * (max_n + 1));
     vector<string> ans;
     for (int i = 0; i < len; ++i) {
         ans.emplace_back(GenRandomString());
@@ -239,7 +230,7 @@ int main(int argc, char* argv[]) {
         Test test_tree;
         auto strs = GenRandomStringArray(max_n);
         for (int j = 0; j < strs.size(); j++) {
-            double decide = Math::random();
+            double decide = Random::nextDouble();
             if (decide < 0.25) {
                 trie_tree.Insert(strs[j]);
                 test_tree.Insert(strs[j]);

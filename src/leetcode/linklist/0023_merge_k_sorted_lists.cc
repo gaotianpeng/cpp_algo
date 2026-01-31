@@ -1,37 +1,25 @@
 #include <iostream>
-#include <random>
 #include <vector>
 #include <algorithm>
 #include <queue>
+#include "common/test_utils.h"
 
 using namespace std;
+using namespace test_utils;
 
 /*
     for test
 */
 namespace {
 
-class Math {
-public:
-    static double random() {
-        static std::random_device rd;
-        static std::default_random_engine engine(rd());
-        static std::uniform_real_distribution<> distribution(0.0, 1.0);
-        return distribution(engine);
-    }
-};
-
+// Custom RandomSortedArr function
 static void RandomSortedArr(vector<int>& out, int max_n, int min_val, int max_val) {
-	int len = (int)(Math::random() * max_n);
+	int len = (int)(Random::nextDouble() * max_n);
 	for (int i = 0; i < len; i++) {
-		int val = (int)(Math::random() * (max_val - min_val + 1)) + min_val;
+		int val = Random::nextInt(min_val, max_val);
 		out.emplace_back(val);
 	}
     std::sort(out.begin(), out.end());
-}
-
-static int RandomVal(int min_val, int max_val) {
-    return (int)(Math::random()*(max_val - min_val)) + min_val;
 }
 
 struct ListNode{
@@ -247,7 +235,7 @@ int main(int argc, char* argv[]) {
     int max_vec_n = 30;
     
     for (int i = 0; i < test_times; ++i) {
-        int vec_n = RandomVal(0, max_vec_n);
+        int vec_n = Random::nextInt(0, max_vec_n);
         vector<ListNode*> list1;
         vector<ListNode*> list2;
         vector<ListNode*> list3;

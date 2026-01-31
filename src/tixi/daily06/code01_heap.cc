@@ -1,24 +1,16 @@
 #include <algorithm>
 #include <iostream>
-#include <random>
 #include <stdexcept>
 #include <vector>
+#include "common/test_utils.h"
+
 using namespace std;
+using namespace test_utils;
 
 /*
     for test
 */
 namespace {
-
-class Math {
-public:
-    static double random() {
-        static std::random_device rd;
-        static std::default_random_engine engine(rd());
-        static std::uniform_real_distribution<> distribution(0.0, 1.0);
-        return distribution(engine);
-    }
-};
 
 class TestHeap {
 public:
@@ -165,10 +157,10 @@ int main(int argc, char* argv[]) {
     bool success = true;
 
     for (int i = 0; i < test_times; ++i) {
-        int cur_limit = (int) (Math::random() * limit) + 1;
+        int cur_limit = (int) (Random::nextDouble() * limit) + 1;
         HeapMap my(cur_limit);
         TestHeap test(cur_limit);
-        int curOpTimes = (int) (Math::random() * limit);
+        int curOpTimes = (int) (Random::nextDouble() * limit);
         for (int j = 0; j < curOpTimes; j++) {
             if (my.empty() != test.empty()) {
                 success = false;
@@ -179,7 +171,7 @@ int main(int argc, char* argv[]) {
                 break;
             }
             if (my.empty()) {
-                int curValue = (int) (Math::random() * value);
+                int curValue = (int) (Random::nextDouble() * value);
                 my.push(curValue);
                 test.push(curValue);
             } else if (my.full()) {
@@ -190,8 +182,8 @@ int main(int argc, char* argv[]) {
                     break;
                 }
             } else {
-                if (Math::random() < 0.5) {
-                    int curValue = (int) (Math::random() * value);
+                if (Random::nextDouble() < 0.5) {
+                    int curValue = (int) (Random::nextDouble() * value);
                     my.push(curValue);
                     test.push(curValue);
                 } else {

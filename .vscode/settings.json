@@ -1,6 +1,5 @@
 {
     "files.associations": {
-        // 容器
         "vector": "cpp",
         "array": "cpp",
         "deque": "cpp",
@@ -12,66 +11,43 @@
         "unordered_set": "cpp",
         "stack": "cpp",
         "queue": "cpp",
-        
-        // 字符串
         "string": "cpp",
         "string_view": "cpp",
-        
-        // IO 流
         "iostream": "cpp",
         "fstream": "cpp",
         "sstream": "cpp",
         "istream": "cpp",
         "ostream": "cpp",
         "iosfwd": "cpp",
-        
-        // 算法和迭代器
         "algorithm": "cpp",
         "iterator": "cpp",
         "numeric": "cpp",
         "ranges": "cpp",
-        
-        // 智能指针和内存
         "memory": "cpp",
         "memory_resource": "cpp",
         "scoped_allocator": "cpp",
-        
-        // 函数对象和工具
         "functional": "cpp",
         "utility": "cpp",
         "tuple": "cpp",
         "optional": "cpp",
         "variant": "cpp",
         "any": "cpp",
-        
-        // 类型特性
         "type_traits": "cpp",
         "typeinfo": "cpp",
         "typeindex": "cpp",
-        
-        // 多线程
         "thread": "cpp",
         "mutex": "cpp",
         "condition_variable": "cpp",
         "future": "cpp",
         "atomic": "cpp",
-        
-        // 时间
         "chrono": "cpp",
-        
-        // 异常和错误
         "exception": "cpp",
         "stdexcept": "cpp",
         "system_error": "cpp",
-        
-        // 数学
         "cmath": "cpp",
         "complex": "cpp",
         "valarray": "cpp",
         "random": "cpp",
-        "numeric": "cpp",
-        
-        // 其他常用
         "limits": "cpp",
         "new": "cpp",
         "initializer_list": "cpp",
@@ -80,7 +56,25 @@
         "locale": "cpp",
         "codecvt": "cpp",
         "bitset": "cpp",
-        "bit": "cpp"
+        "bit": "cpp",
+        "__bit_reference": "cpp",
+        "__locale": "cpp",
+        "__split_buffer": "cpp",
+        "__verbose_abort": "cpp",
+        "cctype": "cpp",
+        "clocale": "cpp",
+        "cstddef": "cpp",
+        "cstdint": "cpp",
+        "cstdio": "cpp",
+        "cstdlib": "cpp",
+        "cstring": "cpp",
+        "execution": "cpp",
+        "ios": "cpp",
+        "print": "cpp",
+        "streambuf": "cpp",
+        "cstdarg": "cpp",
+        "ctime": "cpp",
+        "cwchar": "cpp"
     },
     "C_Cpp.default.cppStandard": "c++17",
     "C_Cpp.default.compilerPath": "/usr/bin/g++"

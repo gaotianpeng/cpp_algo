@@ -1,33 +1,21 @@
 #include <iostream>
-#include <random>
 #include <set>
 #include <sstream>
 #include <string>
+#include "common/test_utils.h"
 
 using namespace std;
+using namespace test_utils;
 
 
 namespace {
-class Math {
-public:
-    static double random()  {
-        static std::random_device rd;
-        static std::default_random_engine engine(rd());
-        static std::uniform_real_distribution<> distribution(0.0, 1.0);
 
-        return distribution(engine);
-    }
-};
-
-static int RandomVal(int min, int max) {
-    return (int)(Math::random() * (max - min)) + min;
-}
-
+// Custom RandomStr function
 static string RandomStr(int max_len) {
-    int n = RandomVal(0, max_len);
+    int n = Random::nextInt(0, max_len);
     stringstream ss;
     for (int i = 0; i < n; ++i) {
-        char ch = RandomVal(0, 128);
+        char ch = Random::nextInt(0, 128);
         ss << ch;
     }
     return ss.str();

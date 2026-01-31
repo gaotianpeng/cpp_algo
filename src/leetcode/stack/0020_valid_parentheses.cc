@@ -1,35 +1,22 @@
 #include <iostream>
-#include <random>
 #include <sstream>
 #include <stack>
 #include <unordered_map>
 #include <string>
+#include "common/test_utils.h"
 
 using namespace std;
+using namespace test_utils;
 
 namespace {
 
-class Math {
-public:
-    static double random() {
-        std::random_device rd;
-        std::default_random_engine engine(rd());
-        std::uniform_real_distribution<> distribution(0.0, 1.0);
-
-        return distribution(engine);
-    }
-};
-
-static int RandomVal(int min, int max) {
-    return (int)(Math::random() * (max - min + 1)) + min;
-}
-
+// Custom RandomStr function
 static string RandomStr(int max_n) {
     char chs[] = {'[', ']', '(', ')', '{', '}'};
-    int len = RandomVal(0, max_n);
+    int len = Random::nextInt(0, max_n);
     stringstream ss;
     for (int i = 0; i < len; ++i) {
-        char ch = chs[RandomVal(0, 5)];
+        char ch = chs[Random::nextInt(0, 5)];
         ss << ch; 
     }
 

@@ -1,33 +1,20 @@
 #include <algorithm>
 #include <iostream>
-#include <random>
 #include <map>
 #include <vector>
+#include "common/test_utils.h"
 
 using namespace std;
+using namespace test_utils;
 
 namespace {
 
-class Math {
-public:
-    static double random() {
-        static random_device rd;
-        static default_random_engine engine(rd());
-        static uniform_real_distribution<> distribution(0.0, 1.0);
-
-        return distribution(engine);
-    }
-};
-
-static int RandomVal(int min, int max) {
-    return (int)Math::random() * (max - min) + min;
-}
-
+// Custom RandomArr that returns vector<int>
 static vector<int> RandomArr(int max_len, int min, int max) {
-    int len = RandomVal(0, max_len);
+    int len = Random::nextInt(0, max_len);
     vector<int> ans;
     for (int i = 0; i < len; ++i) {
-        ans.emplace_back(RandomVal(min, max));
+        ans.emplace_back(Random::nextInt(min, max));
     }
 
     return ans;
